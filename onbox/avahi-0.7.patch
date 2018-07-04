@@ -1,0 +1,215 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur avahi-0.7.orig/avahi-autoipd/main.c avahi-0.7/avahi-autoipd/main.c
+--- avahi-0.7.orig/avahi-autoipd/main.c	2017-07-10 03:14:59.087371000 -0700
++++ avahi-0.7/avahi-autoipd/main.c	2018-07-04 02:16:35.398982000 -0700
+@@ -54,7 +54,6 @@
+ #include <signal.h>
+ #include <string.h>
+ #include <time.h>
+-#include <getopt.h>
+ 
+ #include <grp.h>
+ #include <poll.h>
+@@ -1469,6 +1468,7 @@
+ #endif
+     };
+ 
++#if 0
+     static const struct option long_options[] = {
+         { "help",          no_argument,       NULL, 'h' },
+         { "daemonize",     no_argument,       NULL, 'D' },
+@@ -1489,8 +1489,9 @@
+         { "debug",         no_argument,       NULL, OPTION_DEBUG },
+         { NULL, 0, NULL, 0 }
+     };
++#endif
+ 
+-    while ((c = getopt_long(argc, argv, "hDskrcVS:t:w", long_options, NULL)) >= 0) {
++    while ((c = getopt(argc, argv, "hDskrcVS:t:w")) >= 0) {
+ 
+         switch(c) {
+             case 's':
+diff '--exclude=.deps' '--exclude=*.log' -ur avahi-0.7.orig/avahi-core/iface-pfroute.c avahi-0.7/avahi-core/iface-pfroute.c
+--- avahi-0.7.orig/avahi-core/iface-pfroute.c	2017-07-10 03:14:59.103370000 -0700
++++ avahi-0.7/avahi-core/iface-pfroute.c	2018-07-04 00:46:20.594782000 -0700
+@@ -116,6 +116,23 @@
+ #define ADVANCE(x, n) (x += ROUNDUP(sizeof(struct sockaddr)))
+ #endif
+ 
++
++#if defined(__sun__)
++
++#ifndef RTAX_MAX
++#define RTAX_DST         0
++#define RTAX_GATEWAY     1
++#define RTAX_NETMASK     2
++#define RTAX_GENMASK     3
++#define RTAX_IFP         4
++#define RTAX_IFA         5
++#define RTAX_AUTHOR      6
++#define RTAX_BRD         7
++#define RTAX_MAX RTA_NUMBITS
++#endif
++
++#endif
++
+ static void rtm_addr(struct rt_msghdr *rtm, AvahiInterfaceMonitor *m)
+ {
+   AvahiInterface *iface;
+@@ -340,7 +357,7 @@
+     }
+ }
+ 
+-#if defined (SIOCGLIFNUM) && defined(HAVE_STRUCT_LIFCONF) /* Solaris 8 and later; Sol 7? */
++#if 0 && defined (SIOCGLIFNUM) && defined(HAVE_STRUCT_LIFCONF) /* Solaris 8 and later; Sol 7? */
+ /*
+  * I got this function from GNU zsbra
+  */
+@@ -495,7 +512,7 @@
+   avahi_interface_monitor_check_relevant(m);
+   avahi_interface_monitor_update_rrs(m, 0);
+   avahi_log_info("Network interface enumeration completed.");
+-#elif defined (SIOCGLIFNUM) && defined(HAVE_STRUCT_LIFCONF) /* Solaris 8 and later; Sol 7? */
++#elif 0 && defined (SIOCGLIFNUM) && defined(HAVE_STRUCT_LIFCONF) /* Solaris 8 and later; Sol 7? */
+     int sockfd;
+     int ret;
+     int n;
+diff '--exclude=.deps' '--exclude=*.log' -ur avahi-0.7.orig/avahi-core/socket.c avahi-0.7/avahi-core/socket.c
+--- avahi-0.7.orig/avahi-core/socket.c	2017-07-10 03:14:59.107370000 -0700
++++ avahi-0.7/avahi-core/socket.c	2018-07-03 23:48:45.301130000 -0700
+@@ -394,11 +394,13 @@
+         goto fail;
+     }
+ 
++    /*
+     yes = 1;
+     if (setsockopt(fd, IPPROTO_IPV6, IPV6_V6ONLY, &yes, sizeof(yes)) < 0) {
+         avahi_log_warn("IPV6_V6ONLY failed: %s", strerror(errno));
+         goto fail;
+     }
++    */
+ 
+     yes = 1;
+     if (setsockopt(fd, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, &yes, sizeof(yes)) < 0) {
+@@ -957,11 +959,13 @@
+         goto fail;
+     }
+ 
++    /*
+     yes = 1;
+     if (setsockopt(fd, IPPROTO_IPV6, IPV6_V6ONLY, &yes, sizeof(yes)) < 0) {
+         avahi_log_warn("IPV6_V6ONLY failed: %s", strerror(errno));
+         goto fail;
+     }
++    */
+ 
+     memset(&local, 0, sizeof(local));
+     local.sin6_family = AF_INET6;
+diff '--exclude=.deps' '--exclude=*.log' -ur avahi-0.7.orig/avahi-daemon/ini-file-parser.c avahi-0.7/avahi-daemon/ini-file-parser.c
+--- avahi-0.7.orig/avahi-daemon/ini-file-parser.c	2017-07-10 03:14:59.111370000 -0700
++++ avahi-0.7/avahi-daemon/ini-file-parser.c	2018-07-04 01:08:32.475559000 -0700
+@@ -162,10 +162,10 @@
+         const char *c;
+ 
+         /* Ignore leading blanks */
+-        for (c = t, n = l; isblank(*c); c++, n--);
++        for (c = t, n = l; isspace(*c); c++, n--);
+ 
+         /* Ignore trailing blanks */
+-        for (; n > 0 && isblank(c[n-1]); n--);
++        for (; n > 0 && isspace(c[n-1]); n--);
+ 
+         *(i++) = avahi_strndup(c, n);
+ 
+diff '--exclude=.deps' '--exclude=*.log' -ur avahi-0.7.orig/avahi-daemon/main.c avahi-0.7/avahi-daemon/main.c
+--- avahi-0.7.orig/avahi-daemon/main.c	2017-07-10 03:14:59.111370000 -0700
++++ avahi-0.7/avahi-daemon/main.c	2018-07-04 01:04:40.598099000 -0700
+@@ -22,7 +22,6 @@
+ #endif
+ 
+ #include <assert.h>
+-#include <getopt.h>
+ #include <string.h>
+ #include <signal.h>
+ #include <errno.h>
+@@ -455,6 +454,7 @@
+         OPTION_DEBUG
+     };
+ 
++#if 0
+     static const struct option long_options[] = {
+         { "help",           no_argument,       NULL, 'h' },
+         { "daemonize",      no_argument,       NULL, 'D' },
+@@ -473,10 +473,11 @@
+         { "debug",          no_argument,       NULL, OPTION_DEBUG },
+         { NULL, 0, NULL, 0 }
+     };
++#endif
+ 
+     assert(c);
+ 
+-    while ((o = getopt_long(argc, argv, "hDkVf:rcs", long_options, NULL)) >= 0) {
++    while ((o = getopt(argc, argv, "hDkVf:rcs")) >= 0) {
+ 
+         switch(o) {
+             case 's':
+@@ -587,9 +588,9 @@
+     int fd;
+     char buf[32];
+ 
+-    fd = open("/etc/machine-id", O_RDONLY|O_CLOEXEC|O_NOCTTY);
++    fd = open("/etc/machine-id", O_RDONLY| /* O_CLOEXEC| */ O_NOCTTY);
+     if (fd == -1 && errno == ENOENT)
+-        fd = open("/var/lib/dbus/machine-id", O_RDONLY|O_CLOEXEC|O_NOCTTY);
++        fd = open("/var/lib/dbus/machine-id", O_RDONLY| /* O_CLOEXEC| */ O_NOCTTY);
+     if (fd == -1)
+         return NULL;
+ 
+diff '--exclude=.deps' '--exclude=*.log' -ur avahi-0.7.orig/avahi-dnsconfd/main.c avahi-0.7/avahi-dnsconfd/main.c
+--- avahi-0.7.orig/avahi-dnsconfd/main.c	2017-07-10 03:14:59.115370000 -0700
++++ avahi-0.7/avahi-dnsconfd/main.c	2018-07-04 01:24:32.864602000 -0700
+@@ -33,7 +33,6 @@
+ #include <net/if.h>
+ #include <signal.h>
+ #include <sys/wait.h>
+-#include <getopt.h>
+ #include <assert.h>
+ #include <inttypes.h>
+ #include <stdlib.h>
+@@ -385,7 +384,7 @@
+ 
+ static int parse_command_line(int argc, char *argv[]) {
+     int c;
+-
++/*
+     static const struct option long_options[] = {
+         { "help",      no_argument,       NULL, 'h' },
+         { "daemonize", no_argument,       NULL, 'D' },
+@@ -396,8 +395,9 @@
+         { "check",     no_argument,       NULL, 'c' },
+         { NULL, 0, NULL, 0 }
+     };
++*/
+ 
+-    while ((c = getopt_long(argc, argv, "hDkVrcs", long_options, NULL)) >= 0) {
++    while ((c = getopt(argc, argv, "hDkVrcs")) >= 0) {
+ 
+         switch(c) {
+             case 'h':
+diff '--exclude=.deps' '--exclude=*.log' -ur avahi-0.7.orig/config.h avahi-0.7/config.h
+--- avahi-0.7.orig/config.h	2018-07-03 22:41:37.390341000 -0700
++++ avahi-0.7/config.h	2018-07-04 01:22:51.684093000 -0700
+@@ -398,3 +398,14 @@
+ 
+ /* Define to `int' if <sys/types.h> doesn't define. */
+ /* #undef uid_t */
++
++typedef long long int64_t;
++typedef unsigned long long uint64_t;
++
++#define STATIC_ASSERT(COND,MSG) typedef char static_assertion_##MSG[(COND)?1:-1]
++
++STATIC_ASSERT(sizeof(int64_t) == 8, int64_t_must_be_8_bytes);
++STATIC_ASSERT(sizeof(uint64_t) == 8, uint64_t_must_be_8_bytes);
++
++#define CMSG_SPACE(len) (_CMSG_HDR_ALIGN(sizeof(struct cmsghdr)) + _CMSG_DATA_ALIGN(len))
++#define CMSG_LEN(len) (_CMSG_HDR_ALIGN(sizeof(struct cmsghdr)) + (len))

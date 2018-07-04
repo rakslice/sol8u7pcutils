@@ -1,0 +1,41 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur mDNSResponder-878.30.4.orig/Clients/Makefile mDNSResponder-878.30.4/Clients/Makefile
+--- mDNSResponder-878.30.4.orig/Clients/Makefile	2015-03-03 19:09:18.000000000 -0800
++++ mDNSResponder-878.30.4/Clients/Makefile	2018-07-04 03:31:43.126623000 -0700
+@@ -34,7 +34,7 @@
+ LIBS =
+ else
+ TARGETS = build/dns-sd
+-LIBS = -L../mDNSPosix/build/prod/ -ldns_sd
++LIBS = -L../mDNSPosix/build/prod/ -ldns_sd -lsocket -lnsl
+ endif
+ 
+ all: $(TARGETS)
+Files mDNSResponder-878.30.4.orig/mDNSPosix/objects/prod/PosixDaemon.c.o and mDNSResponder-878.30.4/mDNSPosix/objects/prod/PosixDaemon.c.o differ
+Files mDNSResponder-878.30.4.orig/mDNSPosix/objects/prod/uds_daemon.c.o and mDNSResponder-878.30.4/mDNSPosix/objects/prod/uds_daemon.c.o differ
+diff '--exclude=.deps' '--exclude=*.log' -ur mDNSResponder-878.30.4.orig/mDNSShared/dnssd_clientstub.c mDNSResponder-878.30.4/mDNSShared/dnssd_clientstub.c
+--- mDNSResponder-878.30.4.orig/mDNSShared/dnssd_clientstub.c	2018-02-03 14:22:30.000000000 -0800
++++ mDNSResponder-878.30.4/mDNSShared/dnssd_clientstub.c	2018-07-04 03:31:12.007284000 -0700
+@@ -88,6 +88,9 @@
+     #define sockaddr_mdns sockaddr_un
+     #define AF_MDNS AF_LOCAL
+ 
++    #define CMSG_SPACE(len) (_CMSG_HDR_ALIGN(sizeof(struct cmsghdr)) + _CMSG_DATA_ALIGN(len))
++    #define CMSG_LEN(len) (_CMSG_HDR_ALIGN(sizeof(struct cmsghdr)) + (len))
++
+ #endif
+ 
+ // <rdar://problem/4096913> Specifies how many times we'll try and connect to the server.
+diff '--exclude=.deps' '--exclude=*.log' -ur mDNSResponder-878.30.4.orig/mDNSShared/uds_daemon.c mDNSResponder-878.30.4/mDNSShared/uds_daemon.c
+--- mDNSResponder-878.30.4.orig/mDNSShared/uds_daemon.c	2017-05-26 15:25:33.000000000 -0700
++++ mDNSResponder-878.30.4/mDNSShared/uds_daemon.c	2018-07-04 03:31:12.007332000 -0700
+@@ -25,6 +25,10 @@
+ #include <sys/types.h>
+ #include <sys/time.h>
+ #include <sys/resource.h>
++
++#define CMSG_SPACE(len) (_CMSG_HDR_ALIGN(sizeof(struct cmsghdr)) + _CMSG_DATA_ALIGN(len))
++#define CMSG_LEN(len) (_CMSG_HDR_ALIGN(sizeof(struct cmsghdr)) + (len))
++
+ #endif
+ 
+ #include <stdlib.h>
