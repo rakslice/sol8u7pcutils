@@ -1,15 +1,3 @@
-diff '--exclude=.deps' '--exclude=*.log' -ur Eterm-0.9.6.orig/src/command.c Eterm-0.9.6/src/command.c
---- Eterm-0.9.6.orig/src/command.c	2018-07-04 20:12:38.336272000 -0700
-+++ Eterm-0.9.6/src/command.c	2018-07-05 14:20:47.463904000 -0700
-@@ -1926,7 +1926,7 @@
-             return;
-         }
- # ifdef USE_X11R6_XIM
--        XRegisterIMInstantiateCallback(Xdisplay, NULL, NULL, NULL, xim_instantiate_cb, NULL);
-+        /* XRegisterIMInstantiateCallback(Xdisplay, NULL, NULL, NULL, xim_instantiate_cb, NULL); */
- # endif
- #endif
-     }
 diff '--exclude=.deps' '--exclude=*.log' -ur Eterm-0.9.6.orig/src/windows.c Eterm-0.9.6/src/windows.c
 --- Eterm-0.9.6.orig/src/windows.c	2018-07-04 20:12:38.336280000 -0700
 +++ Eterm-0.9.6/src/windows.c	2018-07-04 20:14:58.019159000 -0700
