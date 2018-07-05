@@ -1,0 +1,40 @@
+#!/bin/bash
+set -e 
+
+patches_dir=~/solaris8u7git/onbox/patches
+
+overwrite=no
+if [ "$1" == "-f" ]; then
+	overwrite=yes
+	shift
+fi
+
+if [ $# -ne 1 ]; then
+	echo "Usage:"
+	echo "$0 [-f] {dirname}"
+	exit 1
+fi
+
+set -x
+dirname="$1"
+origdirname="${dirname}.orig"
+outputfile="${patches_dir}/${dirname}.patch"
+
+if [ ! -d "$dirname" ]; then
+	echo "$dirname not found"
+	exit 1
+fi
+
+if [ ! -d "$origdirname" ]; then
+	echo "$origdirname not found"
+	exit 1
+fi
+
+if [ "$overwrite" == "no" ] && [ -f "$outputfile" ]; then
+	echo "$outputfile already exists"
+	exit 1
+fi
+
+gdiff --exclude=".deps" --exclude="*.log" -ur "$origdirname" "$dirname" | fgrep -v "Only in $dirname/" > "$outputfile"
+cat "$outputfile"
+

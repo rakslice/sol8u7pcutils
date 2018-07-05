@@ -1,0 +1,36 @@
+#!/bin/bash
+set -e
+
+if [ $# -lt 1 ]; then
+	echo "Usage:" 1>&2
+	echo "$0 {install} {packagename}" 1>&2
+	exit 1
+fi
+
+set -x
+
+command="$1"
+shift
+packagenames="$*"
+
+case $command in
+install)
+
+	sudo pkgutil -i -y $packagenames
+	;;
+list)
+	sudo pkgutil -l
+	;;
+search)
+	sudo pkgutil -a | fgrep $packagenames
+	;;
+update)
+	sudo pkgutil -U
+	;;
+
+*)
+	echo "Unknown command $command" 1>&2
+	exit 1
+	;;
+esac
+
