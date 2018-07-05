@@ -1,8 +1,13 @@
-#!/usr/bin/bash
+#!/opt/csw/bin/bash
 
 set -e
+set -o pipefail
 
 cd ~/src
+
+if [ ! -d logs ]; then
+	mkdir logs
+fi
 
 function die() {
 	echo "$1" 1>&2
@@ -16,6 +21,20 @@ function installed() {
 		return 1
 	fi
 }	
+
+function download_and_sha() {
+	if [ "$#" -ne 2 ]; then 
+		die "bad params to download_and_sha: $*"
+	fi
+	url="$1"
+	sha_expected="$2"
+	archive=$(basename "$url")
+	if [ ! -f "$archive" ]; then
+		wget "$url"
+	fi	
+	sha_actual=$(shasum "$archive" | awk '{print $1}')
+	[ "$sha_actual" == "$sha_expected" ]
+}
 
 function wtcmmi() {
 	# a function to build a thing
@@ -48,20 +67,23 @@ function wtcmmi() {
 	pushd "$dirname"
 
 	if [ "$noconfig" == "" ]; then	
-		./configure "$@"
+		./configure "$@" 2>&1 | tee ~/src/logs/${dirname}.configure.out
+		if [ -f config.log ]; then
+			cp config.log ~/src/logs/${dirname}.config.log
+		fi
 	fi
 
 	if [ -f ../${dirname}.patch ]; then
-		gpatch -p1 -i ../${dirname}.patch
+		gpatch -p1 -i ../${dirname}.patch 2>&1 | tee ~/src/logs/${dirname}.patch.out
 	fi
 
 	if [ "$make_subdir" != "" ]; then
 		cd "$make_subdir"
 	fi
 
-	gmake ${make_params}
+	gmake ${make_params} 2>&1 | tee ~/src/logs/${dirname}.make.out
 
-	sudo gmake install ${make_install_params}
+	sudo gmake install ${make_install_params} 2>&1 | tee ~/src/logs/${dirname}.make_install.out
 
 	popd	
 	
@@ -123,6 +145,47 @@ wtcmmi http://www.eterm.org/download/libast-0.7.tar.gz 8449049642c5a945336a326b8
 
 libast_lib=$(libast-config --prefix)/lib
 
-wtcmmi http://eterm.org/download/Eterm-0.9.6.tar.gz b4cb00f898ffd2de9bf7ae0ecde1cc3a5fee9f02 --with-imlib=/opt/csw LDFLAGS="-L$libast_lib /opt/csw/X11/lib/libXdmcp.so -R/opt/csw/X11/lib"
-#/usr/openwin/lib/libXdmcp.a
-##-L/opt/csw/X11/lib -R/opt/csw/X11/lib
+
+## Eterm-0.9.6
+
+if true; then
+
+# We need the separate backgrounds archive extracted within the source directory
+download_and_sha http://eterm.org/download/Eterm-bg-0.9.6.tar.gz 26e81a1e91228c971c70ba06e006ef69490ef208
+if [ ! -d Eterm-0.9.6 ]; then mkdir Eterm-0.9.6; fi
+pushd Eterm-0.9.6
+gtar xf ../Eterm-bg-0.9.6.tar.gz
+popd
+
+# Workaround a problem with the path in the install-sh command lines used
+pushd Eterm-0.9.6/bg
+if [ ! -f install-sh ]; then
+	ln -s ../install-sh install-sh
+fi
+popd
+
+wtcmmi http://eterm.org/download/Eterm-0.9.6.tar.gz b4cb00f898ffd2de9bf7ae0ecde1cc3a5fee9f02 --with-imlib=/opt/csw LDFLAGS="-L$libast_lib /opt/csw/X11/lib/libXdmcp.so -R/opt/csw/X11/lib -R/opt/csw/lib"
+
+fi
+
+
+
+## Eterm-0.8.10
+
+if false; then
+
+# imlib 1
+sudo pkg install imlib
+
+# Can't find an older version of this, let's try the newer one
+# We need the separate backgrounds archive extracted within the source directory
+download_and_sha http://eterm.org/download/Eterm-bg-0.9.6.tar.gz 26e81a1e91228c971c70ba06e006ef69490ef208
+if [ ! -d Eterm-0.8.10 ]; then mkdir Eterm-0.8.10; fi
+pushd Eterm-0.8.10
+gtar xf ../Eterm-bg-0.9.6.tar.gz
+popd
+
+wtcmmi http://ftp.gnome.org/mirror/archive/ftp.sunet.se/pub/vendor/sco/skunkware/uw7/emulators/rxvt/src/Eterm-0.8.10.tar.gz 0cafeec2c9d79c874c6b312dcb105b912168ad0d --with-imlib=/opt/csw --prefix=/usr/local
+
+fi
+
