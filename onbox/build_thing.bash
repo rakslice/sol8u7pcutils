@@ -3,6 +3,10 @@
 set -e
 set -o pipefail
 
+script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+patches_dir="${script_path}/patches"
+
 cd ~/src
 
 if [ ! -d logs ]; then
@@ -75,13 +79,13 @@ function wtcmmi() {
 	fi
 
 	# apply a patch if there is one to apply post-config so it can change makefiles
-	if [ -f ../${dirname}.patch ]; then
+	if [ -f "${patches_dir}/${dirname}.patch" ]; then
 		# for easy patch creation make a .orig copy of the directory if we don't already have one
 		if [ ! -d ../${dirname}.orig ]; then
 			cp -R ../${dirname} ../${dirname}.orig
 		fi
 
-		gpatch -p1 -i ../${dirname}.patch 2>&1 | tee ~/src/logs/${dirname}.patch.out
+		gpatch -p1 -i "${patches_dir}/${dirname}.patch" 2>&1 | tee ~/src/logs/${dirname}.patch.out
 	fi
 
 	if [ "$make_subdir" != "" ]; then
@@ -157,6 +161,9 @@ libast_lib=$(libast-config --prefix)/lib
 
 if true; then
 
+# pkg dependencies: gdb for automatic Eterm gdb tracebacks
+pkg install gdb
+
 # We need the separate backgrounds archive extracted within the source directory
 download_and_sha http://eterm.org/download/Eterm-bg-0.9.6.tar.gz 26e81a1e91228c971c70ba06e006ef69490ef208
 if [ ! -d Eterm-0.9.6 ]; then mkdir Eterm-0.9.6; fi
@@ -181,7 +188,7 @@ fi
 
 if false; then
 
-# imlib 1
+# package dependencies: imlib 1
 sudo pkg install imlib
 
 # Can't find an older version of this, let's try the newer one
