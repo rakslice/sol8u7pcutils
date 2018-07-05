@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e -x
+
+DEST_ADDRESS=192.168.2.136
+FROM_ADDRESS=$(pathping -n -w 1 -h 1 -q 1 ${DEST_ADDRESS} | awk '$1 == "0" {print $2; exit}')
+
+# FIXME hardcoded cygwin path
+/l/cygwin/bin/XWin :18 -listen tcp -query ${DEST_ADDRESS} -from ${FROM_ADDRESS} -fp tcp/${DEST_ADDRESS}:7100 -once "$@"
