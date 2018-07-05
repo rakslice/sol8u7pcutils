@@ -1,0 +1,13 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur Eterm-0.9.6.orig/src/windows.c Eterm-0.9.6/src/windows.c
+--- Eterm-0.9.6.orig/src/windows.c	2011-03-15 21:16:59.000000000 -0800
++++ Eterm-0.9.6/src/windows.c	2018-07-04 06:09:49.508356000 -0700
+@@ -504,7 +504,9 @@
+ 
+         atom = XInternAtom(Xdisplay, "UTF8_STRING", False);
+         XChangeProperty(Xdisplay, TermWin.parent, props[PROP_EWMH_STARTUP_ID], atom, 8, PropModeReplace, tmp, strlen(tmp) + 1);
++#ifdef HAVE_UNSETENV
+         unsetenv("DESKTOP_STARTUP_ID");
++#endif
+     }
+ 
+     /* Set window opacity if needed. */

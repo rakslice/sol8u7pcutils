@@ -9,6 +9,13 @@ function die() {
 	exit 1
 }
 
+function installed() {
+	dirname="$1"
+	build_tag="installed-${dirname}"
+	if [ ! -f "$build_tag" ]; then
+		return 1
+	fi
+}	
 
 function wtcmmi() {
 	# a function to build a thing
@@ -87,6 +94,8 @@ fi
 
 wtcmmi https://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/opt/csw/ssl LDFLAGS=-R/opt/csw/lib
 
+if ! installed mDNSResponder-878.30.4; then
+
 if [ ! -d /etc/rc4.d ]; then
 	sudo mkdir /etc/rc4.d
 	sudo chown root:sys /etc/rc4.d
@@ -101,9 +110,19 @@ if [ -f /usr/lib/libdns_sd.so ]; then
 	sudo rm /usr/lib/libdns_sd.so
 fi
 
+fi
+
 noconfig=1 \
 make_subdir=mDNSPosix \
 make_params="os=solaris CC=gcc" \
 make_install_params="os=solaris" \
 LD_RUN_PATH=/opt/csw/lib \
 wtcmmi https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-878.30.4.tar.gz 6661247c232e296c8646130a26686b904db7c912
+
+wtcmmi http://www.eterm.org/download/libast-0.7.tar.gz 8449049642c5a945336a326b8d512e4d261232d0
+
+libast_lib=$(libast-config --prefix)/lib
+
+wtcmmi http://eterm.org/download/Eterm-0.9.6.tar.gz b4cb00f898ffd2de9bf7ae0ecde1cc3a5fee9f02 --with-imlib=/opt/csw LDFLAGS="-L$libast_lib /opt/csw/X11/lib/libXdmcp.so -R/opt/csw/X11/lib"
+#/usr/openwin/lib/libXdmcp.a
+##-L/opt/csw/X11/lib -R/opt/csw/X11/lib
