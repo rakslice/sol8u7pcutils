@@ -66,6 +66,7 @@ function wtcmmi() {
 
 	pushd "$dirname"
 
+	# configure
 	if [ "$noconfig" == "" ]; then	
 		./configure "$@" 2>&1 | tee ~/src/logs/${dirname}.configure.out
 		if [ -f config.log ]; then
@@ -73,7 +74,13 @@ function wtcmmi() {
 		fi
 	fi
 
+	# apply a patch if there is one to apply post-config so it can change makefiles
 	if [ -f ../${dirname}.patch ]; then
+		# for easy patch creation make a .orig copy of the directory if we don't already have one
+		if [ ! -d ../${dirname}.orig ]; then
+			cp -R ../${dirname} ../${dirname}.orig
+		fi
+
 		gpatch -p1 -i ../${dirname}.patch 2>&1 | tee ~/src/logs/${dirname}.patch.out
 	fi
 
