@@ -1,4 +1,8 @@
 
+# Workaround for Solaris 8 XDMCP Xinerama BadWindow abort with Cygwin/X
+# based on:
+# https://robsworldoftech.blogspot.com/2009/11/cygwinx-remote-xdmcp-logins-to-solaris.html
+
 CC=gcc
 
 CFLAGS=-G -fpic
