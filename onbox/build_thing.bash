@@ -40,9 +40,37 @@ function download_and_sha() {
 	[ "$sha_actual" == "$sha_expected" ]
 }
 
+function populate_certificates() {
+	if [ "$#" -ne 1 ]; then
+		die "bad params to populate_certificates: $*"
+	fi
+	
+	ssl_dir="$1"
+
+	[ -d "${ssl_dir}" ]
+
+	sudo pkg install gawk
+
+	certs_dir=~/certs
+	if [ ! -d "${certs_dir}" ]; then
+		mkdir "${certs_dir}"
+	fi
+	wget "https://curl.haxx.se/ca/cacert.pem" --ca-certificate "${script_path}/GlobalSign_Root_CA.pem"
+
+	pushd "${certs_dir}"
+	cat ~/src/cacert.pem | gawk 'split_after==1{n++;split_after=0} /-----END CERTIFICATE-----/ {split_after=1} {print > "cert" n ".pem"}'
+	popd
+
+	sudo cp "${certs_dir}"/*.pem "${ssl_dir}/certs"
+
+	sudo "${ssl_dir}/bin/c_rehash" "${ssl_dir}/certs"
+}
+
 function wtcmmi() {
-	# a function to build a thing
+
+	# a function to build things
 	# wget - tar - configure - make - make install
+
 	if [ "$#" -lt 2 ]; then 
 		die "bad params to wtcmmi: $*"
 	fi
@@ -56,8 +84,19 @@ function wtcmmi() {
 	archive=$(basename "$url")
 	dirname="${archive%.tar.gz}"
 	build_tag="installed-${dirname}"
-	if [ -f "$build_tag" ]; then
-		return
+
+	make_clean=no
+
+	if [ "$tag_must_contain" == "" ]; then
+		if [ -f "$build_tag" ]; then
+			return
+		fi
+	else
+		if fgrep -- "$tag_must_contain" "$build_tag"; then
+			return
+		else
+			make_clean=yes
+		fi
 	fi
 
 	if [ ! -f "$archive" ]; then
@@ -70,9 +109,13 @@ function wtcmmi() {
 
 	pushd "$dirname"
 
+	if [ "$configure_name" == "" ]; then
+		configure_name=configure
+	fi
+
 	# configure
 	if [ "$noconfig" == "" ]; then	
-		./configure "$@" 2>&1 | tee ~/src/logs/${dirname}.configure.out
+		./${configure_name} "$@" 2>&1 | tee ~/src/logs/${dirname}.configure.out
 		if [ -f config.log ]; then
 			cp config.log ~/src/logs/${dirname}.config.log
 		fi
@@ -92,13 +135,17 @@ function wtcmmi() {
 		cd "$make_subdir"
 	fi
 
+	if [ "$make_clean" == "yes" ]; then
+		gmake clean 2>&1 | tee ~/src/logs/${dirname}.make_clean.out
+	fi
+
 	gmake ${make_params} 2>&1 | tee ~/src/logs/${dirname}.make.out
 
 	sudo gmake install ${make_install_params} 2>&1 | tee ~/src/logs/${dirname}.make_install.out
 
 	popd	
 	
-	touch "$build_tag"
+	echo "installed $url $sha_expected $*" > "$build_tag"
 }
 
 
@@ -124,6 +171,8 @@ sudo /usr/sbin/useradd avahi
 sudo /usr/sbin/groupadd avahi
 
 fi
+
+## wget 1.19.5 -- first build, with opencsw openssl
 
 wtcmmi https://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/opt/csw/ssl LDFLAGS=-R/opt/csw/lib
 
@@ -180,8 +229,13 @@ popd
 
 wtcmmi http://eterm.org/download/Eterm-0.9.6.tar.gz b4cb00f898ffd2de9bf7ae0ecde1cc3a5fee9f02 --with-imlib=/opt/csw LDFLAGS="-L$libast_lib /opt/csw/X11/lib/libXdmcp.so -R/opt/csw/X11/lib -R/opt/csw/lib" --disable-xim
 
+# setup terminfo for Eterm
+if [ ! -f /usr/share/lib/terminfo/E/Eterm ]; then
+	sudo mkdir -p /usr/share/lib/terminfo/E
+	sudo ln -s /usr/share/lib/terminfo/x/xterm /usr/share/lib/terminfo/E/Eterm
 fi
 
+fi # ETerm-0.9.6
 
 
 ## Eterm-0.8.10
@@ -201,5 +255,24 @@ popd
 
 wtcmmi http://ftp.gnome.org/mirror/archive/ftp.sunet.se/pub/vendor/sco/skunkware/uw7/emulators/rxvt/src/Eterm-0.8.10.tar.gz 0cafeec2c9d79c874c6b312dcb105b912168ad0d --with-imlib=/opt/csw --prefix=/usr/local
 
-fi
+fi # Eterm-0.8.10
+
+
+## OpenSSL 1.0.2o
+
+configure_name=config \
+wtcmmi https://www.openssl.org/source/openssl-1.0.2o.tar.gz a47faaca57b47a0d9d5fb085545857cc92062691
+
+populate_certificates "/usr/local/ssl"
+
+
+## Wget 1.19.5 -- second build, with OpenSSL 1.0.x we just built
+
+tag_must_contain=--with-openssl=/usr/local/ssl \
+wtcmmi https://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/usr/local/ssl LDFLAGS="-ldl"
+
+
+## Launchy 2.5
+
+wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 1234
 
