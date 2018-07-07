@@ -1,0 +1,12 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.8.7.orig/mkspecs/solaris-g++/qmake.conf qt-everywhere-opensource-src-4.8.7/mkspecs/solaris-g++/qmake.conf
+--- qt-everywhere-opensource-src-4.8.7.orig/mkspecs/solaris-g++/qmake.conf	2018-07-06 02:19:52.574153000 -0700
++++ qt-everywhere-opensource-src-4.8.7/mkspecs/solaris-g++/qmake.conf	2018-07-06 02:22:05.713139000 -0700
+@@ -55,7 +55,7 @@
+ QMAKE_LINK_SHLIB	= g++
+ QMAKE_LINK_C		= gcc
+ QMAKE_LINK_C_SHLIB	= gcc
+-QMAKE_LFLAGS		=
++QMAKE_LFLAGS		= -R/opt/csw/gcc4/lib
+ QMAKE_LFLAGS_RELEASE	=
+ QMAKE_LFLAGS_DEBUG	= -g
+ QMAKE_LFLAGS_SHLIB	= -shared

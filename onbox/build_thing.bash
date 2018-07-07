@@ -1,7 +1,10 @@
 #!/opt/csw/bin/bash
-
 set -e
 set -o pipefail
+
+# 
+# Script for building things from source
+#
 
 script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -49,6 +52,10 @@ function populate_certificates() {
 
 	[ -d "${ssl_dir}" ]
 
+	if fgrep -x "${ssl_dir}" ~/certs/populated_certs; then
+		return
+	fi
+
 	sudo pkg install gawk
 
 	certs_dir=~/certs
@@ -64,6 +71,8 @@ function populate_certificates() {
 	sudo cp "${certs_dir}"/*.pem "${ssl_dir}/certs"
 
 	sudo "${ssl_dir}/bin/c_rehash" "${ssl_dir}/certs"
+
+	echo "${ssl_dir}" >> ~/certs/populated_certs
 }
 
 function wtcmmi() {
@@ -272,7 +281,28 @@ tag_must_contain=--with-openssl=/usr/local/ssl \
 wtcmmi https://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/usr/local/ssl LDFLAGS="-ldl"
 
 
+## Qt 4.8.5
+
+if false; then
+
+sudo pkg install gcc4g++ gcc4g++rt
+
+LD_RUN_PATH=/opt/csw/gcc4/lib \
+wtcmmi https://download.qt.io/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.tar.gz 76aef40335c0701e5be7bb3a9101df5d22fe3666 -opensource -confirm-license -platform "solaris-g++"
+
+fi
+
+
+## Qt 4.6.4
+
+sudo pkg install gcc4g++ gcc4g++rt
+
+LD_RUN_PATH=/opt/csw/gcc4/lib \
+wtcmmi https://mirror.csclub.uwaterloo.ca/qtproject/archive/qt/4.6/qt-everywhere-opensource-src-4.6.4.tar.gz df3a8570cfec2793a76818c9b31244f3ba8a2f3b -opensource -confirm-license -platform "solaris-g++"
+
+
 ## Launchy 2.5
 
-wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 1234
+configure_name="/usr/local/bin/qmake -o Launchy.pro" \
+wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 7a6317168fe7aa219c138fbbc0f84539be9bce9e
 
