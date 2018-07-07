@@ -1,15 +1,3 @@
-diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/mkspecs/default/qmake.conf qt-everywhere-opensource-src-4.6.4/mkspecs/default/qmake.conf
---- qt-everywhere-opensource-src-4.6.4.orig/mkspecs/default/qmake.conf	2018-07-06 03:33:01.099508000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/mkspecs/default/qmake.conf	2018-07-06 11:19:14.783318000 -0700
-@@ -54,7 +54,7 @@
- QMAKE_LINK_SHLIB	= g++
- QMAKE_LINK_C		= gcc
- QMAKE_LINK_C_SHLIB	= gcc
--QMAKE_LFLAGS		=
-+QMAKE_LFLAGS		= -R/opt/csw/lib -R/opt/csw/gcc4/lib
- QMAKE_LFLAGS_RELEASE	=
- QMAKE_LFLAGS_DEBUG	= -g
- QMAKE_LFLAGS_SHLIB	= -shared
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/mkspecs/solaris-g++/qmake.conf qt-everywhere-opensource-src-4.6.4/mkspecs/solaris-g++/qmake.conf
 --- qt-everywhere-opensource-src-4.6.4.orig/mkspecs/solaris-g++/qmake.conf	2018-07-06 03:33:00.969418000 -0700
 +++ qt-everywhere-opensource-src-4.6.4/mkspecs/solaris-g++/qmake.conf	2018-07-06 11:19:14.783318000 -0700
@@ -46,6 +34,24 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
  #include <stdlib.h>
  
  namespace JSC {
+diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.cpp qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.cpp
+--- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.cpp	2018-07-06 03:32:51.083575000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.cpp	2018-07-07 04:11:39.732576000 -0700
+@@ -37,6 +37,14 @@
+ 
+ static const double D32 = 4294967296.0;
+ 
++double trunc(double x) {
++	if (x < 0) {
++		return ceil(x);
++	} else {
++		return floor(x);
++	}
++}
++
+ // ECMA 9.4
+ double JSValue::toInteger(ExecState* exec) const
+ {
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.h qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.h	2018-07-06 03:32:51.033625000 -0700
 +++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.h	2018-07-06 14:53:33.477760000 -0700
@@ -84,7 +90,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
  #if USE(QUERY_PERFORMANCE_COUNTER)
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/DateMath.cpp qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/DateMath.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/DateMath.cpp	2018-07-06 03:32:50.833442000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/DateMath.cpp	2018-07-06 14:49:16.115064000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/DateMath.cpp	2018-07-07 11:24:31.163583000 -0700
 @@ -53,7 +53,7 @@
  #include <algorithm>
  #include <limits.h>
@@ -94,6 +100,21 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
  #include <time.h>
  
  
+@@ -909,6 +909,14 @@
+     return (ymdhmsToSeconds(year, month + 1, day, hour, minute, second) - (offset * 60.0)) * msPerSecond;
+ }
+ 
++double trunc(double x) {
++	if (x < 0) {
++		return ceil(x);
++	} else {
++		return floor(x);
++	}
++}
++
+ double timeClip(double t)
+ {
+     if (!isfinite(t))
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastAllocBase.h qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastAllocBase.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastAllocBase.h	2018-07-06 03:32:50.853429000 -0700
 +++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastAllocBase.h	2018-07-06 14:49:29.963246000 -0700

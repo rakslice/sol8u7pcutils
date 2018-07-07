@@ -122,9 +122,13 @@ function wtcmmi() {
 		configure_name=configure
 	fi
 
+	if [ "$(echo "$configure_name" | cut -c1)" != "/" ]; then
+		configure_name="./$configure_name"
+	fi
+
 	# configure
 	if [ "$noconfig" == "" ]; then	
-		./${configure_name} "$@" 2>&1 | tee ~/src/logs/${dirname}.configure.out
+		${configure_name} "$@" 2>&1 | tee ~/src/logs/${dirname}.configure.out
 		if [ -f config.log ]; then
 			cp config.log ~/src/logs/${dirname}.config.log
 		fi
@@ -297,12 +301,15 @@ fi
 
 sudo pkg install gcc4g++ gcc4g++rt
 
+make_params=-j2 \
 LD_RUN_PATH=/opt/csw/gcc4/lib \
-wtcmmi https://mirror.csclub.uwaterloo.ca/qtproject/archive/qt/4.6/qt-everywhere-opensource-src-4.6.4.tar.gz df3a8570cfec2793a76818c9b31244f3ba8a2f3b -opensource -confirm-license -platform "solaris-g++"
+wtcmmi https://mirror.csclub.uwaterloo.ca/qtproject/archive/qt/4.6/qt-everywhere-opensource-src-4.6.4.tar.gz df3a8570cfec2793a76818c9b31244f3ba8a2f3b -opensource -confirm-license -platform "solaris-g++" -nomake examples
+
+QT464=/usr/local/Trolltech/Qt-4.6.4
 
 
 ## Launchy 2.5
 
-configure_name="/usr/local/bin/qmake -o Launchy.pro" \
+configure_name="${QT464}/bin/qmake -o Launchy.pro" \
 wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 7a6317168fe7aa219c138fbbc0f84539be9bce9e
 
