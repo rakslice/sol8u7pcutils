@@ -37,7 +37,7 @@ def toss_patch(patch_filename):
 	with open(output_filename, "w") as output_handle:
 		for filename, section_lines in sections(patch_filename):
 			skip = False
-			if filename.endswith("/Makefile"):
+			if filename.rsplit("/", 1)[-1].startswith("Makefile"):
 				continue
 			if any(all(ignore_message in l for l in change_lines(section_lines)) for ignore_message in IGNORE_MESSAGES):
 				continue
