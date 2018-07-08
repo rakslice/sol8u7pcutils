@@ -1,0 +1,27 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/platforms/unix/platform_unix.cpp launchy-2.5/platforms/unix/platform_unix.cpp
+--- launchy-2.5.orig/platforms/unix/platform_unix.cpp	2018-07-07 21:49:53.244706000 -0700
++++ launchy-2.5/platforms/unix/platform_unix.cpp	2018-07-07 22:34:32.195700000 -0700
+@@ -22,7 +22,7 @@
+ #include <QApplication>
+ #include <QX11Info>
+ #include "platform_unix.h"
+-#include <boost/pointer_cast.hpp>  
++/* #include <boost/pointer_cast.hpp> */ 
+ #include <X11/Xlib.h>
+ #include <QFileIconProvider>
+ 
+diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/plugins/calcy/precompiled.h launchy-2.5/plugins/calcy/precompiled.h
+--- launchy-2.5.orig/plugins/calcy/precompiled.h	2018-07-07 21:49:52.244109000 -0700
++++ launchy-2.5/plugins/calcy/precompiled.h	2018-07-07 22:32:20.637605000 -0700
+@@ -36,8 +36,8 @@
+ using namespace boost;
+ 
+ #define BOOST_SPIRIT_USE_OLD_NAMESPACE
+-#include <boost/spirit/include/classic_core.hpp>
+-#include <boost/spirit/include/classic_attribute.hpp>
+-#include <boost/spirit/include/phoenix1_functions.hpp>
++#include <boost/spirit/core.hpp> 
++#include <boost/spirit/attribute.hpp>
++#include <boost/spirit/phoenix/functions.hpp>
+ 
+ #endif // PRECOMPILED_H

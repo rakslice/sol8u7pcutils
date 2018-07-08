@@ -16,6 +16,9 @@ if [ ! -d logs ]; then
 	mkdir logs
 fi
 
+
+######### Functions ############
+
 function die() {
 	echo "$1" 1>&2
 	exit 1
@@ -29,6 +32,32 @@ function installed() {
 	fi
 }	
 
+function verify_sha() {
+	if [ "$#" -ne 2 ]; then 
+		die "bad params to verify_sha: $*"
+	fi
+	archive="$1"
+	sha_expected="$2"
+
+	sha_expected_len=$(echo -n "$sha_expected" | wc -c | awk '{print $1}')
+
+	case $sha_expected_len in
+	40)
+		sha_args="-a 1"
+		;;
+	64)
+		sha_args="-a 256"
+		;;
+	*)
+		echo "don't know what sha algorithm uses a $sha_expected_len digit key, using sha1"
+		sha_args="-a 1"
+		;;
+	esac
+
+	sha_actual=$(shasum $sha_args "$archive" | awk '{print $1}')
+	[ "$sha_actual" == "$sha_expected" ]
+}
+
 function download_and_sha() {
 	if [ "$#" -ne 2 ]; then 
 		die "bad params to download_and_sha: $*"
@@ -39,8 +68,7 @@ function download_and_sha() {
 	if [ ! -f "$archive" ]; then
 		wget "$url"
 	fi	
-	sha_actual=$(shasum "$archive" | awk '{print $1}')
-	[ "$sha_actual" == "$sha_expected" ]
+	verify_sha "$archive" "$sha_expected"
 }
 
 function populate_certificates() {
@@ -92,6 +120,8 @@ function wtcmmi() {
 
 	archive=$(basename "$url")
 	dirname="${archive%.tar.gz}"
+	dirname="${dirname%.tar.bz2}"
+	dirname="${dirname%.tar.xz}"
 	build_tag="installed-${dirname}"
 
 	make_clean=no
@@ -111,8 +141,7 @@ function wtcmmi() {
 	if [ ! -f "$archive" ]; then
 		wget "$url"
 	fi
-	sha_actual=$(shasum "$archive" | awk '{print $1}')
-	[ "$sha_actual" == "$sha_expected" ]
+	verify_sha "$archive" "$sha_expected"
 
 	gtar xf "$archive"
 
@@ -152,17 +181,30 @@ function wtcmmi() {
 		gmake clean 2>&1 | tee ~/src/logs/${dirname}.make_clean.out
 	fi
 
-	gmake ${make_params} 2>&1 | tee ~/src/logs/${dirname}.make.out
+	if [ "$make_command" == "" ]; then
+		make_command=gmake
+	fi
 
-	sudo gmake install ${make_install_params} 2>&1 | tee ~/src/logs/${dirname}.make_install.out
+	${make_command} ${make_params} 2>&1 | tee ~/src/logs/${dirname}.make.out
+
+	sudo ${make_command} install ${make_install_params} 2>&1 | tee ~/src/logs/${dirname}.make_install.out
 
 	popd	
 	
 	echo "installed $url $sha_expected $*" > "$build_tag"
 }
 
+################ Main script
+
+## text mode / dev quality of life packages
+
+pkg install git hexdump lynx
+
+## avahi 0.7
 
 if false; then
+
+# libdaemon 0.14
 
 wtcmmi "http://0pointer.de/lennart/projects/libdaemon/libdaemon-0.14.tar.gz" 78a4db58cf3a7a8906c35592434e37680ca83b8f
 
@@ -175,6 +217,7 @@ for tool in xgettext msgfmt; do
 	fi
 done
 
+# avahi-0.7
 
 #make_params="V=1" \
 PKG_CONFIG_PATH=/usr/local/lib/pkgconfig \
@@ -220,6 +263,8 @@ libast_lib=$(libast-config --prefix)/lib
 
 
 ## Eterm-0.9.6
+# requires: libast, imlib2
+# wants: gdb
 
 if true; then
 
@@ -252,6 +297,7 @@ fi # ETerm-0.9.6
 
 
 ## Eterm-0.8.10
+# requires: libast, imlib 1.x
 
 if false; then
 
@@ -280,6 +326,7 @@ populate_certificates "/usr/local/ssl"
 
 
 ## Wget 1.19.5 -- second build, with OpenSSL 1.0.x we just built
+# Requires: openssl
 
 tag_must_contain=--with-openssl=/usr/local/ssl \
 wtcmmi https://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/usr/local/ssl LDFLAGS="-ldl"
@@ -303,13 +350,40 @@ sudo pkg install gcc4g++ gcc4g++rt
 
 make_params=-j2 \
 LD_RUN_PATH=/opt/csw/gcc4/lib \
-wtcmmi https://mirror.csclub.uwaterloo.ca/qtproject/archive/qt/4.6/qt-everywhere-opensource-src-4.6.4.tar.gz df3a8570cfec2793a76818c9b31244f3ba8a2f3b -opensource -confirm-license -platform "solaris-g++" -nomake examples
+wtcmmi https://mirror.csclub.uwaterloo.ca/qtproject/archive/qt/4.6/qt-everywhere-opensource-src-4.6.4.tar.gz df3a8570cfec2793a76818c9b31244f3ba8a2f3b -opensource -confirm-license -platform "solaris-g++" -nomake examples -no-sse2
 
 QT464=/usr/local/Trolltech/Qt-4.6.4
 
 
-## Launchy 2.5
+## Boost 1.67
 
-configure_name="${QT464}/bin/qmake -o Launchy.pro" \
-wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 7a6317168fe7aa219c138fbbc0f84539be9bce9e
+if false; then
+
+noconfig=1 \
+make_command="/bin/bash ./bootstrap.sh" \
+wtcmmi https://dl.bintray.com/boostorg/release/1.67.0/source/boost_1_67_0.tar.bz2 2684c972994ee57fc5632e03bf044746f6eb45d4920c343937a465fd67a5adba
+
+fi
+
+
+## Boost 1.52.0
+
+if false; then
+
+configure_name="/bin/bash ./bootstrap.sh" \
+make_command="./b2" \
+wtcmmi https://sourceforge.net/projects/boost/files/boost/1.52.0/boost_1_52_0.tar.bz2 cddd6b4526a09152ddc5db856463eaa1dc29c5d9
+
+fi
+
+
+## Launchy 2.5
+# requires: Qt 4.6.x+, Boost
+
+pkg install boost_devel boost_rt
+
+boost_dir=/opt/csw/include
+
+configure_name="${QT464}/bin/qmake -r -unix Launchy.pro" \
+wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 7a6317168fe7aa219c138fbbc0f84539be9bce9e "INCLUDEPATH+=$boost_dir" "LIBS+=-L/usr/openwin/lib -R/usr/openwin/lib -lX11" 
 
