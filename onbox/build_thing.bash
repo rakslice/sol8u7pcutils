@@ -402,7 +402,7 @@ sudo pkg install gcc4g++ gcc4g++rt
 
 make_params=-j2 \
 LD_RUN_PATH=/opt/csw/gcc4/lib \
-wtcmmi https://mirror.csclub.uwaterloo.ca/qtproject/archive/qt/4.6/qt-everywhere-opensource-src-4.6.4.tar.gz df3a8570cfec2793a76818c9b31244f3ba8a2f3b -opensource -confirm-license -platform "solaris-g++" -nomake examples -no-sse2
+wtcmmi https://mirror.csclub.uwaterloo.ca/qtproject/archive/qt/4.6/qt-everywhere-opensource-src-4.6.4.tar.gz df3a8570cfec2793a76818c9b31244f3ba8a2f3b -opensource -confirm-license -platform "solaris-g++" -nomake examples -no-sse -no-sse2
 
 QT464=/usr/local/Trolltech/Qt-4.6.4
 
