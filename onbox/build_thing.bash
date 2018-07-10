@@ -32,6 +32,38 @@ function installed() {
 	fi
 }	
 
+function readlink() {
+	if [ "$#" -ne 1 ]; then 
+		die "bad params to readlink: $*"
+	fi
+	pkg install python 1>&2
+	python -c '
+import os, sys
+src=sys.argv[1]
+target=os.readlink(src)
+if not os.path.isabs(target):
+	target=os.path.abspath(os.path.join(os.path.dirname(src), target))
+print target' "$1"
+	#python -c 'import os, sys; src=sys.argv[1]; target=os.readlink(src); target=target if os.path.isabs(target) else os.path.abspath(os.path.join(os.path.dirname(src), target)); print target' "$1"
+}
+
+function ensure_link() {
+	if [ "$#" -ne 2 ]; then 
+		die "bad params to ensure_link: $*"
+	fi
+	symlink="$1"
+	target="$2"
+
+	if [ -f "$symlink" ] && [ "$(readlink "$symlink")" != "$target" ]; then
+        	sudo rm "$symlink"
+	fi      
+                                      
+	if [ ! -f "$symlink" ]; then
+        	sudo mkdir -p "$(dirname "$symlink")"
+        	sudo ln -s "$target" "$symlink"
+	fi
+}
+
 function verify_sha() {
 	if [ "$#" -ne 2 ]; then 
 		die "bad params to verify_sha: $*"
@@ -47,6 +79,12 @@ function verify_sha() {
 		;;
 	64)
 		sha_args="-a 256"
+		;;
+	32)
+		# md5
+		sha_actual=$(openssl md5 "$archive" | awk '{print $2}')
+		[ "$sha_actual" == "$sha_expected" ]
+		return
 		;;
 	*)
 		echo "don't know what sha algorithm uses a $sha_expected_len digit key, using sha1"
@@ -64,7 +102,8 @@ function download_and_sha() {
 	fi
 	url="$1"
 	sha_expected="$2"
-	archive=$(basename "$url")
+
+	archive="$(basename "$url")"
 	if [ ! -f "$archive" ]; then
 		wget "$url"
 	fi	
@@ -118,10 +157,21 @@ function wtcmmi() {
 	sha_expected="$2"
 	shift 2
 
-	archive=$(basename "$url")
-	dirname="${archive%.tar.gz}"
-	dirname="${dirname%.tar.bz2}"
-	dirname="${dirname%.tar.xz}"
+	if [ "$archive_filename" == "" ]; then
+		archive="$(basename "$url")"
+		wget_options=""
+	else
+		archive="$archive_filename"
+		wget_options='-O '"$archive_filename"
+	fi
+
+	if [ "$use_dirname" == "" ]; then
+		dirname="${archive%.tar.gz}"
+		dirname="${dirname%.tar.bz2}"
+		dirname="${dirname%.tar.xz}"
+	else
+		dirname="$use_dirname"
+	fi
 	build_tag="installed-${dirname}"
 
 	make_clean=no
@@ -139,7 +189,7 @@ function wtcmmi() {
 	fi
 
 	if [ ! -f "$archive" ]; then
-		wget "$url"
+		wget "$url" $wget_options
 	fi
 	verify_sha "$archive" "$sha_expected"
 
@@ -155,6 +205,10 @@ function wtcmmi() {
 		configure_name="./$configure_name"
 	fi
 
+	if [ "$patch_before_configure" != "" ] && [ -f "${patches_dir}/${dirname}.patch" ]; then
+		gpatch -p1 -i "${patches_dir}/${dirname}.patch" 2>&1 | tee ~/src/logs/${dirname}.patch.out
+	fi
+
 	# configure
 	if [ "$noconfig" == "" ]; then	
 		${configure_name} "$@" 2>&1 | tee ~/src/logs/${dirname}.configure.out
@@ -164,7 +218,7 @@ function wtcmmi() {
 	fi
 
 	# apply a patch if there is one to apply post-config so it can change makefiles
-	if [ -f "${patches_dir}/${dirname}.patch" ]; then
+	if [ "$patch_before_configure" == "" ] && [ -f "${patches_dir}/${dirname}.patch" ]; then
 		# for easy patch creation make a .orig copy of the directory if we don't already have one
 		if [ ! -d ../${dirname}.orig ]; then
 			cp -R ../${dirname} ../${dirname}.orig
@@ -263,13 +317,14 @@ libast_lib=$(libast-config --prefix)/lib
 
 
 ## Eterm-0.9.6
+
 # requires: libast, imlib2
-# wants: gdb
+# wants: gdb, ncurses
 
 if true; then
 
-# pkg dependencies: gdb for automatic Eterm gdb tracebacks
-pkg install gdb
+# pkg dependencies: gdb for automatic Eterm gdb tracebacks, ncurses for more appropriate terminfo
+pkg install gdb ncurses
 
 # We need the separate backgrounds archive extracted within the source directory
 download_and_sha http://eterm.org/download/Eterm-bg-0.9.6.tar.gz 26e81a1e91228c971c70ba06e006ef69490ef208
@@ -288,10 +343,7 @@ popd
 wtcmmi http://eterm.org/download/Eterm-0.9.6.tar.gz b4cb00f898ffd2de9bf7ae0ecde1cc3a5fee9f02 --with-imlib=/opt/csw LDFLAGS="-L$libast_lib /opt/csw/X11/lib/libXdmcp.so -R/opt/csw/X11/lib -R/opt/csw/lib" --disable-xim
 
 # setup terminfo for Eterm
-if [ ! -f /usr/share/lib/terminfo/E/Eterm ]; then
-	sudo mkdir -p /usr/share/lib/terminfo/E
-	sudo ln -s /usr/share/lib/terminfo/x/xterm /usr/share/lib/terminfo/E/Eterm
-fi
+ensure_link "/usr/share/lib/terminfo/E/Eterm" "/opt/csw/share/terminfo/x/xterm-256color"
 
 fi # ETerm-0.9.6
 
@@ -386,4 +438,44 @@ boost_dir=/opt/csw/include
 
 configure_name="${QT464}/bin/qmake -r -unix Launchy.pro" \
 wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 7a6317168fe7aa219c138fbbc0f84539be9bce9e "INCLUDEPATH+=$boost_dir" "LIBS+=-L/usr/openwin/lib -R/usr/openwin/lib -lX11" 
+
+
+## VIM 7.4
+
+use_dirname=vim74 \
+wtcmmi ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2 601abf7cc2b5ab186f40d8790e542f86afca86b7
+
+
+## zaycakitayca/gnome-menu-editor-qt
+
+# form of github tarball link is https://api.github.com/repos/User/repo/tarball/master
+
+archive_filename=zaycakitayca-gnome-menu-editor-qt-c50bc7a.tar.gz \
+configure_name="${QT464}/bin/qmake gnome-menu-editor-qt.pro " \
+patch_before_configure=1 \
+wtcmmi https://api.github.com/repos/zaycakitayca/gnome-menu-editor-qt/tarball/c50bc7a e590696de0180369f27a0fba9a5a09e3575546c7
+
+sudo cp -r zaycakitayca-gnome-menu-editor-qt-c50bc7a/gnome-menu-editor-qt /usr/local/bin/gnome-menu-editor-qt
+
+exit 1
+
+## Gtk3 3.22.30
+
+#pkg install gtk_doc 
+pkg install libffi
+
+LDFLAGS="-R/opt/csw/gcc4/lib" \
+wtcmmi https://ftp.pcre.org/pub/pcre/pcre-8.42.tar.bz2 085b6aa253e0f91cae70b3cdbe8c1ac2 --enable-unicode-properties --enable-utf8
+
+#archive_filename="gobject-introspection-1.56.1.tar.gz" \
+#configure_name="autogen.sh" \
+#wtcmmi https://github.com/GNOME/gobject-introspection/archive/1.56.1.tar.gz c37114c348176e1321f81e2332c4e89d0dbef37a
+
+wtcmmi https://ftp.gnu.org/pub/gnu/gettext/gettext-0.19.8.1.tar.xz e0fe90ede22f7f16bbde7bdea791a835f2773fc9 LDFLAGS=-R/opt/csw/lib
+
+LDFLAGS="-R/usr/local/lib" \
+CFLAGS=-march=prescott \
+wtcmmi http://ftp.gnome.org/pub/gnome/sources/glib/2.56/glib-2.56.1.tar.xz 988af38524804ea1ae6bc9a2bad181ff
+
+wtcmmi http://ftp.gnome.org/pub/gnome/sources/gtk+/3.22/gtk+-3.22.30.tar.xz 1be769c97b4dac9221d63f62f61ef724c55a14a3
 

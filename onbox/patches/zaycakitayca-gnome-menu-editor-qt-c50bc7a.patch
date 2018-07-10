@@ -1,0 +1,54 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur zaycakitayca-gnome-menu-editor-qt-c50bc7a.orig/gnome-menu-editor-qt.pro zaycakitayca-gnome-menu-editor-qt-c50bc7a/gnome-menu-editor-qt.pro
+--- zaycakitayca-gnome-menu-editor-qt-c50bc7a.orig/gnome-menu-editor-qt.pro	2014-10-03 06:14:18.000000000 -0700
++++ zaycakitayca-gnome-menu-editor-qt-c50bc7a/gnome-menu-editor-qt.pro	2018-07-09 18:56:20.970701000 -0700
+@@ -25,5 +25,5 @@
+ 
+ QMAKE_CXXFLAGS -= -O2
+ QMAKE_CFLAGS -= -O2
+-QMAKE_CXXFLAGS += -std=c++11 -O3
++QMAKE_CXXFLAGS += -std=c++0x -O3
+ QMAKE_CFLAGS += -O3
+Only in zaycakitayca-gnome-menu-editor-qt-c50bc7a: main.o
+diff '--exclude=.deps' '--exclude=*.log' -ur zaycakitayca-gnome-menu-editor-qt-c50bc7a.orig/mainwindow.cpp zaycakitayca-gnome-menu-editor-qt-c50bc7a/mainwindow.cpp
+--- zaycakitayca-gnome-menu-editor-qt-c50bc7a.orig/mainwindow.cpp	2014-10-03 06:14:18.000000000 -0700
++++ zaycakitayca-gnome-menu-editor-qt-c50bc7a/mainwindow.cpp	2018-07-09 20:09:39.561955000 -0700
+@@ -11,6 +11,8 @@
+ #include <QMessageBox>
+ #include <QInputDialog>
+ 
++#include <QDebug>
++
+ MainWindow::MainWindow(QWidget *parent) :
+     QMainWindow(parent),
+     ui(new Ui::MainWindow)
+@@ -21,11 +23,15 @@
+ 
+     cats=new QMap<QString,QMap<QString,QPair<QString, bool> > >; //contents of all .desktop files is stored here
+ 
++    qDebug() << "parsing in main window";
++
+     QStringList pathes; //search pathes of .desktop files
+     pathes.append(default_path);
+     pathes.append(QDir::homePath()+"/.local/share/applications");
+     for(QStringList::Iterator it2=pathes.begin();it2!=pathes.end();++it2){
+-        for(QDirIterator it(*it2,QDirIterator::Subdirectories);it.hasNext();it.next()){
++        for(QDirIterator it(*it2,QDirIterator::Subdirectories);it.hasNext();){
++	    it.next();
++	    qDebug() << "considering file" << it.filePath();
+             if(QFileInfo(it.filePath()).isFile() && QFileInfo(it.filePath()).suffix()=="desktop"){ //.desktop file found
+                 QFile file(it.filePath());
+                 if(file.open(QIODevice::ReadOnly)) {
+@@ -57,6 +63,8 @@
+                                     name=value;
+                                 }else if(param=="Categories"){
+                                     cat+=value;
++				     qDebug() << "Current category is" << value;
++					
+                                 }else if(param=="Hidden"){
+                                     hidden=(value=="true");
+                                 }else{
+Only in zaycakitayca-gnome-menu-editor-qt-c50bc7a: mainwindow.o
+Only in zaycakitayca-gnome-menu-editor-qt-c50bc7a: moc_editdfile.cpp
+Only in zaycakitayca-gnome-menu-editor-qt-c50bc7a: moc_editdfile.o
+Only in zaycakitayca-gnome-menu-editor-qt-c50bc7a: moc_mainwindow.cpp
+Only in zaycakitayca-gnome-menu-editor-qt-c50bc7a: moc_mainwindow.o

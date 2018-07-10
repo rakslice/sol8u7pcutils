@@ -1,0 +1,12 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur glib-2.56.1.orig/glib/gnulib/printf-parse.c glib-2.56.1/glib/gnulib/printf-parse.c
+--- glib-2.56.1.orig/glib/gnulib/printf-parse.c	2018-07-08 04:42:02.159560000 -0700
++++ glib-2.56.1/glib/gnulib/printf-parse.c	2018-07-08 04:44:24.022635000 -0700
+@@ -59,7 +59,7 @@
+ # endif
+ #else
+ # if !defined (_MSC_VER) || (_MSC_VER >= 1600)
+-#  include <stdint.h>
++/* #  include <stdint.h> */
+ # else
+ typedef signed __int64 intmax_t;
+ # endif

@@ -1,0 +1,22 @@
+#!/bin/bash
+set -e 
+set -x
+
+# create a skeleton for xdg menus.
+
+# Base dirs. See 
+# https://specifications.freedesktop.org/basedir-spec/basedir-spec-0.6.html
+
+if [ "$XDG_DATA_HOME" == "" ]; then
+	XDG_DATA_HOME=~/.local/share
+fi
+if [ "$XDG_CONFIG_HOME" == "" ]; then
+	XDG_CONFIG_HOME=~/.config
+fi
+
+# Menu format. See
+# https://specifications.freedesktop.org/menu-spec/menu-spec-1.0.html#menu-file-format
+
+if [ ! -d $XDG_DATA_HOME/applications ]; then
+	mkdir -p $XDG_DATA_HOME/applications
+fi
