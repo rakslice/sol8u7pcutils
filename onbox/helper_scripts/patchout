@@ -36,5 +36,8 @@ if [ "$overwrite" == "no" ] && [ -f "$outputfile" ]; then
 fi
 
 gdiff --exclude=".deps" --exclude="*.log" -ur "$origdirname" "$dirname" | fgrep -v "Only in $dirname/" > "$outputfile"
+
+"${patches_dir}/toss_patch.py" "$outputfile"
+
 cat "$outputfile"
 

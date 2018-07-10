@@ -27,6 +27,23 @@ search)
 update)
 	sudo pkgutil -U
 	;;
+findfile)
+	sudo pkgutil -F "${packagenames}"
+	;;
+findfilepkg)
+	sudo pkgutil -F "${packagenames}" | awk '{print $2}' | sort | uniq
+	;;
+help)
+	set +x
+	echo "Usage:"
+	echo " pkg install {packagename} 	install a package"
+	echo " pkg list				list packages"
+	echo " pkg search {x}			look for packages with x in the name"
+	echo " pkg update			download updated pkg index"
+	echo " pkg help				show this help"
+	echo " pkg findfile {x}			find files matching {x} in packages"
+	echo " pkg findfilepkg {x}		find a package containing the given file"
+	;;
 
 *)
 	echo "Unknown command $command" 1>&2
