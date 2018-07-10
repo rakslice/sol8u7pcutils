@@ -1,0 +1,75 @@
+#!/bin/bash
+set -e
+set -x
+
+# Uninstall and remove a thing installed by build_thing.
+#
+# This also removes the installation tag and source code,
+# getting everything ready for a fresh build of the
+# software on the next build_install run.
+
+
+if [ $# -ne 1 ]; then
+	echo "Usage:" 1>&2
+	echo "$0 {app to uninstall}" 1>&2
+	exit 1
+fi
+
+
+dirname="$1"
+dirpath=~/src/"$dirname"
+tagfile=~/src/"installed-$dirname"
+
+function die() {
+	echo "$1" 1>&2
+	exit 1
+}
+
+
+if [ ! -d "$dirpath" ]; then
+	die "source dir for $dirpath not found"
+fi
+
+if [ ! -f "$tagfile" ]; then
+	die "installation record for $dirname not found"
+fi
+
+echo "Found installation tag $tagfile:"
+cat "$tagfile"
+
+#
+#  Extra steps for specific pieces of software can be added
+#  to the case statement below.
+#
+#  Set do_make_uninstall=no if the default
+#  'gmake uninstall' in the source directory 
+#  is not a appropriate for that software.
+#
+
+do_make_uninstall=yes
+
+case "$dirname" in 
+pcre-8.42)
+	# symlinks that pcre's make install creates
+	# but can't overwrite
+	sudo rm /usr/local/share/man/man3/pcre*
+	;;
+zaycakitayca-gnome-menu-editor-qt-c50bc7a)
+	# this has no make install, just a copy
+	# of the program we manually put in
+	# /usr/local/bin
+	do_make_uninstall=no
+	sudo rm /usr/local/bin/gnome-menu-editor-qt
+	;;
+esac
+
+if [ "$do_make_uninstall" == "yes" ]; then
+	pushd "$dirpath"
+	sudo gmake uninstall
+	popd
+fi
+
+rm -rf "$dirpath"
+
+rm "$tagfile"
+
