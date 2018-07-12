@@ -21,6 +21,9 @@ install)
 list)
 	sudo pkgutil -l
 	;;
+listfiles)
+	sudo pkgutil -L $packagenames
+	;;
 search)
 	sudo pkgutil -a | fgrep $packagenames
 	;;
@@ -38,6 +41,7 @@ help)
 	echo "Usage:"
 	echo " pkg install {packagename} 	install a package"
 	echo " pkg list				list packages"
+	echo " pkg listfiles {x}		list files in package"
 	echo " pkg search {x}			look for packages with x in the name"
 	echo " pkg update			download updated pkg index"
 	echo " pkg help				show this help"
