@@ -1,0 +1,12 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur ImageMagick-7.0.8-6.orig/MagickCore/magick-type.h ImageMagick-7.0.8-6/MagickCore/magick-type.h
+--- ImageMagick-7.0.8-6.orig/MagickCore/magick-type.h	2018-07-11 03:18:19.245789000 -0700
++++ ImageMagick-7.0.8-6/MagickCore/magick-type.h	2018-07-11 03:21:34.561515000 -0700
+@@ -179,7 +179,7 @@
+ #  define IsNaN(a) ((a) != (a))
+ #endif
+ #if !defined(INFINITY)
+-#  define INFINITY (-logf(0f))
++#  define INFINITY (-log(0.0f))
+ #endif
+ 
+ typedef struct _BlobInfo BlobInfo;
