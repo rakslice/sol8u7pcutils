@@ -20,22 +20,38 @@ fi
 ######### Functions ############
 
 function die() {
-	echo "$1" 1>&2
+
+	# Show an error message and exit
+
+	msg="$1"
+
+	echo "$msg" 1>&2
 	exit 1
 }
 
 function installed() {
+
+	# Check if a thing is already installed.
+
 	dirname="$1"
+
 	build_tag="installed-${dirname}"
+
 	if [ ! -f "$build_tag" ]; then
 		return 1
 	fi
 }	
 
 function readlink() {
+
+	# Print the target of a symlink.
+
 	if [ "$#" -ne 1 ]; then 
 		die "bad params to readlink: $*"
 	fi
+
+	symlink="$1"
+
 	pkg install python 1>&2
 	python -c '
 import os, sys
@@ -43,14 +59,19 @@ src=sys.argv[1]
 target=os.readlink(src)
 if not os.path.isabs(target):
 	target=os.path.abspath(os.path.join(os.path.dirname(src), target))
-print target' "$1"
+print target' "$symlink"
 	#python -c 'import os, sys; src=sys.argv[1]; target=os.readlink(src); target=target if os.path.isabs(target) else os.path.abspath(os.path.join(os.path.dirname(src), target)); print target' "$1"
 }
 
 function ensure_link() {
+
+	# Ensure there is a symlink at the given location that points to
+        # the given target.
+
 	if [ "$#" -ne 2 ]; then 
 		die "bad params to ensure_link: $*"
 	fi
+
 	symlink="$1"
 	target="$2"
 
@@ -65,9 +86,14 @@ function ensure_link() {
 }
 
 function verify_sha() {
+
+	# Verify that the given file matches the given expected hash.
+        # Guesses the hash algorithm from the length of the expected hash.
+
 	if [ "$#" -ne 2 ]; then 
 		die "bad params to verify_sha: $*"
 	fi
+
 	archive="$1"
 	sha_expected="$2"
 
@@ -97,9 +123,14 @@ function verify_sha() {
 }
 
 function download_and_sha() {
+
+	# Download the given URL and ensure that the downloaded file matches the 
+        # given expected hash.
+
 	if [ "$#" -ne 2 ]; then 
 		die "bad params to download_and_sha: $*"
 	fi
+
 	url="$1"
 	sha_expected="$2"
 
@@ -111,6 +142,10 @@ function download_and_sha() {
 }
 
 function populate_certificates() {
+
+	# Populate the given OpenSSL-compatibile install with known-good root certs
+        # from haxx.se's CA cert set derived from Mozilla's set
+
 	if [ "$#" -ne 1 ]; then
 		die "bad params to populate_certificates: $*"
 	fi
@@ -188,14 +223,25 @@ function wtcmmi() {
 		fi
 	fi
 
+	# 1) wget
+
 	if [ ! -f "$archive" ]; then
 		wget "$url" $wget_options
 	fi
 	verify_sha "$archive" "$sha_expected"
 
+	# 2) tar
+
 	gtar xf "$archive"
 
 	pushd "$dirname"
+
+	# 3) configure
+
+	# apply a patch if there is one to apply and patch_before_configure is specified
+	if [ "$patch_before_configure" != "" ] && [ -f "${patches_dir}/${dirname}.patch" ]; then
+		gpatch -p1 -i "${patches_dir}/${dirname}.patch" 2>&1 | tee ~/src/logs/${dirname}.patch.out
+	fi
 
 	if [ "$configure_name" == "" ]; then
 		configure_name=configure
@@ -205,11 +251,6 @@ function wtcmmi() {
 		configure_name="./$configure_name"
 	fi
 
-	if [ "$patch_before_configure" != "" ] && [ -f "${patches_dir}/${dirname}.patch" ]; then
-		gpatch -p1 -i "${patches_dir}/${dirname}.patch" 2>&1 | tee ~/src/logs/${dirname}.patch.out
-	fi
-
-	# configure
 	if [ "$noconfig" == "" ]; then	
 		${configure_name} "$@" 2>&1 | tee ~/src/logs/${dirname}.configure.out
 		if [ -f config.log ]; then
@@ -217,7 +258,9 @@ function wtcmmi() {
 		fi
 	fi
 
-	# apply a patch if there is one to apply post-config so it can change makefiles
+	# 4) make
+
+	# apply a patch if there is one to apply, post-config by default so it can change makefiles
 	if [ "$patch_before_configure" == "" ] && [ -f "${patches_dir}/${dirname}.patch" ]; then
 		# for easy patch creation make a .orig copy of the directory if we don't already have one
 		if [ ! -d ../${dirname}.orig ]; then
@@ -241,10 +284,13 @@ function wtcmmi() {
 
 	${make_command} ${make_params} 2>&1 | tee ~/src/logs/${dirname}.make.out
 
+	# 5) install
+
 	sudo ${make_command} install ${make_install_params} 2>&1 | tee ~/src/logs/${dirname}.make_install.out
 
 	popd	
-	
+
+	# write an installation tag, indicating that it was successfully installed with the given settings.
 	echo "installed $url $sha_expected $*" > "$build_tag"
 }
 
