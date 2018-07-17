@@ -1,6 +1,22 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur glib-2.56.1.orig/glib/gmain.c glib-2.56.1/glib/gmain.c
+--- glib-2.56.1.orig/glib/gmain.c	2018-07-08 04:42:02.008457000 -0700
++++ glib-2.56.1/glib/gmain.c	2018-07-16 18:35:16.132103000 -0700
+@@ -2802,10 +2802,10 @@
+   struct timespec ts;
+   gint result;
+ 
+-  result = clock_gettime (CLOCK_MONOTONIC, &ts);
++  result = clock_gettime (/* CLOCK_MONOTONIC */ CLOCK_HIGHRES, &ts);
+ 
+   if G_UNLIKELY (result != 0)
+-    g_error ("GLib requires working CLOCK_MONOTONIC");
++    g_error ("GLib requires working CLOCK_HIGHRES");
+ 
+   return (((gint64) ts.tv_sec) * 1000000) + (ts.tv_nsec / 1000);
+ }
 diff '--exclude=.deps' '--exclude=*.log' -ur glib-2.56.1.orig/glib/gnulib/printf-parse.c glib-2.56.1/glib/gnulib/printf-parse.c
 --- glib-2.56.1.orig/glib/gnulib/printf-parse.c	2018-07-08 04:42:02.159560000 -0700
-+++ glib-2.56.1/glib/gnulib/printf-parse.c	2018-07-08 04:44:24.022635000 -0700
++++ glib-2.56.1/glib/gnulib/printf-parse.c	2018-07-16 18:30:07.754127000 -0700
 @@ -59,7 +59,7 @@
  # endif
  #else
