@@ -1,4 +1,4 @@
-#!/opt/csw/bin/bash
+#!/usr/local/bin/bash
 set -e
 set -o pipefail
 
@@ -325,7 +325,11 @@ function wtcmmi() {
 
 ################ Main script
 
-if false; then
+pkg install patch
+
+ensure_link /usr/local/bin/gpatch /usr/local/bin/patch
+
+if false; then  # BIG JUMP
 
 ## text mode / dev quality of life packages
 
@@ -388,20 +392,24 @@ make_install_params="os=solaris" \
 LD_RUN_PATH=/opt/csw/lib \
 wtcmmi https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-878.30.4.tar.gz 6661247c232e296c8646130a26686b904db7c912
 
-wtcmmi http://www.eterm.org/download/libast-0.7.tar.gz 8449049642c5a945336a326b8d512e4d261232d0
-
-libast_lib=$(libast-config --prefix)/lib
-
+fi # BIG JUMP
 
 ## Eterm-0.9.6
 
 # requires: libast, imlib2
 # wants: gdb, ncurses
 
+pkg install imlib2
+
 if true; then
 
+wtcmmi http://www.eterm.org/download/libast-0.7.tar.gz 8449049642c5a945336a326b8d512e4d261232d0
+
+libast_lib=$(libast-config --prefix)/lib
+
 # pkg dependencies: gdb for automatic Eterm gdb tracebacks, ncurses for more appropriate terminfo
-pkg install gdb ncurses
+pkg install gdb
+pkg install ncurses
 
 # We need the separate backgrounds archive extracted within the source directory
 download_and_sha http://eterm.org/download/Eterm-bg-0.9.6.tar.gz 26e81a1e91228c971c70ba06e006ef69490ef208
@@ -423,6 +431,8 @@ wtcmmi http://eterm.org/download/Eterm-0.9.6.tar.gz b4cb00f898ffd2de9bf7ae0ecde1
 ensure_link "/usr/share/lib/terminfo/E/Eterm" "/opt/csw/share/terminfo/x/xterm-256color"
 
 fi # ETerm-0.9.6
+
+if false; then # ANOTHER BIG JUMP
 
 
 ## Eterm-0.8.10

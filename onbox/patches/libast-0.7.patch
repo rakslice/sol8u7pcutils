@@ -1,0 +1,12 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur libast-0.7.orig/include/libast/types.h libast-0.7/include/libast/types.h
+--- libast-0.7.orig/include/libast/types.h	2018-07-22 20:19:42.142306000 -0700
++++ libast-0.7/include/libast/types.h	2018-07-22 20:23:36.822762000 -0700
+@@ -36,6 +36,8 @@
+ #ifndef _LIBAST_TYPES_H_
+ #define _LIBAST_TYPES_H_
+ 
++typedef size_t socklen_t;
++
+ 
+ /**
+  * @defgroup DOXGRP_TYPES LibAST Portable Data Types

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e 
 
 patches_dir=~/solaris8u7git/onbox/patches

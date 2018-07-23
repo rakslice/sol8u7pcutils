@@ -1,4 +1,4 @@
-#!/opt/csw/bin/python
+#!/usr/bin/env python
 
 
 # A utility to process a .patch file and take out sections that don't have any relevant changes
