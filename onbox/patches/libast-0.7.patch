@@ -1,6 +1,6 @@
 diff '--exclude=.deps' '--exclude=*.log' -ur libast-0.7.orig/include/libast/types.h libast-0.7/include/libast/types.h
 --- libast-0.7.orig/include/libast/types.h	2018-07-22 20:19:42.142306000 -0700
-+++ libast-0.7/include/libast/types.h	2018-07-22 20:23:36.822762000 -0700
++++ libast-0.7/include/libast/types.h	2018-07-22 20:38:59.842725000 -0700
 @@ -36,6 +36,8 @@
  #ifndef _LIBAST_TYPES_H_
  #define _LIBAST_TYPES_H_
@@ -10,3 +10,16 @@ diff '--exclude=.deps' '--exclude=*.log' -ur libast-0.7.orig/include/libast/type
  
  /**
   * @defgroup DOXGRP_TYPES LibAST Portable Data Types
+Only in libast-0.7.orig/src: array.loT
+diff '--exclude=.deps' '--exclude=*.log' -ur libast-0.7.orig/src/socket.c libast-0.7/src/socket.c
+--- libast-0.7.orig/src/socket.c	2018-07-22 20:19:42.442434000 -0700
++++ libast-0.7/src/socket.c	2018-07-23 00:05:56.695339000 -0700
+@@ -721,7 +721,7 @@
+         hinfo = gethostbyname(SPIF_CHARPTR_C(SPIF_STR_STR(hostname)));
+     } while ((tries <= 3) && (hinfo == NULL) && (h_errno == TRY_AGAIN));
+     if (hinfo == NULL) {
+-        libast_print_error("Unable to resolve hostname \"%s\" -- %s\n", SPIF_STR_STR(hostname), hstrerror(h_errno));
++        libast_print_error("Unable to resolve hostname \"%s\" -- h_errno %d\n", SPIF_STR_STR(hostname), h_errno);
+         return SPIF_NULL_TYPE(ipsockaddr);
+     }
+ 
