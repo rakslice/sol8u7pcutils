@@ -148,9 +148,22 @@ case "$cmd" in
 		extracted_filename="${local_filename%.gz}"
 		gunzip -c "${local_filename}" > "${extracted_filename}"
 
-		sudo /usr/sbin/pkgadd -d "${extracted_filename}" all
-
 		package_names="$(/bin/pkginfo -d "${extracted_filename}" | awk '{print $2}')"
+		packages_to_install=""
+
+		for package_name in $package_names; do
+			if pkginfo "${package_name}" > /dev/null 2> /dev/null; then
+				echo "Package $package_name already installed"
+				continue
+			fi
+			packages_to_install="$packages_to_install $package_name"
+		done
+
+		if [ "$packages_to_install" == "" ]; then
+			exit 0
+		fi
+
+		sudo /usr/sbin/pkgadd -d "${extracted_filename}" $packages_to_install
 
 		rm "${extracted_filename}"
 
