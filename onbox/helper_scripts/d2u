@@ -1,0 +1,19 @@
+#!/usr/local/bin/bash
+set -e 
+
+if [ $# -ne 1 ]; then
+	echo "Usage:"
+	echo "$0 {filename}"
+	exit 1
+fi
+
+set -x
+
+filename="$1"
+
+cat "$filename" > "$filename.dos"
+dos2unix "$filename" > "$filename.unix"
+cat "$filename.unix" > "$filename"
+rm "$filename.unix"
+rm "$filename.dos"
+

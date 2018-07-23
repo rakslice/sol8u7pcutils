@@ -1,0 +1,244 @@
+#!/usr/local/bin/bash
+set -e
+
+
+# A package helper script
+
+if [ $# -lt 1 ]; then
+	echo "Usage:"
+	echo "$0 {list|search|install|rm|files|check_bins|help|....} [options]"
+	exit 1
+fi
+
+
+packages_dir=~/packages
+checksums_file=$packages_dir/checksums/tcg.list
+
+#####################################
+#package sites for 2.6 sparc
+#####################################
+
+#BASE_URL=http://ftp.sunet.se/mirror/archive/ftp.sunet.se/pub/vendor/sun/freeware/sparc/2.6/
+BASE_URL=http://sandsys:8121/
+
+PACKAGE_PREFIX=TGC
+
+#ftp://ftp.deu.edu.tr/pub/Solaris/sunfreeware/intel/2.6/
+#http://download.nust.na/pub3/solaris/sunfreeware/pub/freeware/sparc/5.6/
+
+# ibiblio solaris package archive - A largish archive but all mashed 
+#  together and they don't match the site I've been using:
+
+#https://www.ibiblio.org/pub/packages/solaris/sparc/
+#http://sunsite.icm.edu.pl/pub/sun/solaris_sparc/
+
+# TCGWare - has some things the other doesn't
+#https://jupiterrise.com/tgcware/sunos5.6_sparc/stable/
+
+#####################################
+
+function assert_checksum() {
+	if [ $# -ne 2 ]; then
+		echo "bad params for assert_checksum: $*"
+		exit 1
+	fi
+
+	filename="$1"
+	expected_checksum="$2"
+	
+	checksum_len="${#expected_checksum}"
+
+	case "$checksum_len" in
+		32)
+			if [ -f /usr/local/ssl/bin/openssl ]; then
+				actual_checksum="$(/usr/local/ssl/bin/openssl md5 "$filename" | awk '{print $2}')"
+			else
+				actual_checksum="$(/usr/local/bin/md5sum "$filename" | awk '{print $1}')"
+			fi
+			;;
+		*)
+			echo "Don't know a checksum that gives $checksum_len digits"
+			exit 1
+			;;
+	esac
+
+	if [ "$actual_checksum" != "$expected_checksum" ]; then
+		echo "Checksum failure. Got $actual_checksum"
+		exit 1
+	fi
+}
+
+function pkgfiles() {
+	/usr/sbin/pkgchk -l "$1" | grep '^Pathname: ' | cut -d' ' -f2-
+}
+
+function check_package_bins() {
+
+	for pkg_name in $*; do
+		for bin_file in $(pkgfiles "${pkg_name}" | egrep '/s?bin/'); do
+
+			if ! file "$bin_file" | grep 'ELF' > /dev/null; then
+				continue
+			fi
+			if ldd "$bin_file" | fgrep '(file not found)' > /dev/null; then
+				echo "$bin_file:"
+				ldd "$bin_file"
+			fi
+		done
+	done
+
+}
+
+
+cmd="$1"
+
+case "$cmd" in
+	help)
+		echo "Commands:"
+		echo "  search - show available packages"
+		echo "  list - list the installed packages"
+		echo "  install - install the given package"
+		echo "  help - show this help"
+		;;
+	list)
+		if [ "$2" == "" ]; then
+			pkginfo
+		else
+			pkginfo | fgrep "$2"
+		fi
+		;;
+	search)
+		if [ "$2" == "" ]; then
+			cat "$checksums_file"
+		else
+			grep -- "$2" "$checksums_file" 
+		fi
+		;;
+	install)
+		if [ "$2" == "" ]; then
+			echo "$0 install {packagename}"
+			exit 1
+		fi
+
+		installed_package_name="${PACKAGE_PREFIX}$2"
+		if pkginfo "${installed_package_name}" > /dev/null 2> /dev/null; then
+			echo "There's already a package $installed_package_name installed"
+			exit 0
+		fi
+		
+		pkg_line="$(grep -- "^ *$2\." "$checksums_file" | tail -1)"
+		if [ "$pkg_line" == "" ]; then
+			pkg_line="$(grep -- "^ *$2-[0-9]" "$checksums_file" | tail -1)"
+		fi
+
+		if [ "$pkg_line" == "" ]; then
+			echo "No available package matching \"$2\""
+			exit 1
+		fi
+
+		pkg_filename="$(echo "$pkg_line" | awk '{print $1}')"
+		pkg_checksum="$(echo "$pkg_line" | awk '{print $2}')"
+		
+		pkg_url="${BASE_URL}${pkg_filename}"
+		local_filename="$packages_dir/$pkg_filename"
+		if [ ! -f "$local_filename" ]; then
+			wget -O "${local_filename}.incomplete" "$pkg_url"
+			mv "${local_filename}.incomplete" "${local_filename}"
+		fi
+
+		# TCGWARE has no checksums
+		#assert_checksum "$local_filename" "$pkg_checksum"
+
+		# extract the pkg temporarily as it's compressed
+		extracted_filename="${local_filename%.gz}"
+		gunzip -c "${local_filename}" > "${extracted_filename}"
+
+		# TCGWARE has dependencies... need to process them
+
+		#/bin/pkginfo -l -d "${extracted_filename}"
+		#/usr/sbin/pkgchk -l -d "${extracted_filename}" all
+
+		package_names="$(/bin/pkginfo -d "${extracted_filename}" | awk '{print $2}')"
+
+		# transform this package to directory-style temporarily
+		# so we can access the dependencies list
+
+		package_depends_marker="${extracted_filename}.depends_extracted"
+
+		if [ ! -f "$package_depends_marker" ]; then
+
+			package_temp_dir="${extracted_filename}.temp"
+			if [ -d "$package_temp_dir" ]; then
+				rm -rf "$package_temp_dir"
+			fi
+			mkdir "$package_temp_dir"
+			/bin/pkgtrans "$extracted_filename" "$package_temp_dir" all
+			
+			for package_name in $package_names; do
+				package_depend_file="${extracted_filename}.${package_name}.depend"
+				cp "$package_temp_dir/$package_name/install/depend" "$package_depend_file"
+			done
+
+			rm -rf "$package_temp_dir"
+			touch "$package_depends_marker"
+		fi
+		
+
+		for package_name in $package_names; do
+			package_depend_file="${extracted_filename}.${package_name}.depend"
+
+			cat "$package_depend_file"
+
+			awk ' function output() { 
+				if (NR != 1) {
+					if (version != "") {
+						match(version, /(.*),REV=(.*)/, parts);
+						spec = spec "-" parts[1] "-" parts[2];
+						
+					}
+					print name " " spec
+				}
+			      }
+			      /^P / {output(); name=$2; spec=$3; version=""}
+			     !/^P / {version=$2}
+			      END   {output();}' "$package_depend_file" | \
+			(while read line; do
+				if [ "$line" == "" ]; then
+					continue
+				fi
+				subpackage_name=$(echo "$line" | awk '{print $1}')
+				subpackage_spec=$(echo "$line" | awk '{print $2}')
+				if pkginfo "${subpackage_name}" > /dev/null 2> /dev/null; then
+					continue
+				fi
+				if ! echo "$ALREADY_INSTALLING" | grep " $subpackage_name "; then
+				echo "$package_name installing subpackage $subpackage_spec"
+				ALREADY_INSTALLING="$ALREADY_INSTALLING $package_name " $0 install $subpackage_spec
+				fi
+			done)
+		done
+
+		sudo /usr/sbin/pkgadd -d "${extracted_filename}" all
+
+		rm "${extracted_filename}"
+
+		check_package_bins ${package_names}
+		;;
+	rm)
+		if [ "$2" == "" ]; then
+			echo "pkg rm {packagename}"
+			exit 1
+		fi
+		sudo /usr/sbin/pkgrm "${PACKAGE_PREFIX}$2"
+		;;
+	check_bins)
+		check_package_bins ${2}
+		;;
+	files)
+		pkgfiles "${PACKAGE_PREFIX}$2"
+		;;
+	*)
+		echo "Unknown command: $cmd"
+		exit 1
+		;;
+esac

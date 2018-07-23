@@ -102,9 +102,11 @@ function verify_sha() {
 	case $sha_expected_len in
 	40)
 		sha_args="-a 1"
+		sha_alt="sha1sum"
 		;;
 	64)
 		sha_args="-a 256"
+		sha_alt="sha256sum"
 		;;
 	32)
 		# md5
@@ -115,10 +117,15 @@ function verify_sha() {
 	*)
 		echo "don't know what sha algorithm uses a $sha_expected_len digit key, using sha1"
 		sha_args="-a 1"
+		sha_alt="sha1sum"
 		;;
 	esac
 
-	sha_actual=$(shasum $sha_args "$archive" | awk '{print $1}')
+	if type shasum; then
+		sha_actual=$(shasum $sha_args "$archive" | awk '{print $1}')
+	else
+		sha_actual=$($sha_alt "$archive" | awk '{print $1}')
+	fi
 	[ "$sha_actual" == "$sha_expected" ]
 }
 
@@ -146,23 +153,39 @@ function populate_certificates() {
 	# Populate the given OpenSSL-compatibile install with known-good root certs
         # from haxx.se's CA cert set derived from Mozilla's set
 
+	# A note about SSL paths:
+	# When you build openssl 1.0.x from source with a --prefix
+	# it puts the bin and lib dirs right in the prefix directory
+	# and makes a subdirectory of the prefix directory ssl for
+	# the usual configuration directories like certs.
+
+	# The packaged openssl 1.0.x for solaris /usr/local instead puts
+	# the bin, lib, and configuration stuff like cert all in
+	# /usr/local/ssl
+
+	# populate_certificates takes the directory containing the certs directory,
+	# usually a directory called "ssl"
+
 	if [ "$#" -ne 1 ]; then
 		die "bad params to populate_certificates: $*"
 	fi
-	
+
 	ssl_dir="$1"
 
 	[ -d "${ssl_dir}" ]
 
-	if fgrep -x "${ssl_dir}" ~/certs/populated_certs; then
+	if fgrep -x "${ssl_dir}" ~/certs/populated_certs > /dev/null; then
 		return
 	fi
 
-	sudo pkg install gawk
+	pkg install gawk
 
 	certs_dir=~/certs
 	if [ ! -d "${certs_dir}" ]; then
 		mkdir "${certs_dir}"
+	fi
+	if [ -f "cacert.pem" ]; then
+		rm cacert.pem
 	fi
 	wget "https://curl.haxx.se/ca/cacert.pem" --ca-certificate "${script_path}/GlobalSign_Root_CA.pem"
 
@@ -172,7 +195,13 @@ function populate_certificates() {
 
 	sudo cp "${certs_dir}"/*.pem "${ssl_dir}/certs"
 
-	sudo "${ssl_dir}/bin/c_rehash" "${ssl_dir}/certs"
+	if [ -f "${ssl_dir}/bin/c_rehash" ]; then
+		# bin dir inside ssl
+		sudo "${ssl_dir}/bin/c_rehash" "${ssl_dir}/certs"
+	else
+		# bin dir on same level as ssl
+		sudo "${ssl_dir}/../bin/c_rehash" "${ssl_dir}/certs"
+	fi
 
 	echo "${ssl_dir}" >> ~/certs/populated_certs
 }
@@ -194,10 +223,10 @@ function wtcmmi() {
 
 	if [ "$archive_filename" == "" ]; then
 		archive="$(basename "$url")"
-		wget_options=""
+		internal_wget_options=""
 	else
 		archive="$archive_filename"
-		wget_options='-O '"$archive_filename"
+		internal_wget_options='-O '"$archive_filename"
 	fi
 
 	if [ "$use_dirname" == "" ]; then
@@ -226,7 +255,7 @@ function wtcmmi() {
 	# 1) wget
 
 	if [ ! -f "$archive" ]; then
-		wget "$url" $wget_options
+		wget "$url" $wget_options $internal_wget_options
 	fi
 	verify_sha "$archive" "$sha_expected"
 
@@ -295,6 +324,8 @@ function wtcmmi() {
 }
 
 ################ Main script
+
+if false; then
 
 ## text mode / dev quality of life packages
 
@@ -415,19 +446,32 @@ wtcmmi http://ftp.gnome.org/mirror/archive/ftp.sunet.se/pub/vendor/sco/skunkware
 fi # Eterm-0.8.10
 
 
+fi # BIG JUMP
+
+BUILT_SSL_DIR=/usr/local/ssl102o
+
 ## OpenSSL 1.0.2o
 
 configure_name=config \
-wtcmmi https://www.openssl.org/source/openssl-1.0.2o.tar.gz a47faaca57b47a0d9d5fb085545857cc92062691
+wget_options=--no-check-certificate \
+wtcmmi http://www.openssl.org/source/openssl-1.0.2o.tar.gz a47faaca57b47a0d9d5fb085545857cc92062691 --prefix=${BUILT_SSL_DIR}
 
-populate_certificates "/usr/local/ssl"
+# If existing wget wasn't using 1.0.x, it's not ready to populate yet
+#populate_certificates "${BUILT_SSL_DIR}"
 
 
 ## Wget 1.19.5 -- second build, with OpenSSL 1.0.x we just built
 # Requires: openssl
 
-tag_must_contain=--with-openssl=/usr/local/ssl \
-wtcmmi https://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/usr/local/ssl LDFLAGS="-ldl"
+PKG_CONFIG_PATH=${BUILT_SSL_DIR}/lib/pkgconfig \
+tag_must_contain=--with-openssl=${BUILT_SSL_DIR} \
+wtcmmi https://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=${BUILT_SSL_DIR} LDFLAGS="-ldl" --without-libintl-prefix
+
+
+# see note about SSL paths
+populate_certificates "${BUILT_SSL_DIR}/ssl"
+
+exit 1
 
 
 ## Qt 4.8.5

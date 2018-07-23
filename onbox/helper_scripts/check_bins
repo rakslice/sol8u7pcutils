@@ -1,0 +1,15 @@
+#!/usr/local/bin/bash
+
+set -e
+
+PREFIX=/usr/local
+
+for f in $PREFIX/bin/* $PREFIX/sbin/*; do
+	if ! file "$f" | grep ELF > /dev/null; then
+		continue
+	fi
+	if ldd $f | grep '(file not found)' > /dev/null; then
+		echo "$f:"
+		ldd $f
+	fi
+done
