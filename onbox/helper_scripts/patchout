@@ -9,9 +9,15 @@ if [ "$1" == "-f" ]; then
 	shift
 fi
 
+toss_args=""
+if [ "$1" == "--allow-makefile" ]; then
+	toss_args="$1"
+	shift
+fi
+
 if [ $# -ne 1 ]; then
 	echo "Usage:"
-	echo "$0 [-f] {dirname}"
+	echo "$0 [-f] [--allow-makefile] {dirname}"
 	exit 1
 fi
 
@@ -30,14 +36,18 @@ if [ ! -d "$origdirname" ]; then
 	exit 1
 fi
 
-if [ "$overwrite" == "no" ] && [ -f "$outputfile" ]; then
-	echo "$outputfile already exists"
-	exit 1
+if [ -f "$outputfile" ]; then
+	if [ "$overwrite" == "no" ] ; then
+		echo "$outputfile already exists"
+		exit 1
+	else
+		cp "$outputfile" "${outputfile}.prev"	
+	fi
 fi
 
 gdiff --exclude=".deps" --exclude="*.log" -ur "$origdirname" "$dirname" | fgrep -v "Only in $dirname/" > "$outputfile"
 
-"${patches_dir}/toss_patch.py" "$outputfile"
+"${patches_dir}/toss_patch.py" "$toss_args" "$outputfile"
 
 cat "$outputfile"
 
