@@ -1,0 +1,33 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur WindowMaker-0.95.8.orig/configure WindowMaker-0.95.8/configure
+--- WindowMaker-0.95.8.orig/configure	2018-07-23 03:15:43.336885000 -0700
++++ WindowMaker-0.95.8/configure	2018-07-23 04:27:44.527693000 -0700
+@@ -14372,7 +14372,7 @@
+   return 0;
+ }
+ _ACEOF
+-for ac_lib in '' rt; do
++for ac_lib in '' posix4; do
+   if test -z "$ac_lib"; then
+     ac_res="none required"
+   else
+@@ -17692,7 +17692,7 @@
+       ac_path_magickwand="$as_dir/$ac_prog$ac_exec_ext"
+       as_fn_executable_p "$ac_path_magickwand" || continue
+ wm_cv_libchk_magick_cflags=`$ac_path_magickwand --cflags`
+-                  wm_cv_libchk_magick_libs=`$ac_path_magickwand --ldflags`
++                  wm_cv_libchk_magick_libs=`$ac_path_magickwand --libs --ldflags`
+                   wm_cv_libchk_magick=magickwand
+       $ac_path_magickwand_found && break 3
+     done
+diff '--exclude=.deps' '--exclude=*.log' -ur WindowMaker-0.95.8.orig/configure.ac WindowMaker-0.95.8/configure.ac
+--- WindowMaker-0.95.8.orig/configure.ac	2018-07-23 03:15:43.346644000 -0700
++++ WindowMaker-0.95.8/configure.ac	2018-07-23 04:21:12.116246000 -0700
+@@ -369,7 +369,7 @@
+ 
+ dnl nanosleep is generally available in standard libc, although not always the
+ dnl case. One known example is Solaris which needs -lrt
+-AC_SEARCH_LIBS([nanosleep], [rt], [],
++AC_SEARCH_LIBS([nanosleep], [posix4], [],
+     [AC_MSG_ERROR([function 'nanosleep' not found, please report to wmaker-dev@lists.windowmaker.org])])
+ 
+ dnl the flag 'O_NOFOLLOW' for 'open' is used in WINGs

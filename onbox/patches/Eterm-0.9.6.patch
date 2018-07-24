@@ -1,6 +1,37 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur Eterm-0.9.6.orig/src/startup.c Eterm-0.9.6/src/startup.c
+--- Eterm-0.9.6.orig/src/startup.c	2018-07-23 00:14:05.517632000 -0700
++++ Eterm-0.9.6/src/startup.c	2018-07-23 16:40:12.388504000 -0700
+@@ -79,6 +79,8 @@
+     /* "WINDOWID=\0" = 10 chars, UINT_MAX = 10 chars */
+     static char windowid_string[20], *display_string, *term_string;
+ 
++    char *argv_tmp;
++
+     orig_argv0 = argv[0];
+     
+     /* Security enhancements -- mej */
+@@ -103,6 +105,8 @@
+ #ifdef SPIFOPT_SETTING_PREPARSE
+     SPIFOPT_FLAGS_SET(SPIFOPT_SETTING_PREPARSE);
+ #endif
++    argv_tmp = malloc(argc * sizeof(char *));
++    memcpy(argv_tmp, argv, argc * sizeof(char *));
+     spifopt_parse(argc, argv);
+     init_defaults();
+ 
+@@ -244,7 +248,8 @@
+ 
+     process_colors();
+ 
+-    Create_Windows(argc, argv);
++    Create_Windows(argc, argv_tmp);
++    free(argv_tmp);
+     scr_reset();                /* initialize screen */
+ 
+     /* Initialize the scrollbar */
 diff '--exclude=.deps' '--exclude=*.log' -ur Eterm-0.9.6.orig/src/windows.c Eterm-0.9.6/src/windows.c
---- Eterm-0.9.6.orig/src/windows.c	2018-07-04 20:12:38.336280000 -0700
-+++ Eterm-0.9.6/src/windows.c	2018-07-04 20:14:58.019159000 -0700
+--- Eterm-0.9.6.orig/src/windows.c	2018-07-23 00:14:05.418025000 -0700
++++ Eterm-0.9.6/src/windows.c	2018-07-23 16:46:08.008729000 -0700
 @@ -504,7 +504,9 @@
  
          atom = XInternAtom(Xdisplay, "UTF8_STRING", False);

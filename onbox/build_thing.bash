@@ -10,6 +10,8 @@ script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 patches_dir="${script_path}/patches"
 
+main_packages_prefix=/usr/local
+
 cd ~/src
 
 if [ ! -d logs ]; then
@@ -429,12 +431,9 @@ popd
 wtcmmi http://eterm.org/download/Eterm-0.9.6.tar.gz b4cb00f898ffd2de9bf7ae0ecde1cc3a5fee9f02 --with-imlib=/opt/csw LDFLAGS="-L$libast_lib /usr/lib/libresolv.so.2 -R$libast_lib" --disable-xim
 
 # setup terminfo for Eterm
-ensure_link "/usr/share/lib/terminfo/E/Eterm" "/opt/csw/share/terminfo/x/xterm-256color"
+ensure_link "/usr/share/lib/terminfo/E/Eterm" "${main_packages_prefix}/share/terminfo/x/xterm-256color"
 
 fi # ETerm-0.9.6
-
-if false; then # ANOTHER BIG JUMP
-
 
 ## Eterm-0.8.10
 # requires: libast, imlib 1.x
@@ -457,11 +456,16 @@ wtcmmi http://ftp.gnome.org/mirror/archive/ftp.sunet.se/pub/vendor/sco/skunkware
 fi # Eterm-0.8.10
 
 
-fi # BIG JUMP
+## WindowMaker
 
-BUILT_SSL_DIR=/usr/local/ssl102o
+patch_before_configure=1 \
+wtcmmi https://www.windowmaker.org/pub/source/release/WindowMaker-0.95.8.tar.gz fd59e3cb07071bd70359eef427ff12eb9cfe4641 --disable-shape PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+
 
 ## OpenSSL 1.0.2o
+
+
+BUILT_SSL_DIR=/usr/local/ssl102o
 
 configure_name=config \
 wget_options=--no-check-certificate \
