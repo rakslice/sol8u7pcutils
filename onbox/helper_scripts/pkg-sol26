@@ -23,6 +23,10 @@ BASE_URL=http://sandsys:8121/
 
 PACKAGE_PREFIX=SMC
 
+GREP=/usr/bin/grep
+EGREP=/usr/bin/egrep
+FGREP=/usr/bin/fgrep
+
 #ftp://ftp.deu.edu.tr/pub/Solaris/sunfreeware/intel/2.6/
 #http://download.nust.na/pub3/solaris/sunfreeware/pub/freeware/sparc/5.6/
 
@@ -69,18 +73,18 @@ function assert_checksum() {
 }
 
 function pkgfiles() {
-	/usr/sbin/pkgchk -l "$1" | grep '^Pathname: ' | cut -d' ' -f2-
+	/usr/sbin/pkgchk -l "$1" | "$GREP" '^Pathname: ' | cut -d' ' -f2-
 }
 
 function check_package_bins() {
 
 	for pkg_name in $*; do
-		for bin_file in $(pkgfiles "${pkg_name}" | egrep '/s?bin/'); do
+		for bin_file in $(pkgfiles "${pkg_name}" | "$EGREP" '/s?bin/'); do
 
-			if ! file "$bin_file" | grep 'ELF' > /dev/null; then
+			if ! file "$bin_file" | "$GREP" 'ELF' > /dev/null; then
 				continue
 			fi
-			if ldd "$bin_file" | fgrep '(file not found)' > /dev/null; then
+			if ldd "$bin_file" | "$FGREP" '(file not found)' > /dev/null; then
 				echo "$bin_file:"
 				ldd "$bin_file"
 			fi
@@ -104,14 +108,14 @@ case "$cmd" in
 		if [ "$2" == "" ]; then
 			pkginfo
 		else
-			pkginfo | fgrep "$2"
+			pkginfo | "$FGREP" "$2"
 		fi
 		;;
 	search)
 		if [ "$2" == "" ]; then
 			cat "$checksums_file"
 		else
-			grep -- "$2" "$checksums_file" 
+			"$GREP" -- "$2" "$checksums_file" 
 		fi
 		;;
 	install)
@@ -125,7 +129,7 @@ case "$cmd" in
 			echo "There's already a package $installed_package_name installed"
 			exit 0
 		fi
-		pkg_line="$(grep -- "^$2-" "$checksums_file" | tail -1)"
+		pkg_line="$("$GREP" -- "^$2-" "$checksums_file" | tail -1)"
 
 		if [ "$pkg_line" == "" ]; then
 			echo "No available package matching \"$2\""
