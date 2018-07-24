@@ -1,0 +1,56 @@
+diff --exclude=.deps --exclude='*.log' -ur ImageMagick-6.9.10-6.orig/coders/xwd.c ImageMagick-6.9.10-6/coders/xwd.c
+--- ImageMagick-6.9.10-6.orig/coders/xwd.c	2018-07-18 00:13:51.720123000 -0700
++++ ImageMagick-6.9.10-6/coders/xwd.c	2018-07-18 18:59:11.780008000 -0700
+@@ -119,6 +119,28 @@
+   return(MagickFalse);
+ }
+ 
++
++
++#include "Xlib.h"
++
++#undef XGetPixel
++#undef XPutPixel
++#undef XSubImage
++
++unsigned long XGetPixel(XImage *ximage, int x, int y);
++void XPutPixel(XImage *ximage, int x, int y, unsigned long pixel);
++XImage *XSubImage(XImage *ximage, int x, int y, unsigned int subimage_width, unsigned int subimage_height);
++
++
++int XInitImage(XImage *image) {
++	image->f.get_pixel = XGetPixel;
++	image->f.put_pixel = XPutPixel; 
++	image->f.sub_image = XSubImage;
++	return 1;
++}
++
++
++
+ #if defined(MAGICKCORE_X11_DELEGATE)
+ /*
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+diff --exclude=.deps --exclude='*.log' -ur ImageMagick-6.9.10-6.orig/magick/distribute-cache.c ImageMagick-6.9.10-6/magick/distribute-cache.c
+--- ImageMagick-6.9.10-6.orig/magick/distribute-cache.c	2018-07-18 00:13:48.880012000 -0700
++++ ImageMagick-6.9.10-6/magick/distribute-cache.c	2018-07-18 17:14:54.890006000 -0700
+@@ -74,7 +74,7 @@
+ #include "magick/version.h"
+ #include "magick/version-private.h"
+ #undef MAGICKCORE_HAVE_DISTRIBUTE_CACHE
+-#if defined(MAGICKCORE_HAVE_SOCKET) && defined(MAGICKCORE_THREAD_SUPPORT)
++#if 0 && defined(MAGICKCORE_HAVE_SOCKET) && defined(MAGICKCORE_THREAD_SUPPORT)
+ #include <netinet/in.h>
+ #include <netdb.h>
+ #include <sys/socket.h>
+diff --exclude=.deps --exclude='*.log' -ur ImageMagick-6.9.10-6.orig/magick/magick-type.h ImageMagick-6.9.10-6/magick/magick-type.h
+--- ImageMagick-6.9.10-6.orig/magick/magick-type.h	2018-07-18 00:13:49.120002000 -0700
++++ ImageMagick-6.9.10-6/magick/magick-type.h	2018-07-18 17:14:54.930001000 -0700
+@@ -212,7 +212,7 @@
+ #  define IsNaN(a) ((a) != (a))
+ #endif
+ #if !defined(INFINITY)
+-#  define INFINITY (-logf(0f))
++#  define INFINITY (-log(0.0f))
+ #endif
+ 
+ typedef struct _BlobInfo BlobInfo;

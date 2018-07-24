@@ -1,0 +1,12 @@
+diff --exclude=.deps --exclude='*.log' -ur bzip2-1.0.6.orig/Makefile bzip2-1.0.6/Makefile
+--- bzip2-1.0.6.orig/Makefile	2018-07-18 01:29:03.740002000 -0700
++++ bzip2-1.0.6/Makefile	2018-07-18 01:29:17.590003000 -0700
+@@ -21,7 +21,7 @@
+ LDFLAGS=
+ 
+ BIGFILES=-D_FILE_OFFSET_BITS=64
+-CFLAGS=-Wall -Winline -O2 -g $(BIGFILES)
++CFLAGS=-Wall -Winline -O2 -g -fPIC $(BIGFILES)
+ 
+ # Where you want it installed when you do 'make install'
+ PREFIX=/usr/local

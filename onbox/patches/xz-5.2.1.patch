@@ -1,0 +1,271 @@
+diff -ru xz-5.2.1/src/xz/list.c xz-5.2.1/src/xz/list.c
+--- xz-5.2.1/src/xz/list.c	2015-02-26 15:54:33.000000000 +0100
++++ xz-5.2.1/src/xz/list.c	2015-07-21 12:58:35.279952712 +0200
+@@ -129,8 +129,7 @@
+ 
+ 	const char *stability = ver == 0 ? "alpha" : ver == 1 ? "beta" : "";
+ 
+-	snprintf(buf, sizeof(buf), "%u.%u.%u%s",
+-			major, minor, patch, stability);
++	sprintf(buf, "%u.%u.%u%s", major, minor, patch, stability);
+ 	return buf;
+ }
+ 
+@@ -545,7 +544,7 @@
+ {
+ 	// Don't read anything from the file if there is no integrity Check.
+ 	if (iter->stream.flags->check == LZMA_CHECK_NONE) {
+-		snprintf(check_value, sizeof(check_value), "---");
++		sprintf(check_value, "---");
+ 		return false;
+ 	}
+ 
+@@ -561,14 +560,14 @@
+ 	// 32-bit and 64-bit Check values are little endian too. It shouldn't
+ 	// be a too big problem if this guess is wrong.
+ 	if (size == 4)
+-		snprintf(check_value, sizeof(check_value),
++		sprintf(check_value,
+ 				"%08" PRIx32, conv32le(buf.u32[0]));
+ 	else if (size == 8)
+-		snprintf(check_value, sizeof(check_value),
++		sprintf(check_value,
+ 				"%016" PRIx64, conv64le(buf.u64[0]));
+ 	else
+ 		for (size_t i = 0; i < size; ++i)
+-			snprintf(check_value + i * 2, 3, "%02x", buf.u8[i]);
++			sprintf(check_value + i * 2, "%02x", buf.u8[i]);
+ 
+ 	return false;
+ }
+@@ -617,7 +616,7 @@
+ 		return "---";
+ 
+ 	static char buf[16];
+-	snprintf(buf, sizeof(buf), "%.3f", ratio);
++	sprintf(buf, "%.3f", ratio);
+ 	return buf;
+ }
+ 
+diff -ru xz-5.2.1/src/xz/message.c xz-5.2.1/src/xz/message.c
+--- xz-5.2.1/src/xz/message.c	2015-02-26 15:54:33.000000000 +0100
++++ xz-5.2.1/src/xz/message.c	2015-07-21 12:58:35.269952712 +0200
+@@ -297,7 +297,7 @@
+ 
+ 	// Use big enough buffer to hold e.g. a multibyte decimal point.
+ 	static char buf[16];
+-	snprintf(buf, sizeof(buf), "%.1f %%", percentage);
++	sprintf(buf, "%.1f %%", percentage);
+ 
+ 	return buf;
+ }
+@@ -332,9 +332,9 @@
+ 	// If the ratio is very bad, just indicate that it is greater than
+ 	// 9.999. This way the length of the ratio field stays fixed.
+ 	if (ratio > 9.999)
+-		snprintf(pos, left, " > %.3f", 9.999);
++		sprintf(pos, " > %.3f", 9.999);
+ 	else
+-		snprintf(pos, left, " = %.3f", ratio);
++		sprintf(pos, " = %.3f", ratio);
+ 
+ 	return buf;
+ }
+@@ -375,7 +375,7 @@
+ 	//  - 999 KiB/s
+ 	// Use big enough buffer to hold e.g. a multibyte decimal point.
+ 	static char buf[16];
+-	snprintf(buf, sizeof(buf), "%.*f %s",
++	sprintf(buf, "%.*f %s",
+ 			speed > 9.9 ? 0 : 1, speed, unit[unit_index]);
+ 	return buf;
+ }
+@@ -401,11 +401,11 @@
+ 	if (minutes >= 60) {
+ 		const uint32_t hours = minutes / 60;
+ 		minutes %= 60;
+-		snprintf(buf, sizeof(buf),
++		sprintf(buf,
+ 				"%" PRIu32 ":%02" PRIu32 ":%02" PRIu32,
+ 				hours, minutes, seconds);
+ 	} else {
+-		snprintf(buf, sizeof(buf), "%" PRIu32 ":%02" PRIu32,
++		sprintf(buf, "%" PRIu32 ":%02" PRIu32,
+ 				minutes, seconds);
+ 	}
+ 
+@@ -444,52 +444,52 @@
+ 	if (remaining <= 10) {
+ 		// A maximum of 10 seconds remaining.
+ 		// Show the number of seconds as is.
+-		snprintf(buf, sizeof(buf), "%" PRIu32 " s", remaining);
++		sprintf(buf, "%" PRIu32 " s", remaining);
+ 
+ 	} else if (remaining <= 50) {
+ 		// A maximum of 50 seconds remaining.
+ 		// Round up to the next multiple of five seconds.
+ 		remaining = (remaining + 4) / 5 * 5;
+-		snprintf(buf, sizeof(buf), "%" PRIu32 " s", remaining);
++		sprintf(buf, "%" PRIu32 " s", remaining);
+ 
+ 	} else if (remaining <= 590) {
+ 		// A maximum of 9 minutes and 50 seconds remaining.
+ 		// Round up to the next multiple of ten seconds.
+ 		remaining = (remaining + 9) / 10 * 10;
+-		snprintf(buf, sizeof(buf), "%" PRIu32 " min %" PRIu32 " s",
++		sprintf(buf, "%" PRIu32 " min %" PRIu32 " s",
+ 				remaining / 60, remaining % 60);
+ 
+ 	} else if (remaining <= 59 * 60) {
+ 		// A maximum of 59 minutes remaining.
+ 		// Round up to the next multiple of a minute.
+ 		remaining = (remaining + 59) / 60;
+-		snprintf(buf, sizeof(buf), "%" PRIu32 " min", remaining);
++		sprintf(buf, "%" PRIu32 " min", remaining);
+ 
+ 	} else if (remaining <= 9 * 3600 + 50 * 60) {
+ 		// A maximum of 9 hours and 50 minutes left.
+ 		// Round up to the next multiple of ten minutes.
+ 		remaining = (remaining + 599) / 600 * 10;
+-		snprintf(buf, sizeof(buf), "%" PRIu32 " h %" PRIu32 " min",
++		sprintf(buf, "%" PRIu32 " h %" PRIu32 " min",
+ 				remaining / 60, remaining % 60);
+ 
+ 	} else if (remaining <= 23 * 3600) {
+ 		// A maximum of 23 hours remaining.
+ 		// Round up to the next multiple of an hour.
+ 		remaining = (remaining + 3599) / 3600;
+-		snprintf(buf, sizeof(buf), "%" PRIu32 " h", remaining);
++		sprintf(buf, "%" PRIu32 " h", remaining);
+ 
+ 	} else if (remaining <= 9 * 24 * 3600 + 23 * 3600) {
+ 		// A maximum of 9 days and 23 hours remaining.
+ 		// Round up to the next multiple of an hour.
+ 		remaining = (remaining + 3599) / 3600;
+-		snprintf(buf, sizeof(buf), "%" PRIu32 " d %" PRIu32 " h",
++		sprintf(buf, "%" PRIu32 " d %" PRIu32 " h",
+ 				remaining / 24, remaining % 24);
+ 
+ 	} else if (remaining <= 999 * 24 * 3600) {
+ 		// A maximum of 999 days remaining. ;-)
+ 		// Round up to the next multiple of a day.
+ 		remaining = (remaining + 24 * 3600 - 1) / (24 * 3600);
+-		snprintf(buf, sizeof(buf), "%" PRIu32 " d", remaining);
++		sprintf(buf, "%" PRIu32 " d", remaining);
+ 
+ 	} else {
+ 		// The estimated remaining time is too big. Don't show it.
+@@ -859,7 +859,7 @@
+ 	// This way it's easy to notice errors where one has typed
+ 	// --memory=123 instead of --memory=123MiB.
+ 	if (memlimit < (UINT32_C(1) << 20)) {
+-		snprintf(memlimitstr, sizeof(memlimitstr), "%s B",
++		sprintf(memlimitstr, "%s B",
+ 				uint64_to_str(memlimit, 1));
+ 	} else {
+ 		// Round up just like with memusage. If this function is
+@@ -868,7 +868,7 @@
+ 		// the usage is higher than the limit, which would give
+ 		// a false impression that the memory usage limit isn't
+ 		// properly enforced.
+-		snprintf(memlimitstr, sizeof(memlimitstr), "%s MiB",
++		sprintf(memlimitstr, "%s MiB",
+ 				uint64_to_str(round_up_to_mib(memlimit), 1));
+ 	}
+ 
+@@ -888,11 +888,11 @@
+ 	static char buf[16];
+ 
+ 	if ((num & ((UINT32_C(1) << 20) - 1)) == 0)
+-		snprintf(buf, sizeof(buf), "%" PRIu32 "MiB", num >> 20);
++		sprintf(buf, "%" PRIu32 "MiB", num >> 20);
+ 	else if ((num & ((UINT32_C(1) << 10) - 1)) == 0)
+-		snprintf(buf, sizeof(buf), "%" PRIu32 "KiB", num >> 10);
++		sprintf(buf, "%" PRIu32 "KiB", num >> 10);
+ 	else
+-		snprintf(buf, sizeof(buf), "%" PRIu32, num);
++		sprintf(buf, "%" PRIu32, num);
+ 
+ 	return buf;
+ }
+diff -ru xz-5.2.1/src/xz/util.c xz-5.2.1/src/xz/util.c
+--- xz-5.2.1/src/xz/util.c	2015-02-26 15:54:33.000000000 +0100
++++ xz-5.2.1/src/xz/util.c	2015-07-21 12:58:35.269952712 +0200
+@@ -149,7 +149,7 @@
+ {
+ 	if (thousand == UNKNOWN) {
+ 		bufs[slot][0] = '\0';
+-		snprintf(bufs[slot], sizeof(bufs[slot]), "%'u", 1U);
++		sprintf(bufs[slot], "%'u", 1U);
+ 		thousand = bufs[slot][0] == '1' ? WORKS : BROKEN;
+ 	}
+ 
+@@ -165,9 +165,9 @@
+ 	check_thousand_sep(slot);
+ 
+ 	if (thousand == WORKS)
+-		snprintf(bufs[slot], sizeof(bufs[slot]), "%'" PRIu64, value);
++		sprintf(bufs[slot], "%'" PRIu64, value);
+ 	else
+-		snprintf(bufs[slot], sizeof(bufs[slot]), "%" PRIu64, value);
++		sprintf(bufs[slot], "%" PRIu64, value);
+ 
+ 	return bufs[slot];
+ }
+@@ -216,9 +216,9 @@
+ 
+ 	if (always_also_bytes && value >= 10000) {
+ 		if (thousand == WORKS)
+-			snprintf(pos, left, " (%'" PRIu64 " B)", value);
++			sprintf(pos, " (%'" PRIu64 " B)", value);
+ 		else
+-			snprintf(pos, left, " (%" PRIu64 " B)", value);
++			sprintf(pos, " (%" PRIu64 " B)", value);
+ 	}
+ 
+ 	return bufs[slot];
+@@ -230,7 +230,7 @@
+ {
+ 	va_list ap;
+ 	va_start(ap, fmt);
+-	const int len = vsnprintf(*pos, *left, fmt, ap);
++	const int len = vsprintf(*pos, fmt, ap);
+ 	va_end(ap);
+ 
+ 	// If an error occurred, we want the caller to think that the whole
+diff -ru xz-5.2.1/src/xzdec/Makefile.in xz-5.2.1/src/xzdec/Makefile.in
+--- xz-5.2.1/src/xzdec/Makefile.in	2015-02-26 15:55:25.000000000 +0100
++++ xz-5.2.1/src/xzdec/Makefile.in	2015-07-22 09:11:43.188757192 +0200
+@@ -401,7 +401,7 @@
+ 	-I$(top_builddir)/lib
+ 
+ xzdec_LDADD = $(top_builddir)/src/liblzma/liblzma.la $(am__append_2) \
+-	$(LTLIBINTL)
++	$(LTLIBINTL) -lgcc_s
+ lzmadec_SOURCES = xzdec.c ../common/tuklib_progname.c \
+ 	../common/tuklib_exit.c $(am__append_3)
+ lzmadec_CPPFLAGS = $(xzdec_CPPFLAGS) -DLZMADEC
+diff -ru xz-5.2.1/src/xz/Makefile.in xz-5.2.1/src/xz/Makefile.in
+--- xz-5.2.1/src/xz/Makefile.in	2015-02-26 15:55:25.000000000 +0100
++++ xz-5.2.1/src/xz/Makefile.in	2015-07-22 09:14:32.028755999 +0200
+@@ -401,7 +401,7 @@
+ 
+ # libgnu.a may need these libs, so this must be after libgnu.a.
+ xz_LDADD = $(top_builddir)/src/liblzma/liblzma.la $(am__append_2) \
+-	$(LTLIBINTL)
++	$(LTLIBINTL) -lgcc_s
+ dist_man_MANS = xz.1
+ xzlinks = unxz xzcat $(am__append_3)
+ all: all-am
+diff -ru xz-5.2.1/src/lzmainfo/Makefile.in xz-5.2.1/src/lzmainfo/Makefile.in
+--- xz-5.2.1/src/lzmainfo/Makefile.in	2015-02-26 15:55:24.000000000 +0100
++++ xz-5.2.1/src/lzmainfo/Makefile.in	2015-07-22 09:32:35.278748344 +0200
+@@ -383,7 +383,7 @@
+ 	-I$(top_builddir)/lib
+ 
+ lzmainfo_LDADD = $(top_builddir)/src/liblzma/liblzma.la \
+-	$(am__append_2) $(LTLIBINTL)
++	$(am__append_2) $(LTLIBINTL) -lgcc_s
+ dist_man_MANS = lzmainfo.1
+ all: all-am
+ 

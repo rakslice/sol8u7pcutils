@@ -1,0 +1,38 @@
+diff --exclude=.deps --exclude='*.log' -ur git-1.6.2.1.orig/git-compat-util.h git-1.6.2.1/git-compat-util.h
+--- git-1.6.2.1.orig/git-compat-util.h	2009-03-15 13:59:04.000000000 -0800
++++ git-1.6.2.1/git-compat-util.h	2018-07-17 21:21:59.280003000 -0700
+@@ -80,7 +80,8 @@
+ #include <arpa/inet.h>
+ #include <netdb.h>
+ #include <pwd.h>
+-#include <inttypes.h>
++/* #include <inttypes.h> */
++#include "stdint.h"
+ #if defined(__CYGWIN__)
+ #undef _XOPEN_SOURCE
+ #include <grp.h>
+Only in git-1.6.2.1: git-config
+Only in git-1.6.2.1: git-count-objects
+Only in git-1.6.2.1: git-cvsexportcommit
+Only in git-1.6.2.1: git-cvsimport
+Only in git-1.6.2.1: git-cvsserver
+Only in git-1.6.2.1: git-daemon
+Only in git-1.6.2.1: git-describe
+Only in git-1.6.2.1: git-diff
+Only in git-1.6.2.1: git-diff-files
+Only in git-1.6.2.1: git-diff-index
+Only in git-1.6.2.1: git-diff-tree
+Only in git-1.6.2.1: git-fast-export
+Only in git-1.6.2.1: git-fast-import
+Only in git-1.6.2.1: git-fetch
+Only in git-1.6.2.1: git-fetch--tool
+Only in git-1.6.2.1: git-fetch-pack
+Only in git-1.6.2.1: git-filter-branch
+Only in git-1.6.2.1: git-fmt-merge-msg
+Only in git-1.6.2.1: git-for-each-ref
+Only in git-1.6.2.1: git-format-patch
+Only in git-1.6.2.1: git-fsck
+Only in git-1.6.2.1: git-fsck-objects
+Only in git-1.6.2.1: git-gc
+Only in git-1.6.2.1: git-get-tar-commit-id
+Only in git-1.6.2.1: git-grep

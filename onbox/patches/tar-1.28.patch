@@ -1,0 +1,30 @@
+diff -ru tar-1.28/lib/xattr-at.c tar-1.28/lib/xattr-at.c
+--- tar-1.28/lib/xattr-at.c	2014-02-10 18:42:45.000000000 +0100
++++ tar-1.28/lib/xattr-at.c	2015-07-21 00:43:03.710122079 +0200
+@@ -18,6 +18,8 @@
+ 
+ #include <config.h>
+ 
++#ifdef HAVE_XATTRS
++
+ #include "xattr-at.h"
+ #include "openat.h"
+ 
+@@ -108,3 +110,4 @@
+ #undef AT_FUNC_RESULT
+ #undef AT_FUNC_POST_FILE_PARAM_DECLS
+ #undef AT_FUNC_POST_FILE_ARGS
++#endif /* HAVE_XATTRS */
+diff -ru tar-1.28/src/incremen.c tar-1.28/src/incremen.c
+--- tar-1.28/src/incremen.c	2014-02-22 15:12:13.000000000 +0100
++++ tar-1.28/src/incremen.c	2015-07-21 00:43:03.710122079 +0200
+@@ -23,6 +23,9 @@
+ #include <quotearg.h>
+ #include "common.h"
+ 
++#undef ftello
++#define ftello ftell
++
+ /* Incremental dump specialities.  */
+ 
+ /* Which child files to save under a directory.  */

@@ -1,0 +1,53 @@
+diff --exclude=.deps --exclude='*.log' -ur git-2.16.4.orig/Makefile git-2.16.4/Makefile
+--- git-2.16.4.orig/Makefile	2018-07-18 16:38:01.200084000 -0700
++++ git-2.16.4/Makefile	2018-07-18 19:19:42.810040000 -0700
+@@ -926,6 +926,8 @@
+ LIB_OBJS += wt-status.o
+ LIB_OBJS += xdiff-interface.o
+ LIB_OBJS += zlib.o
++LIB_OBJS += vasprintf.o
++LIB_OBJS += vsnprintf.o
+ 
+ BUILTIN_OBJS += builtin/add.o
+ BUILTIN_OBJS += builtin/am.o
+diff --exclude=.deps --exclude='*.log' -ur git-2.16.4.orig/git-compat-util.h git-2.16.4/git-compat-util.h
+--- git-2.16.4.orig/git-compat-util.h	2018-07-18 16:38:04.790039000 -0700
++++ git-2.16.4/git-compat-util.h	2018-07-18 19:21:59.850005000 -0700
+@@ -1232,3 +1232,10 @@
+ #endif
+ 
+ #endif
++
++#if !defined(INET_ADDRSTRLEN)
++#define INET_ADDRSTRLEN 16
++#endif
++#if !defined(INET6_ADDRSTRLEN) && !defined(NO_IPV6)
++#define INET6_ADDRSTRLEN 46
++#endif
+diff --exclude=.deps --exclude='*.log' -ur git-2.16.4.orig/t/t5545-push-options.sh git-2.16.4/t/t5545-push-options.sh
+--- git-2.16.4.orig/t/t5545-push-options.sh	2018-07-18 16:38:11.930031000 -0700
++++ git-2.16.4/t/t5545-push-options.sh	2018-07-18 19:21:59.900002000 -0700
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/ksh
+ 
+ test_description='pushing to a repository using push options'
+ 
+@@ -13,7 +13,7 @@
+ 		git config receive.denyCurrentBranch warn &&
+ 		mkdir -p .git/hooks &&
+ 		cat >.git/hooks/pre-receive <<-'EOF' &&
+-		#!/bin/sh
++		#!/bin/ksh
+ 		if test -n "$GIT_PUSH_OPTION_COUNT"; then
+ 			i=0
+ 			>hooks/pre-receive.push_options
+@@ -27,7 +27,7 @@
+ 		chmod u+x .git/hooks/pre-receive
+ 
+ 		cat >.git/hooks/post-receive <<-'EOF' &&
+-		#!/bin/sh
++		#!/bin/ksh
+ 		if test -n "$GIT_PUSH_OPTION_COUNT"; then
+ 			i=0
+ 			>hooks/post-receive.push_options
