@@ -1,4 +1,4 @@
-#!/opt/csw/bin/bash
+#!/usr/local/bin/bash
 set -e
 set -o pipefail
 
@@ -10,7 +10,10 @@ script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 patches_dir="${script_path}/patches"
 
-cd ~/src
+PATCH=patch
+
+SRC=~/scsisrc
+cd $SRC
 
 if [ ! -d logs ]; then
 	mkdir logs
@@ -27,6 +30,31 @@ function die() {
 
 	echo "$msg" 1>&2
 	exit 1
+}
+
+function startswith() {
+	
+	# Check if a string starts with another string
+
+	if [ $# -ne 2 ]; then
+		die "bad params to startswith: $*"
+	fi
+
+	haystack="$1"
+	needle="$2"
+
+	nlen=${#needle}
+	hlen=${#haystack}
+
+	if [ $nlen -gt $hlen ]; then
+		return 1
+	fi
+
+	if [ "$(echo "$haystack" | cut -c -${nlen})" != "$needle" ]; then
+		return 1
+	else
+		return 0
+	fi
 }
 
 function installed() {
@@ -52,7 +80,8 @@ function readlink() {
 
 	symlink="$1"
 
-	pkg install python 1>&2
+	#pkg install python 1>&2
+	type python
 	python -c '
 import os, sys
 src=sys.argv[1]
@@ -75,13 +104,22 @@ function ensure_link() {
 	symlink="$1"
 	target="$2"
 
+	if startswith "$symlink" "$HOME/" || \
+	   startswith "$symlink" "/tmp/" || \
+	   startswith "$symlink" "/usr/tmp/" || \
+	   startswith "$symlink" "/var/tmp"; then
+		elevate=""
+	else
+		elevate="sudo"
+	fi	
+
 	if [ -f "$symlink" ] && [ "$(readlink "$symlink")" != "$target" ]; then
-        	sudo rm "$symlink"
+        	$elevate rm "$symlink"
 	fi      
                                       
 	if [ ! -f "$symlink" ]; then
-        	sudo mkdir -p "$(dirname "$symlink")"
-        	sudo ln -s "$target" "$symlink"
+        	$elevate mkdir -p "$(dirname "$symlink")"
+        	$elevate ln -s "$target" "$symlink"
 	fi
 }
 
@@ -101,10 +139,10 @@ function verify_sha() {
 
 	case $sha_expected_len in
 	40)
-		sha_args="-a 1"
+		sha_args="-sha1"
 		;;
 	64)
-		sha_args="-a 256"
+		sha_args="-sha256"
 		;;
 	32)
 		# md5
@@ -114,11 +152,11 @@ function verify_sha() {
 		;;
 	*)
 		echo "don't know what sha algorithm uses a $sha_expected_len digit key, using sha1"
-		sha_args="-a 1"
+		sha_args="-sha1"
 		;;
 	esac
 
-	sha_actual=$(shasum $sha_args "$archive" | awk '{print $1}')
+	sha_actual=$(openssl sha $sha_args "$archive" | awk '{print $2}')
 	[ "$sha_actual" == "$sha_expected" ]
 }
 
@@ -158,7 +196,8 @@ function populate_certificates() {
 		return
 	fi
 
-	sudo pkg install gawk
+	type gawk
+	#sudo pkg install gawk
 
 	certs_dir=~/certs
 	if [ ! -d "${certs_dir}" ]; then
@@ -167,7 +206,7 @@ function populate_certificates() {
 	wget "https://curl.haxx.se/ca/cacert.pem" --ca-certificate "${script_path}/GlobalSign_Root_CA.pem"
 
 	pushd "${certs_dir}"
-	cat ~/src/cacert.pem | gawk 'split_after==1{n++;split_after=0} /-----END CERTIFICATE-----/ {split_after=1} {print > "cert" n ".pem"}'
+	cat $SRC/cacert.pem | gawk 'split_after==1{n++;split_after=0} /-----END CERTIFICATE-----/ {split_after=1} {print > "cert" n ".pem"}'
 	popd
 
 	sudo cp "${certs_dir}"/*.pem "${ssl_dir}/certs"
@@ -238,9 +277,15 @@ function wtcmmi() {
 
 	# 3) configure
 
+	if [ "$patch_level" == "" ]; then
+		patch_options="-p1"
+	else
+		patch_options="-p${patch_level}"
+	fi
+
 	# apply a patch if there is one to apply and patch_before_configure is specified
 	if [ "$patch_before_configure" != "" ] && [ -f "${patches_dir}/${dirname}.patch" ]; then
-		gpatch -p1 -i "${patches_dir}/${dirname}.patch" 2>&1 | tee ~/src/logs/${dirname}.patch.out
+		$PATCH $patch_options -i "${patches_dir}/${dirname}.patch" 2>&1 | tee $SRC/logs/${dirname}.patch.out
 	fi
 
 	if [ "$configure_name" == "" ]; then
@@ -252,9 +297,9 @@ function wtcmmi() {
 	fi
 
 	if [ "$noconfig" == "" ]; then	
-		${configure_name} "$@" 2>&1 | tee ~/src/logs/${dirname}.configure.out
+		${configure_name} "$@" 2>&1 | tee $SRC/logs/${dirname}.configure.out
 		if [ -f config.log ]; then
-			cp config.log ~/src/logs/${dirname}.config.log
+			cp config.log $SRC/logs/${dirname}.config.log
 		fi
 	fi
 
@@ -267,7 +312,7 @@ function wtcmmi() {
 			cp -R ../${dirname} ../${dirname}.orig
 		fi
 
-		gpatch -p1 -i "${patches_dir}/${dirname}.patch" 2>&1 | tee ~/src/logs/${dirname}.patch.out
+		$PATCH $patch_options -i "${patches_dir}/${dirname}.patch" 2>&1 | tee $SRC/logs/${dirname}.patch.out
 	fi
 
 	if [ "$make_subdir" != "" ]; then
@@ -275,18 +320,24 @@ function wtcmmi() {
 	fi
 
 	if [ "$make_clean" == "yes" ]; then
-		gmake clean 2>&1 | tee ~/src/logs/${dirname}.make_clean.out
+		gmake clean 2>&1 | tee $SRC/logs/${dirname}.make_clean.out
 	fi
 
 	if [ "$make_command" == "" ]; then
 		make_command=gmake
 	fi
 
-	${make_command} ${make_params} 2>&1 | tee ~/src/logs/${dirname}.make.out
+	${make_command} ${make_params} 2>&1 | tee $SRC/logs/${dirname}.make.out
+
+	# 4.5) make test
+
+	if [ "$make_test" != "" ]; then
+		${make_command} ${make_test} 2>&1 | tee $SRC/logs/${dirname}.make_test.out
+	fi
 
 	# 5) install
 
-	sudo ${make_command} install ${make_install_params} 2>&1 | tee ~/src/logs/${dirname}.make_install.out
+	sudo ${make_command} install ${make_install_params} 2>&1 | tee $SRC/logs/${dirname}.make_install.out
 
 	popd	
 
@@ -295,6 +346,67 @@ function wtcmmi() {
 }
 
 ################ Main script
+
+#wtcmmi https://ftp.gnu.org/gnu/patch/patch-2.7.6.tar.gz 0ed8f3e49d84964f27e27c712fc8780e291dfa60
+wtcmmi https://ftp.gnu.org/gnu/patch/patch-2.5.9.tar.gz 9a69f7191576549255f046487da420989d2834a6
+
+patch_before_configure=1 \
+wtcmmi https://sourceforge.net/projects/lzmautils/files/xz-5.2.1.tar.gz 6022493efb777ff4e872b63a60be1f1e146f3c0b
+
+patch_before_configure=1 \
+wtcmmi https://ftp.gnu.org/gnu/tar/tar-1.28.tar.bz2 668ea52014ef7e70afc4ff7324410ee32f2970ef
+
+#wtcmmi https://ftp.gnu.org/gnu/diffutils/diffutils-3.6.tar.xz 1287a553868b808ebfff3790a5cdc6fdf7cb2886
+wtcmmi https://ftp.gnu.org/gnu/diffutils/diffutils-2.8.1.tar.gz a4c467c3a6a08cde9f3d94d02067ec26436e7dc5
+
+ensure_link "/usr/local/bin/gdiff" "/usr/local/bin/diff"
+
+## bzip
+
+# this has a patch in place to build with -FPIC for compat with things like imagemagick that want to put it in shared libs
+noconfig=1 \
+wtcmmi http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz 00b516f4704d4a7cb50a1d97e6e8e15b
+
+## less
+
+wtcmmi https://ftp.gnu.org/gnu/less/less-530.tar.gz d8ba1f43e88b706ef701f978cd3262b5b44dffd6
+
+## vim
+
+use_dirname="vim72" \
+wtcmmi http://ftp.vim.org/vim/unix/vim-7.2.tar.bz2 f0901284b338e448bfd79ccca0041254
+
+ensure_link "/usr/local/bin/vi" "/usr/local/bin/vim"
+
+## imagemagick
+
+patch_before_configure=1 \
+wtcmmi https://www.imagemagick.org/download/ImageMagick-6.9.10-6.tar.xz b593d899e5442f57249c0af523dbf17fa90d06d8 PNG_CFLAGS="$(pkg-config libpng14 --cflags)" PNG_LIBS="$(pkg-config libpng14 --libs)" --disable-shared
+
+## gettext 
+
+wtcmmi https://ftp.gnu.org/pub/gnu/gettext/gettext-0.14.6.tar.gz 0d8ce8d9a09a719065a1530399c4f45c15a002c5
+
+# this is newer but I don't want to suffer through a bunch of stdint changes:
+#make_params="LDFLAGS=-lpthread" \
+#wtcmmi https://ftp.gnu.org/pub/gnu/gettext/gettext-0.19.8.1.tar.xz e0fe90ede22f7f16bbde7bdea791a835f2773fc9
+
+## git
+
+mkdir -p $SRC/git-2.16.4
+ensure_link $SRC/git-2.16.4/stdint.h ~/fragments/stdint.h
+ensure_link $SRC/git-2.16.4/vsnprintf.c ~/fragments/vsnprintf.c
+ensure_link $SRC/git-2.16.4/vasprintf.c ~/fragments/vasprintf.c
+
+make_test="test SHELL=/usr/local/bin/bash" \
+wtcmmi https://www.mirrorservice.org/pub/software/scm/git/git-2.16.4.tar.xz de89995ea1551755f41ca621a375b6ad42264421 --disable-pthreads
+
+# this one built but was non-functional - it would corrupt the tree on every commit
+#wtcmmi https://www.mirrorservice.org/pub/software/scm/git/git-1.9.5.tar.xz d4fd2b005aac68f482084f213ed4ad0660bd2ae8 CC=gcc
+
+exit 0
+
+########### previous solaris 8 stuff follows
 
 ## text mode / dev quality of life packages
 
