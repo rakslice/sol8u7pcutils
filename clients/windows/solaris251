@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e -x
+
+DEST_ADDRESS=192.168.2.53
+FROM_ADDRESS=$(pathping -n -w 1 -h 1 -q 1 ${DEST_ADDRESS} | awk '$1 == "0" {print $2; exit}')
+
+/l/cygwin/bin/XWin -listen tcp -query ${DEST_ADDRESS} -from ${FROM_ADDRESS} -fp tcp/${DEST_ADDRESS}:7100 -once "$@"
+#-listen tcp -query 192.168.2.53 -from 192.168.2.145 -fp tcp/192.168.2.53:7100 -fbbpp 24

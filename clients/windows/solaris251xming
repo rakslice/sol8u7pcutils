@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e -x
+
+X=/c/Program\ Files\ \(x86\)/Xming/Xming.exe
+
+DEST_ADDRESS=192.168.2.53
+FROM_ADDRESS=$(pathping -n -w 1 -h 1 -q 1 ${DEST_ADDRESS} | awk '$1 == "0" {print $2; exit}')
+
+cygwin_dir=$(cygpath $(reg query HKLM\\Software\\WOW6432Node\\Cygwin\\setup | awk '$1 == "rootdir" {print $3}'))
+
+"${X}" :20 -query ${DEST_ADDRESS} -from ${FROM_ADDRESS} -fp tcp/${DEST_ADDRESS}:7100 -once "$@"
