@@ -328,17 +328,25 @@ sudo /usr/sbin/groupadd avahi
 
 fi
 
+pkg install gcc4core
+pkg install gcc4g++
+pkg install gcc4g++rt
+pkg install gmake
+pkg install pkgconfig
+
 ## wget 1.19.5 -- first build, with opencsw openssl
 
-wtcmmi https://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/opt/csw/ssl LDFLAGS=-R/opt/csw/lib
+wtcmmi ftp://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/opt/csw/ssl LDFLAGS=-R/opt/csw/lib
 
 if ! installed mDNSResponder-878.30.4; then
 
-if [ ! -d /etc/rc4.d ]; then
-	sudo mkdir /etc/rc4.d
-	sudo chown root:sys /etc/rc4.d
-	sudo chmod 755 /etc/rc4.d
+for d in /etc/rc{4,5}.d; do
+if [ ! -d $d ]; then
+	sudo mkdir $d
+	sudo chown root:sys $d
+	sudo chmod 755 $d
 fi
+done
 
 if [ ! -d /usr/share/man/man8 ]; then
 	sudo mkdir /usr/share/man/man8
@@ -369,6 +377,8 @@ libast_lib=$(libast-config --prefix)/lib
 
 if true; then
 
+pkg install imlib2
+
 # pkg dependencies: gdb for automatic Eterm gdb tracebacks, ncurses for more appropriate terminfo
 pkg install gdb ncurses
 
@@ -385,6 +395,8 @@ if [ ! -f install-sh ]; then
 	ln -s ../install-sh install-sh
 fi
 popd
+
+pkg install libxdmcp
 
 wtcmmi http://eterm.org/download/Eterm-0.9.6.tar.gz b4cb00f898ffd2de9bf7ae0ecde1cc3a5fee9f02 --with-imlib=/opt/csw LDFLAGS="-L$libast_lib /opt/csw/X11/lib/libXdmcp.so -R/opt/csw/X11/lib -R/opt/csw/lib" --disable-xim
 
@@ -420,24 +432,30 @@ fi # Eterm-0.8.10
 configure_name=config \
 wtcmmi https://www.openssl.org/source/openssl-1.0.2o.tar.gz a47faaca57b47a0d9d5fb085545857cc92062691
 
-populate_certificates "/usr/local/ssl"
-
-
 ## Wget 1.19.5 -- second build, with OpenSSL 1.0.x we just built
 # Requires: openssl
 
-tag_must_contain=--with-openssl=/usr/local/ssl \
-wtcmmi https://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/usr/local/ssl LDFLAGS="-ldl"
+# disable existing ssl so we get a good build
 
+if [ ! -d /opt/csw/lib/disabled ]; then
+	sudo mkdir /opt/csw/lib/disabled
+	sudo mv /opt/csw/lib/libssl* /opt/csw/lib/disabled/
+	sudo mv /opt/csw/lib/libcrypto* /opt/csw/lib/disabled/
+fi
+
+PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig \
+tag_must_contain=--with-openssl=/usr/local/ssl \
+wtcmmi ftp://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/usr/local/ssl LDFLAGS="-ldl"
+
+populate_certificates "/usr/local/ssl"
 
 ## Qt 4.8.5
 
 if false; then
 
-sudo pkg install gcc4g++ gcc4g++rt
-
 LD_RUN_PATH=/opt/csw/gcc4/lib \
-wtcmmi https://download.qt.io/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.tar.gz 76aef40335c0701e5be7bb3a9101df5d22fe3666 -opensource -confirm-license -platform "solaris-g++"
+make_params=-j2 \
+wtcmmi https://download.qt.io/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.tar.gz 76aef40335c0701e5be7bb3a9101df5d22fe3666 -opensource -platform "solaris-g++" -confirm-license 
 
 fi
 
@@ -448,6 +466,7 @@ sudo pkg install gcc4g++ gcc4g++rt
 
 make_params=-j2 \
 LD_RUN_PATH=/opt/csw/gcc4/lib \
+configure_name="/bin/bash ./configure" \
 wtcmmi https://mirror.csclub.uwaterloo.ca/qtproject/archive/qt/4.6/qt-everywhere-opensource-src-4.6.4.tar.gz df3a8570cfec2793a76818c9b31244f3ba8a2f3b -opensource -confirm-license -platform "solaris-g++" -nomake examples -no-sse -no-sse2
 
 QT464=/usr/local/Trolltech/Qt-4.6.4
