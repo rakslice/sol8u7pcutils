@@ -462,9 +462,31 @@ fi
 
 ## Qt 4.6.4
 
-sudo pkg install gcc4g++ gcc4g++rt
+pkg install gcc4g++
+pkg install gcc4g++rt
 
-make_params=-j2 \
+pkg install gcc3corert
+pkg install gcc3g++
+pkg install gcc3g++rt
+
+pkg install glib2
+pkg install freetype2
+pkg install ggettext
+pkg install fontconfig
+pkg install libiconv
+pkg install zlib
+pkg install expat
+
+pkg install glib2_devel
+pkg install gtk2_devel
+pkg install gtkmm_devel
+pkg install libcairo_devel
+pkg install libx11_devel
+pkg install libxml2_devel
+pkg install libxrender_devel
+pkg install libpango_devel
+
+make_params=-j5 \
 LD_RUN_PATH=/opt/csw/gcc4/lib \
 configure_name="/bin/bash ./configure" \
 wtcmmi https://mirror.csclub.uwaterloo.ca/qtproject/archive/qt/4.6/qt-everywhere-opensource-src-4.6.4.tar.gz df3a8570cfec2793a76818c9b31244f3ba8a2f3b -opensource -confirm-license -platform "solaris-g++" -nomake examples -no-sse -no-sse2
@@ -501,6 +523,7 @@ pkg install boost_devel boost_rt
 
 boost_dir=/opt/csw/include
 
+make_params=-j5 \
 configure_name="${QT464}/bin/qmake -r -unix Launchy.pro" \
 wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 7a6317168fe7aa219c138fbbc0f84539be9bce9e "INCLUDEPATH+=$boost_dir" "LIBS+=-L/usr/openwin/lib -R/usr/openwin/lib -lX11" 
 
