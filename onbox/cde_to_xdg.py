@@ -20,6 +20,12 @@ DEBUG_MERGES = False
 
 def choose_action_obj(action_obj, allow_fail=False):
 	if type(action_obj) == list:
+		# There is more than one entry with the same action name.
+		# Try to choose the most appropriate one to use for the
+		# purposes of the script (standalone xdg menu entries).
+		#
+		# For now, let's just take the first one we encounter 
+		# that doesn't take any parameters.
 		print "action_obj:"
 		for entry in action_obj:
 			print "  %r" % entry
@@ -52,19 +58,31 @@ def main():
 	for action_name, app_path in enumerate_appmanager_items():
 		if action_name in IGNORE_APPMANAGER_ACTIONS:
 			continue
+
 		if action_name not in dt_obj_index["ACTION"]:
+			# We just didn't encounter an action definition with a name that corresponds to this
+			# appmanager directory entry
 			print >> sys.stderr, "appmanager action %s/%s not found" % (app_path, action_name)
 			assert False
+
 		action_obj = choose_action_obj(dt_obj_index["ACTION"][action_name], allow_fail=True)
 
 		if action_obj is None:
+			# There were actions by this name, but choose_action_obj() ruled them all out.
+			# This action has no version for a run without parameters.
+			# Just skip it.
 			print >> sys.stderr, "appmanager action %s/%s had no suitable action" % (app_path, action_name)
 			continue
 
 		assert "LABEL" in action_obj, "appmanager action %s/%s doesn't have LABEL: %r" % (app_path, action_name, action_obj)
 		label = action_obj["LABEL"]
 		if "ICON" not in action_obj:
-			# just skip actions that don't have an icon
+			# Just skip actions that don't have an icon for consistency with what we do
+			# for front panel objects.
+			# The xdg entry consumer we are targeting, launchy, traditionally just ignores
+			# entries without an icon.
+			# TODO Create an xdg menu entry with the placeholder/default action icon that
+			# CDE would use
 			continue
 		icon_name = action_obj["ICON"]
 
