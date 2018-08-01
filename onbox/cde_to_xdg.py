@@ -25,11 +25,11 @@ def main():
 			if action_name in SPECIAL_ACTIONS:
 				continue
 			icon_filename = find_icon(icon_name)
-			print action_name, icon_filename, label
-			print obj
+			print "action_name %r, icon_filename %r, label %r" % (action_name, icon_filename, label)
+			print "icon obj %r" % obj
 
 			action_obj = dt_obj_index["ACTION"][action_name]
-			print action_obj
+			print "action obj %r" % action_obj
 
 			while action_obj["TYPE"] == "MAP":
 				mapped_action_name = action_obj["MAP_ACTION"]
@@ -38,7 +38,7 @@ def main():
 
 			desc, wintype = action_obj.get("DESCRIPTION"), action_obj.get("WINDOW_TYPE")
 
-			print repr(desc)
+			print "description %r" % desc
 
 			if action_obj["TYPE"] == "COMMAND":
 				cmd = action_obj["EXEC_STRING"]
@@ -46,6 +46,17 @@ def main():
 				if argc == "0":
 					print "RUN %r %s" % (wintype, cmd)
 					create_desktop_entry_content(label, icon_filename, cmd)
+					print ""
+					continue
+
+			if action_obj["TYPE"] == "TT_MSG":
+				dtaction_cmd = os.path.join(DT_PREFIX, "bin", "dtaction")
+				cmd = "%s %s" % (dtaction_cmd, action_name)
+				print "RUNACTION %s" % cmd
+				create_desktop_entry_content(label, icon_filename, cmd)
+				print ""
+
+			print "skipped action %s %s %r" % (obj_type, ident, obj)
 					
 
 			print ""
