@@ -24,8 +24,9 @@ DEBUG_CMD_PARSE = True
 def xdg_exec_quote(args_list):
 	parts = []
 	quotables = ('\\', '"', '$')
+	whitespace = (' ', '\t', '\n', '\r')
 	for arg in args_list:
-		needs_quote = any(x in arg for x in quotables)
+		needs_quote = any(x in arg for x in quotables + whitespace)
 		if needs_quote:
 			for ch in quotables:
 				arg = arg.replace(ch, "\\" + ch)
