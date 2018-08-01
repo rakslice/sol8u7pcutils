@@ -10,9 +10,30 @@ diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/platforms/unix/pla
  #include <X11/Xlib.h>
  #include <QFileIconProvider>
  
+@@ -161,16 +161,14 @@
+ 	QString line = file.readLine();
+ 	
+ 	if (line.startsWith("Name[" + locale, Qt::CaseInsensitive)) 
+-	    name = line.split("=")[1].trimmed();
+-	
+-
++	    name = line.section('=', 1).trimmed();
+ 	else if (line.startsWith("Name=", Qt::CaseInsensitive)) 
+-	    name = line.split("=")[1].trimmed();
++	    name = line.section('=', 1).trimmed();
+ 
+ 	else if (line.startsWith("Icon", Qt::CaseInsensitive))
+-	    icon = line.split("=")[1].trimmed();
++	    icon = line.section('=', 1).trimmed();
+ 	else if (line.startsWith("Exec", Qt::CaseInsensitive))
+-	    exe = line.split("=")[1].trimmed();	
++	    exe = line.section('=', 1).trimmed();
+     }
+     if (name.size() >= item->shortName.size() - 8) {
+ 	item->shortName = name;
 diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/platforms/unix/unix.pro launchy-2.5/platforms/unix/unix.pro
---- launchy-2.5.orig/platforms/unix/unix.pro	2018-07-07 21:49:53.234749000 -0700
-+++ launchy-2.5/platforms/unix/unix.pro	2018-07-08 00:24:50.785505000 -0700
+--- launchy-2.5.orig/platforms/unix/unix.pro	2018-07-30 21:43:53.350014000 -0700
++++ launchy-2.5/platforms/unix/unix.pro	2018-07-31 14:53:43.573349000 -0700
 @@ -11,7 +11,7 @@
  
  
@@ -97,9 +118,103 @@ diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/plugins/weby/weby.
      target.path = $$PREFIX/lib/launchy/plugins/
      icon.path = $$PREFIX/lib/launchy/plugins/icons/
      icon.files = weby.png
+diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/src/plugin_interface.cpp launchy-2.5/src/plugin_interface.cpp
+--- launchy-2.5.orig/src/plugin_interface.cpp	2018-07-30 21:43:53.350047000 -0700
++++ launchy-2.5/src/plugin_interface.cpp	2018-08-01 13:47:16.782412000 -0700
+@@ -180,9 +180,15 @@
+ 
+ void runProgram(QString path, QString args) {
+ 
++    qDebug() << "runProgram() path=" << path << " args=" << args;
++
+     QString fullname = path.split(" ")[0];
+     QFileInfo info(fullname);
+ 
++    /** TODO: this does % replacements in the args, but
++              for desktop entry launches args is empty
++              and all the args are in path */
++
+     /* I would argue that launchy does not need to fully
+        support the desktop entry specification yet/ever.
+        NOTE: %c, %k, and %i are handled during loading */
+@@ -197,23 +203,39 @@
+    }
+ 
+     QString cmd;
++    QStringList arguments;
+ 
+     if( !info.isExecutable() || info.isDir() ){
+         /* if more then one file is passed, then xdg-open will fail.. */
+-        cmd = "xdg-open \"" + path.trimmed() + "\"";
++        cmd = "xdg-open";
++        arguments.append(path.trimmed());
++
+     }else if(getDesktop() == DESKTOP_KDE) {
+         /* special case for KDE since some apps start behind other windows */
+-        cmd = "kstart --activate " + path.trimmed() + " " + args.trimmed();
++        /* cmd = "kstart --activate " + path.trimmed() + " " + args.trimmed(); */
++        cmd = "kstart";
++        arguments.append("--activate");
++        /** FIXME presumably the old syntax word-split the path and args so we could do the same */
++        arguments.append(path.trimmed());
++        arguments.append(args.trimmed());
+     } else /* gnome, xfce, etc */ {
+-        path.replace("\"", "\\\"");
+-        args.replace("\"", "\\\"");
+-        cmd = "sh -c \"" + path.trimmed() + " " + args.trimmed() + "\"";
+-     }
++        cmd = "sh";
++        arguments.append("-c");
+ 
++	/* For troubleshooting, we have a version that just echoes the command that would run to a file: */
++	
++	/*
++	path.replace("'", "'\\''");
++	args.replace("'", "'\\''");
++	QString shellInternalCommand = "echo '" + path.trimmed() + " " + args.trimmed() + "' > /tmp/test";
++	*/
+ 
+-    QProcess::startDetached(cmd);
++	QString shellInternalCommand = path.trimmed() + " " + args.trimmed();	
++        arguments.append(shellInternalCommand);
+ 
++     }
+ 
++    QProcess::startDetached(cmd, arguments);
+ 
+     return;
+ }
+@@ -227,7 +249,6 @@
+     QStringList largs;
+     QFileInfo info(path);
+ 
+-
+     if (path.contains("%")) {
+ 	path.replace("%u", args);
+ 	path.replace("%U", args);
+@@ -347,15 +368,15 @@
+ 		    while(!file.atEnd()) {
+ 			QString line = file.readLine();
+ 			if (line.startsWith("Exec", Qt::CaseInsensitive)) {
+-			    defapp = line.split("=")[1].trimmed();
++			    defapp = line.section('=', 1).trimmed();
+ 			}
+ 			else if (line.startsWith("Icon",Qt::CaseInsensitive))
+-			    icon = line.split("=")[1].trimmed();
++			    icon = line.section('=', 1).trimmed();
+ 			else if (line.startsWith("Name",Qt::CaseInsensitive)) {
+ 			    if (line.startsWith("Name[" + locale, Qt::CaseInsensitive))
+-				name = line.split("=")[1].trimmed();
++				name = line.section('=', 1).trimmed();
+ 			    else if (!line.contains("["))
+-				name = line.split("=")[1].trimmed();
++				name = line.section('=', 1).trimmed();
+ 			    
+ 			}
+ 		    }
 diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/src/src.pro launchy-2.5/src/src.pro
---- launchy-2.5.orig/src/src.pro	2018-07-07 21:49:53.394807000 -0700
-+++ launchy-2.5/src/src.pro	2018-07-08 00:25:00.942797000 -0700
+--- launchy-2.5.orig/src/src.pro	2018-07-30 21:43:53.360076000 -0700
++++ launchy-2.5/src/src.pro	2018-07-31 14:53:43.583752000 -0700
 @@ -71,7 +71,7 @@
                  platform_base_hotkey.h \
                  platform_base_hottrigger.h

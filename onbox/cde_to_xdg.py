@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os, sys
+import shlex
 
 """
 Convert CDE front panel actions with commands to xdg menu application entries
@@ -16,6 +17,21 @@ IGNORE_APPMANAGER_ACTIONS = ["MediaSlice"]
 
 
 DEBUG_MERGES = False
+DEBUG_RAW_PARSE = False
+DEBUG_CMD_PARSE = True
+
+
+def xdg_exec_quote(args_list):
+	parts = []
+	quotables = ('\\', '"', '$')
+	for arg in args_list:
+		needs_quote = any(x in arg for x in quotables)
+		if needs_quote:
+			for ch in quotables:
+				arg = arg.replace(ch, "\\" + ch)
+			arg = '"%s"' % arg
+		parts.append(arg)
+	return " ".join(parts)
 
 
 def choose_action_obj(action_obj, allow_fail=False):
@@ -133,8 +149,25 @@ def create_desktop_entry_for_action(action_name, action_obj, label, icon_name, d
 				# The action is a command line.
 				# Create an xdg menu item that just runs the command line
 				cmd = action_obj["EXEC_STRING"]
+
 				argc = action_obj.get("ARG_COUNT", "0")
 				if argc == "0":
+					# Preprocess the command line
+					# 1. Replace any unnecessary parameter placeholders
+					for i in xrange(8):
+						param = "%Arg_" + str(i) + "%"
+						cmd = cmd.replace(param, "")
+					# 2. do normal command line splitting
+					try:
+						cmd_args_list = shlex.split(cmd)
+					except ValueError:
+						# There are stock Solaris CDE entries that are missing
+						# a trailing close single quote, so try that.
+						cmd_args_list = shlex.split(cmd + "'")
+					if DEBUG_CMD_PARSE:
+						print repr(cmd_args_list)
+					# 3. do escaping of the split command line per XDG requirements
+					cmd = xdg_exec_quote(cmd_args_list)
 					# TODO implement support for running with different window type settings
 					print "RUN COMMAND: %s" % cmd
 					create_desktop_entry_content(label, icon_filename, cmd)
@@ -299,7 +332,8 @@ def load_dtfile(filename):
 			if line == "":
 				continue
 
-			#print line
+			if DEBUG_RAW_PARSE:
+				print "line %d: %s" % (line_num, line)
 			try:
 				first, rest = line.split(None, 1)
 			except ValueError:
@@ -346,7 +380,8 @@ def load_dtfile(filename):
 					line = line[:-1] + handle.readline().strip()
 					line_num += 1
 
-				#print line
+				if DEBUG_RAW_PARSE:
+					print "line %d: %s" % (line_num, line)
 				key, value = line.split(None, 1)
 
 				if key in DUPE_FIELDS:
