@@ -365,7 +365,44 @@ make_install_params="os=solaris" \
 LD_RUN_PATH=/opt/csw/lib \
 wtcmmi https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-878.30.4.tar.gz 6661247c232e296c8646130a26686b904db7c912
 
-wtcmmi http://www.eterm.org/download/libast-0.7.tar.gz 8449049642c5a945336a326b8d512e4d261232d0
+pkg install libtool
+pkg install autoconf
+pkg install automake
+
+mkdir -p ~/src/mej-libast-9f1e275/include/libast
+
+cat > ~/src/mej-libast-9f1e275/include/libast/Makefile.am <<EOF
+# $Id: Makefile.am,v 1.6 2001/09/22 16:25:29 mej Exp $
+
+EXTRA_HEADERS = array.h avl_tree.h dlinked_list.h iterator_if.h         \
+linked_list.h list_if.h map_if.h mbuff.h obj.h objpair.h regexp.h       \
+socket.h str.h sysdefs.h tok.h types.h url.h vector_if.h
+
+install-exec-hook:
+        $(mkinstalldirs) $(DESTDIR)$(includedir)/$(PACKAGE)
+        for i in $(EXTRA_HEADERS) ; do \
+            $(INSTALL_DATA) $(srcdir)/$$i $(DESTDIR)$(includedir)/$(PACKAGE)/ ; \
+        done
+
+uninstall-hook:
+        rm -rf $(DESTDIR)$(includedir)/$(PACKAGE)
+
+EXTRA_DIST = $(EXTRA_HEADERS) sysdefs.h.in types.h.in
+
+all: types.h sysdefs.h
+
+types.h: types.h.in
+        (cd $(top_srcdir) && ./config.status)
+
+sysdefs.h: sysdefs.h.in
+        (cd $(top_srcdir) && ./config.status)
+MAINTAINERCLEANFILES = Makefile.in
+EOF
+
+configure_name=autogen.sh \
+archive_filename=mej-libast-9f1e275.tar.gz \
+wtcmmi https://api.github.com/repos/mej/libast/tarball/9f1e275 590664bf913095e658ff5d01b8d3a4e68ccdc708
+#wtcmmi http://www.eterm.org/download/libast-0.7.tar.gz 8449049642c5a945336a326b8d512e4d261232d0
 
 libast_lib=$(libast-config --prefix)/lib
 
