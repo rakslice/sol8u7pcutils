@@ -590,6 +590,25 @@ wtcmmi https://www.imagemagick.org/download/ImageMagick-7.0.8-6.tar.xz 4c1a95ea1
 
 fi
 
+if [ -f ~/hash.db.add ]; then
+	rm ~/hash.db.add
+fi
+
+for f in /usr/local/ssl/certs/cert*.pem; do
+	dest_file="/opt/csw/share/ca-certificates/mozilla/$(basename "$f")"
+	if [ ! -f "$dest_file" ]; then
+		sudo cp "$f" "$dest_file"
+		cert_hash=$(openssl x509 -noout -hash -in "$dest_file")
+		echo "$(basename "$f")=${cert_hash}.0" >> ~/hash.db.add
+	fi
+done
+
+if [ -f ~/hash.db.add ]; then
+	sudo bash -c 'cat ~/hash.db.add >> /opt/csw/share/ca-certificates/hash.db'
+fi
+
+
+
 exit 1
 
 
