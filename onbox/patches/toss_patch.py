@@ -49,7 +49,7 @@ def toss_patch(patch_filename):
 			filename_proper = filename.rsplit("/", 1)[-1]
 			if filename in skip_filenames:
 				continue
-			if filename_proper.startswith("Makefile"):
+			if filename_proper.startswith("Makefile") and filename_proper != "Makefile.in":
 				continue
 			if filename_proper.startswith("ui_") and filename_proper.endswith(".h") and \
 				(" ** Form generated from reading UI file '%s.ui'\n" % text_within(filename_proper, "ui_", ".h")) in section_lines:
