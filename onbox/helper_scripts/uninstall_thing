@@ -31,11 +31,12 @@ if [ ! -d "$dirpath" ]; then
 fi
 
 if [ ! -f "$tagfile" ]; then
-	die "installation record for $dirname not found"
+	echo "installation record for $dirname not found"
+else 
+	echo "Found installation tag $tagfile:"
+	cat "$tagfile"
 fi
 
-echo "Found installation tag $tagfile:"
-cat "$tagfile"
 
 #
 #  Extra steps for specific pieces of software can be added
