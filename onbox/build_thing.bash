@@ -636,6 +636,8 @@ fi
 
 wtcmmi https://ftp.gnu.org/gnu/coreutils/coreutils-8.11.tar.xz 9c03e0de95ac6ec65129eaf0b3605982a77d8fedaeca5b665ad44fe901695b3b
 
+exit 1
+
 ## gcc-4.x
 
 MPFR=mpfr-2.4.2
@@ -735,7 +737,6 @@ LD_RUN_PATH=/opt/csw/lib \
 PKG_CONFIG_PATH=/opt/csw/X11/lib/pkgconfig:/usr/local/lib/pkgconfig \
 pre_configure_command=./autogen.sh \
 wtcmmi https://inkscape.org/en/gallery/item/12187/inkscape-0.92.3.tar.bz2 063296c05a65d7a92a0f627485b66221487acfc64a24f712eb5237c4bd7816b2
-
 
 
 ## Gtk3 3.22.30
