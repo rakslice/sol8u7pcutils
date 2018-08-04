@@ -106,6 +106,9 @@ function verify_sha() {
 	64)
 		sha_args="-a 256"
 		;;
+	128)
+		sha_args="-a 512"
+		;;
 	32)
 		# md5
 		sha_actual=$(openssl md5 "$archive" | awk '{print $2}')
@@ -243,6 +246,10 @@ function wtcmmi() {
 		gpatch -p1 -i "${patches_dir}/${dirname}.patch" 2>&1 | tee ~/src/logs/${dirname}.patch.out
 	fi
 
+	if [ "$pre_configure_command" != "" ]; then
+		$pre_configure_command 2>&1 | tee ~/src/logs/${dirname}.preconfigure.out
+	fi
+
 	if [ "$configure_name" == "" ]; then
 		configure_name=configure
 	fi
@@ -290,6 +297,17 @@ function wtcmmi() {
 
 	popd	
 
+	# 6) verify binaries
+	prefix=/usr/local
+	if [ "$verify_binaries" != "" ]; then
+		for f in $verify_binaries; do
+			[ -f $prefix/bin/$f ]
+			if ldd $prefix/bin/$f | grep '(file not found)'; then
+				false
+			fi
+		done
+	fi
+
 	# write an installation tag, indicating that it was successfully installed with the given settings.
 	echo "installed $url $sha_expected $*" > "$build_tag"
 }
@@ -320,7 +338,7 @@ done
 # avahi-0.7
 
 #make_params="V=1" \
-PKG_CONFIG_PATH=/usr/local/lib/pkgconfig \
+PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/opt/csw/lib/pkgconfig:/opt/csw/X11/lib/pkgconfig \
 wtcmmi "http://avahi.org/download/avahi-0.7.tar.gz" 8a062878968c0f8e083046429647ad33b122542f --with-distro=none --disable-qt3 --disable-qt4  --disable-gtk --disable-gtk3 --disable-dbus --with-xml=expat LDFLAGS="-L/opt/csw/lib -R/opt/csw/lib" CFLAGS="-I/opt/csw/include/" --disable-pygobject --disable-autoipd
 
 sudo /usr/sbin/useradd avahi
@@ -594,6 +612,8 @@ if [ -f ~/hash.db.add ]; then
 	rm ~/hash.db.add
 fi
 
+if [ ! -f ~/src/installed-mozilla-certs ]; then
+
 for f in /usr/local/ssl/certs/cert*.pem; do
 	dest_file="/opt/csw/share/ca-certificates/mozilla/$(basename "$f")"
 	if [ ! -f "$dest_file" ]; then
@@ -607,7 +627,103 @@ if [ -f ~/hash.db.add ]; then
 	sudo bash -c 'cat ~/hash.db.add >> /opt/csw/share/ca-certificates/hash.db'
 fi
 
+touch ~/src/installed-mozilla-certs
 
+fi 
+
+## coreutils
+
+wtcmmi https://ftp.gnu.org/gnu/coreutils/coreutils-8.11.tar.xz 9c03e0de95ac6ec65129eaf0b3605982a77d8fedaeca5b665ad44fe901695b3b
+
+## gcc-4.x
+
+MPFR=mpfr-2.4.2
+GMP=gmp-4.3.2
+MPC=mpc-0.8.1
+
+download_and_sha https://ftp.gnu.org/gnu/gmp/gmp-4.3.2.tar.bz2 2e0b0fd23e6f10742a5517981e5171c6e88b0a93c83da701b296f5c0861d72c19782daab589a7eac3f9032152a0fc7eff7f5362db8fccc4859564a9aa82329cf
+download_and_sha https://ftp.gnu.org/gnu/mpfr/mpfr-2.4.2.tar.xz 1407793ff7b258f7fc893d80eccee5107a03ac72
+download_and_sha https://gcc.gnu.org/pub/gcc/infrastructure/mpc-0.8.1.tar.gz 14cb9ae3d33caed24d5ae648eed28b2e00ad047a8baeff25981129af88245b4def2948573d7a00d65c5bd34e53524aa6a7351b76703c9f888b41830c1a1daae2
+
+# download_and_sha https://ftp.gnu.org/gnu/mpfr/mpfr-2.4.2.tar.xz 1407793ff7b258f7fc893d80eccee5107a03ac72 
+# download_and_sha https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz b019d9e1d27ec5fb99497159d43a3164995de2d0
+
+
+# wtcmmi https://ftp.gnu.org/gnu/mpc/mpc-1.0.3.tar.gz b8be66396c726fdc36ebb0f692ed8a8cca3bcc66 --prefix=/usr/local/gcc48 --with-gmp=/opt/csw
+# wtcmmi https://ftp.gnu.org/gnu/mpc/mpc-1.0.1.tar.gz 8c7e19ad0dd9b3b5cc652273403423d6cf0c5edf --prefix=/usr/local/gcc48 --with-gmp=/opt/csw
+
+if false; then
+
+GCC_DIR=gcc-4.6.4
+
+mkdir -p $GCC_DIR
+pushd $GCC_DIR
+
+gtar xf ../gmp-4.3.2.tar.bz2
+ln -sf gmp-4.3.2 gmp
+gtar xf ../mpfr-2.4.2.tar.xz
+ln -sf mpfr-2.4.2 mpfr
+gtar xf ../mpc-0.8.1.tar.gz
+ln -sf mpc-0.8.1 mpc
+
+popd
+
+wtcmmi https://ftp.gnu.org/gnu/gcc/gcc-4.6.4/gcc-4.6.4.tar.bz2 63933a8a5cf725626585dbba993c8b0f6db1335d --prefix=/usr/local/gcc46
+
+fi
+
+GCC_DIR=gcc-4.7.4
+
+mkdir -p $GCC_DIR
+pushd $GCC_DIR
+
+gtar xf ../gmp-4.3.2.tar.bz2
+ln -sf gmp-4.3.2 gmp
+gtar xf ../mpfr-2.4.2.tar.xz
+ln -sf mpfr-2.4.2 mpfr
+gtar xf ../mpc-0.8.1.tar.gz
+ln -sf mpc-0.8.1 mpc
+
+popd
+
+#wtcmmi https://ftp.gnu.org/gnu/gcc/gcc-4.8.5/gcc-4.8.5.tar.bz2 de144b551f10e23d82f30ecd2d6d0e18c26f8850 --prefix=/usr/local/gcc48
+wtcmmi https://ftp.gnu.org/gnu/gcc/gcc-4.7.4/gcc-4.7.4.tar.bz2 f3359a157b3536f289c155363f1736a2c9b414db --prefix=/usr/local/gcc47 --enable-obsolete
+
+## inkscape
+
+verify_binaries="gettext msgattrib msgcmp msgconv msgfmt msginit msgunfmt msgcat msgcomm msgen msgfilter msggrep msgmerge msguniq" \
+wtcmmi https://ftp.gnu.org/pub/gnu/gettext/gettext-0.19.8.1.tar.xz e0fe90ede22f7f16bbde7bdea791a835f2773fc9 LDFLAGS="-R/opt/csw/lib -R/opt/csw/gcc4/lib"
+
+ensure_link /usr/local/bin/gmsgfmt /usr/local/bin/msgfmt
+
+archive_filename=lcms2-2.9.tar.gz \
+patch_before_configure="1" \
+wtcmmi https://sourceforge.net/projects/lcms/files/lcms/2.9/lcms2-2.9.tar.gz/download 60bea9875e017dd1c466e988c2ad98f8766e4e55
+
+wtcmmi https://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz 228604686ca23f42e48b98930babeb5d217f1899
+wtcmmi https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz e891c3193029775e83e0534ac0ee0c4c711f6d23
+
+pkg install gnome
+pkg install libxau_devel
+pkg install libxcb_devel
+pkg install libxdmcp_devel
+pkg install x11_renderproto
+
+PKG_CONFIG_PATH=/opt/csw/X11/lib/pkgconfig:/usr/local/lib/pkgconfig \
+LD_RUN_PATH=/opt/csw/gcc4/lib \
+use_dirname=libsigc++-2.10.0 \
+wtcmmi https://github.com/libsigcplusplus/libsigcplusplus/releases/download/2.10.0/libsigcplusplus-2.10.0.tar.xz 7807a12a1e90a98bd8c9440e5b312d3cb1121bf7 MAKE=gmake
+
+PKG_CONFIG_PATH=/opt/csw/X11/lib/pkgconfig:/usr/local/lib/pkgconfig \
+wtcmmi https://www.cairographics.org/releases/cairomm-1.15.5.tar.gz
+
+PKG_CONFIG_PATH=/opt/csw/X11/lib/pkgconfig:/usr/local/lib/pkgconfig \
+wtcmmi http://ftp.gnome.org/pub/GNOME/sources/glibmm/2.56/glibmm-2.56.0.tar.xz 6e74fcba0d245451c58fc8a196e9d103789bc510e1eee1a9b1e816c5209e79a9
+
+LD_RUN_PATH=/opt/csw/lib \
+PKG_CONFIG_PATH=/opt/csw/X11/lib/pkgconfig:/usr/local/lib/pkgconfig \
+pre_configure_command=./autogen.sh \
+wtcmmi https://inkscape.org/en/gallery/item/12187/inkscape-0.92.3.tar.bz2 063296c05a65d7a92a0f627485b66221487acfc64a24f712eb5237c4bd7816b2
 
 exit 1
 

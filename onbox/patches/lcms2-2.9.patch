@@ -1,0 +1,53 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur lcms2-2.9.orig/configure lcms2-2.9/configure
+--- lcms2-2.9.orig/configure	2018-08-03 21:53:45.629622000 -0700
++++ lcms2-2.9/configure	2018-08-03 22:08:44.369780000 -0700
+@@ -15961,7 +15961,7 @@
+ 
+ 
+ 
+-for flag in "-fvisibility=hidden"; do
++for flag in ""; do
+   as_CACHEVAR=`$as_echo "ax_cv_check_cflags__$flag" | $as_tr_sh`
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts $flag" >&5
+ $as_echo_n "checking whether C compiler accepts $flag... " >&6; }
+diff '--exclude=.deps' '--exclude=*.log' -ur lcms2-2.9.orig/Makefile.in lcms2-2.9/Makefile.in
+--- lcms2-2.9.orig/Makefile.in	2018-08-03 21:53:45.789711000 -0700
++++ lcms2-2.9/Makefile.in	2018-08-03 22:14:01.159572000 -0700
+@@ -903,20 +903,20 @@
+ 	find Projects -name "*.opensdf" | xargs rm -rf
+ 	find Projects -name "*.log" | xargs rm -rf
+ 	find Projects -name "ipch" | xargs rm -rf
+-	@for d in $(PLUGIN_DIRECTORIES); do (cd $$d; $(MAKE) clean ); done
++#	@for d in $(PLUGIN_DIRECTORIES); do (cd $$d; $(MAKE) clean ); done
+ 
+ # Handle plug-ins
+ all-local: 
+-	@for d in $(PLUGIN_DIRECTORIES); do (cd $$d; $(MAKE) $(AM_MAKEFLAGS) all ); done
++#	@for d in $(PLUGIN_DIRECTORIES); do (cd $$d; $(MAKE) $(AM_MAKEFLAGS) all ); done
+ 
+ check-local: 
+-	@for d in $(PLUGIN_DIRECTORIES); do (cd $$d; $(MAKE) $(AM_MAKEFLAGS) check ); done
++#	@for d in $(PLUGIN_DIRECTORIES); do (cd $$d; $(MAKE) $(AM_MAKEFLAGS) check ); done
+ 
+ install-exec-local:
+-	@for d in $(PLUGIN_DIRECTORIES); do (cd $$d; $(MAKE) $(AM_MAKEFLAGS) install-exec ); done
++#	@for d in $(PLUGIN_DIRECTORIES); do (cd $$d; $(MAKE) $(AM_MAKEFLAGS) install-exec ); done
+ 
+ uninstall-local:
+-	@for d in $(PLUGIN_DIRECTORIES); do (cd $$d; $(MAKE) $(AM_MAKEFLAGS) uninstall ); done
++#	@for d in $(PLUGIN_DIRECTORIES); do (cd $$d; $(MAKE) $(AM_MAKEFLAGS) uninstall ); done
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+diff '--exclude=.deps' '--exclude=*.log' -ur lcms2-2.9.orig/src/cmsplugin.c lcms2-2.9/src/cmsplugin.c
+--- lcms2-2.9.orig/src/cmsplugin.c	2018-08-03 21:53:45.850604000 -0700
++++ lcms2-2.9/src/cmsplugin.c	2018-08-03 22:08:44.379546000 -0700
+@@ -187,6 +187,8 @@
+            return TRUE;
+         #elif defined (__BORLANDC__)
+            return TRUE;
++	#elif (defined (sun) || defined (__sun) ) && !defined (FP_ZERO)
++	   return TRUE;
+         #else
+ 
+            // fpclassify() required by C99 (only provided by MSVC >= 1800, VS2013 onwards)
