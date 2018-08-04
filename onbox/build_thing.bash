@@ -674,6 +674,8 @@ fi
 
 GCC_DIR=gcc-4.7.4
 
+if [ ! -f installed-$GCC_DIR ]; then
+
 mkdir -p $GCC_DIR
 pushd $GCC_DIR
 
@@ -686,8 +688,10 @@ ln -sf mpc-0.8.1 mpc
 
 popd
 
+fi
+
 #wtcmmi https://ftp.gnu.org/gnu/gcc/gcc-4.8.5/gcc-4.8.5.tar.bz2 de144b551f10e23d82f30ecd2d6d0e18c26f8850 --prefix=/usr/local/gcc48
-wtcmmi https://ftp.gnu.org/gnu/gcc/gcc-4.7.4/gcc-4.7.4.tar.bz2 f3359a157b3536f289c155363f1736a2c9b414db --prefix=/usr/local/gcc47 --enable-obsolete
+wtcmmi https://ftp.gnu.org/gnu/gcc/gcc-4.7.4/gcc-4.7.4.tar.bz2 f3359a157b3536f289c155363f1736a2c9b414db --prefix=/usr/local/gcc47 --enable-obsolete --enable-languages=c,c++
 
 ## inkscape
 
@@ -703,19 +707,25 @@ wtcmmi https://sourceforge.net/projects/lcms/files/lcms/2.9/lcms2-2.9.tar.gz/dow
 wtcmmi https://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz 228604686ca23f42e48b98930babeb5d217f1899
 wtcmmi https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz e891c3193029775e83e0534ac0ee0c4c711f6d23
 
-pkg install gnome
+#pkg install gnome
 pkg install libxau_devel
 pkg install libxcb_devel
 pkg install libxdmcp_devel
 pkg install x11_renderproto
 
+exit 1
+
+# dead end; there is no g++ with C++11 that supports this system
+
+# LD_RUN_PATH=/opt/csw/gcc4/lib \
+LD_RUN_PATH=/usr/local/gcc47/lib \
 PKG_CONFIG_PATH=/opt/csw/X11/lib/pkgconfig:/usr/local/lib/pkgconfig \
-LD_RUN_PATH=/opt/csw/gcc4/lib \
+PATH=/usr/local/gcc47/bin:$PATH \
 use_dirname=libsigc++-2.10.0 \
-wtcmmi https://github.com/libsigcplusplus/libsigcplusplus/releases/download/2.10.0/libsigcplusplus-2.10.0.tar.xz 7807a12a1e90a98bd8c9440e5b312d3cb1121bf7 MAKE=gmake
+wtcmmi https://github.com/libsigcplusplus/libsigcplusplus/releases/download/2.10.0/libsigcplusplus-2.10.0.tar.xz 7807a12a1e90a98bd8c9440e5b312d3cb1121bf7 MAKE=gmake CXX=/usr/local/gcc47/bin/g++ CC=/usr/local/gcc47/bin/gcc
 
 PKG_CONFIG_PATH=/opt/csw/X11/lib/pkgconfig:/usr/local/lib/pkgconfig \
-wtcmmi https://www.cairographics.org/releases/cairomm-1.15.5.tar.gz
+wtcmmi https://www.cairographics.org/releases/cairomm-1.15.5.tar.gz 1234
 
 PKG_CONFIG_PATH=/opt/csw/X11/lib/pkgconfig:/usr/local/lib/pkgconfig \
 wtcmmi http://ftp.gnome.org/pub/GNOME/sources/glibmm/2.56/glibmm-2.56.0.tar.xz 6e74fcba0d245451c58fc8a196e9d103789bc510e1eee1a9b1e816c5209e79a9
@@ -725,7 +735,6 @@ PKG_CONFIG_PATH=/opt/csw/X11/lib/pkgconfig:/usr/local/lib/pkgconfig \
 pre_configure_command=./autogen.sh \
 wtcmmi https://inkscape.org/en/gallery/item/12187/inkscape-0.92.3.tar.bz2 063296c05a65d7a92a0f627485b66221487acfc64a24f712eb5237c4bd7816b2
 
-exit 1
 
 
 ## Gtk3 3.22.30
