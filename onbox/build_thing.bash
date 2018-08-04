@@ -422,7 +422,8 @@ archive_filename=mej-libast-9f1e275.tar.gz \
 wtcmmi https://api.github.com/repos/mej/libast/tarball/9f1e275 590664bf913095e658ff5d01b8d3a4e68ccdc708
 #wtcmmi http://www.eterm.org/download/libast-0.7.tar.gz 8449049642c5a945336a326b8d512e4d261232d0
 
-libast_lib=$(libast-config --prefix)/lib
+#libast_lib=$(libast-config --prefix)/lib
+libast_lib=/usr/local/lib
 
 
 ## Eterm-0.9.6
