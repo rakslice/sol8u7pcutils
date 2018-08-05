@@ -1,0 +1,202 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur distcc.orig/popt/popt.c distcc/popt/popt.c
+--- distcc.orig/popt/popt.c	2018-08-04 20:07:09.307423000 -0700
++++ distcc/popt/popt.c	2018-08-04 20:13:57.801064000 -0700
+@@ -927,7 +927,9 @@
+ 		    if ((opt->argInfo & POPT_ARG_MASK) == POPT_ARG_DOUBLE) {
+ 			*((double *) opt->arg) = aDouble;
+ 		    } else {
++#ifndef _ABS
+ #define _ABS(a)	((((a) - 0.0) < DBL_EPSILON) ? -(a) : (a))
++#endif
+ 			if ((_ABS(aDouble) - FLT_MAX) > DBL_EPSILON)
+ 			    return POPT_ERROR_OVERFLOW;
+ 			if ((FLT_MIN - _ABS(aDouble)) > DBL_EPSILON)
+diff '--exclude=.deps' '--exclude=*.log' -ur distcc.orig/popt/poptconfig.c distcc/popt/poptconfig.c
+--- distcc.orig/popt/poptconfig.c	2018-08-04 20:07:09.307458000 -0700
++++ distcc/popt/poptconfig.c	2018-08-04 20:14:48.270090000 -0700
+@@ -29,20 +29,20 @@
+     /*@=type@*/
+ 
+     line += nameLength;
+-    if (*line == '\0' || !isspace(*line)) return;
++    if (*line == '\0' || !isspace((int) *line)) return;
+ 
+-    while (*line != '\0' && isspace(*line)) line++;
++    while (*line != '\0' && isspace((int) *line)) line++;
+     entryType = line;
+-    while (*line == '\0' || !isspace(*line)) line++;
++    while (*line == '\0' || !isspace((int) *line)) line++;
+     *line++ = '\0';
+ 
+-    while (*line != '\0' && isspace(*line)) line++;
++    while (*line != '\0' && isspace((int) *line)) line++;
+     if (*line == '\0') return;
+     opt = line;
+-    while (*line == '\0' || !isspace(*line)) line++;
++    while (*line == '\0' || !isspace((int) *line)) line++;
+     *line++ = '\0';
+ 
+-    while (*line != '\0' && isspace(*line)) line++;
++    while (*line != '\0' && isspace((int) *line)) line++;
+     if (*line == '\0') return;
+ 
+     /*@-temptrans@*/ /* FIX: line alias is saved */
+@@ -137,7 +137,7 @@
+ 	  case '\n':
+ 	    *dst = '\0';
+ 	    dst = buf;
+-	    while (*dst && isspace(*dst)) dst++;
++	    while (*dst && isspace((int) *dst)) dst++;
+ 	    if (*dst && *dst != '#')
+ 		configLine(con, dst);
+ 	    chptr++;
+diff '--exclude=.deps' '--exclude=*.log' -ur distcc.orig/popt/popthelp.c distcc/popt/popthelp.c
+--- distcc.orig/popt/popthelp.c	2018-08-04 20:07:09.307448000 -0700
++++ distcc/popt/popthelp.c	2018-08-04 20:15:13.128209000 -0700
+@@ -335,9 +335,9 @@
+ 	char format[16];
+ 
+ 	ch = help + lineLength - 1;
+-	while (ch > help && !isspace(*ch)) ch--;
++	while (ch > help && !isspace((int) *ch)) ch--;
+ 	if (ch == help) break;		/* give up */
+-	while (ch > (help + 1) && isspace(*ch)) ch--;
++	while (ch > (help + 1) && isspace((int) *ch)) ch--;
+ 	ch++;
+ 
+ 	sprintf(format, "%%.%ds\n%%%ds", (int) (ch - help), indentLength);
+@@ -345,7 +345,7 @@
+ 	fprintf(fp, format, help, " ");
+ 	/*@=formatconst@*/
+ 	help = ch;
+-	while (isspace(*help) && *help) help++;
++	while (isspace((int) *help) && *help) help++;
+ 	helpLength = strlen(help);
+     }
+ /*@=boundsread@*/
+diff '--exclude=.deps' '--exclude=*.log' -ur distcc.orig/popt/poptparse.c distcc/popt/poptparse.c
+--- distcc.orig/popt/poptparse.c	2018-08-04 20:07:09.307443000 -0700
++++ distcc/popt/poptparse.c	2018-08-04 20:16:01.927628000 -0700
+@@ -81,7 +81,7 @@
+ 		if (*src != quote) *buf++ = '\\';
+ 	    }
+ 	    *buf++ = *src;
+-	} else if (isspace(*src)) {
++	} else if (isspace((int) *src)) {
+ 	    if (*argv[argc] != '\0') {
+ 		buf++, argc++;
+ 		if (argc == argvAlloced) {
+@@ -157,7 +157,7 @@
+ 	p = line;
+ 
+ 	/* loop until first non-space char or EOL */
+-	while( *p != '\0' && isspace(*p) )
++	while( *p != '\0' && isspace((int) *p) )
+ 	    p++;
+ 
+ 	linelen = strlen(p);
+@@ -169,10 +169,10 @@
+ 
+ 	q = p;
+ 
+-	while (*q != '\0' && (!isspace(*q)) && *q != '=')
++	while (*q != '\0' && (!isspace((int) *q)) && *q != '=')
+ 	    q++;
+ 
+-	if (isspace(*q)) {
++	if (isspace((int) *q)) {
+ 	    /* a space after the name, find next non space */
+ 	    *q++='\0';
+ 	    while( *q != '\0' && isspace((int)*q) ) q++;
+@@ -197,14 +197,14 @@
+ 	*q++ = '\0';
+ 
+ 	/* find next non-space letter of value */
+-	while (*q != '\0' && isspace(*q))
++	while (*q != '\0' && isspace((int) *q))
+ 	    q++;
+ 	if (*q == '\0')
+ 	    continue;	/* XXX silently ignore missing value */
+ 
+ 	/* now, loop and strip all ending whitespace */
+ 	x = p + linelen;
+-	while (isspace(*--x))
++	while (isspace((int) *--x))
+ 	    *x = 0;	/* null out last char if space (including fgets() NL) */
+ 
+ 	/* rest of line accept */
+diff '--exclude=.deps' '--exclude=*.log' -ur distcc.orig/popt/system.h distcc/popt/system.h
+--- distcc.orig/popt/system.h	2018-08-04 20:07:09.307428000 -0700
++++ distcc/popt/system.h	2018-08-04 20:13:14.471896000 -0700
+@@ -35,6 +35,8 @@
+ #include <libc.h>
+ #endif
+ 
++#include <alloca.h>
++
+ #if defined(__LCLINT__)
+ /*@-declundef -incondefs -redecl@*/ /* LCL: missing annotation */
+ /*@only@*/ void * alloca (size_t __size)
+diff '--exclude=.deps' '--exclude=*.log' -ur distcc.orig/src/hosts.c distcc/src/hosts.c
+--- distcc.orig/src/hosts.c	2018-08-04 20:07:09.408153000 -0700
++++ distcc/src/hosts.c	2018-08-04 20:11:30.580613000 -0700
+@@ -222,7 +222,7 @@
+             rs_log_error("bad multiplier \"%s\" in host specification", token);
+             return EXIT_BAD_HOSTSPEC;
+         }
+-        while (isdigit(**psrc))
++        while (isdigit((int) **psrc))
+             (*psrc)++;
+         hostdef->n_slots = val;
+     }
+@@ -368,7 +368,7 @@
+         token++;
+ 
+         hostdef->port = strtol(token, &tail, 10);
+-        if (*tail != '\0' && !isspace(*tail) && *tail != '/' && *tail != ',') {
++        if (*tail != '\0' && !isspace((int) *tail) && *tail != '/' && *tail != ',') {
+             rs_log_error("invalid tcp port specification in \"%s\"", token);
+             return EXIT_BAD_HOSTSPEC;
+         } else {
+@@ -509,7 +509,7 @@
+             continue;
+         }
+ 
+-        if (isspace(where[0])) {
++        if (isspace((int) where[0])) {
+             where++;            /* skip space */
+             continue;
+         }
+diff '--exclude=.deps' '--exclude=*.log' -ur distcc.orig/src/rpc.c distcc/src/rpc.c
+--- distcc.orig/src/rpc.c	2018-08-04 20:07:09.427682000 -0700
++++ distcc/src/rpc.c	2018-08-04 20:10:55.986512000 -0700
+@@ -142,7 +142,7 @@
+ 
+     extrabuf[l] = '\0';
+     for (p = extrabuf; *p; p++)
+-        if (!(isprint(*p) || *p == ' ' || *p == '\t')) {
++        if (!(isprint((int) *p) || *p == ' ' || *p == '\t')) {
+             *p = '\0';
+             break;
+         }
+diff '--exclude=.deps' '--exclude=*.log' -ur distcc.orig/src/util.c distcc/src/util.c
+--- distcc.orig/src/util.c	2018-08-04 20:07:09.467698000 -0700
++++ distcc/src/util.c	2018-08-04 20:10:55.987937000 -0700
+@@ -269,7 +269,7 @@
+ 
+     /* validate to avoid possible errors from bad chars or huge value */
+     for (i=0; envh[i] != '\0'; i++) {
+-        if (i > MAXDOMAINLEN || !IS_LEGAL_DOMAIN_CHAR(envh[i])) {
++        if (i > MAXDOMAINLEN || !IS_LEGAL_DOMAIN_CHAR((int) envh[i])) {
+             rs_log_error("HOST/HOSTNAME present in environment but illegal: '%s'", envh);
+             return -1;
+         }
+@@ -822,7 +822,7 @@
+ 
+     /* Count the spaces in the string. */
+     for (for_count = input_copy; *for_count; for_count++)
+-        if (isspace(*for_count))
++        if (isspace((int) *for_count))
+             n_spaces++;
+ 
+     /* The maximum number of space-delimited strings we

@@ -387,16 +387,6 @@ pkg install libtool
 pkg install autoconf
 pkg install automake
 
-# # new m4 automake autoconf
-
-#wtcmmi https://ftp.gnu.org/gnu/automake/automake-1.16.1.tar.xz 1012bc79956013d53da0890f8493388a6cb20831 
-
-#wtcmmi https://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz 228604686ca23f42e48b98930babeb5d217f1899
-#wtcmmi https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz e891c3193029775e83e0534ac0ee0c4c711f6d23
-
-#configure_name="/usr/bin/env bash ./configure" \
-#wtcmmi https://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz 3e7504b832eb2dd23170c91b6af72e15b56eb94e
-
 
 patch_before_configure="1" \
 configure_name=autogen.sh \
@@ -617,6 +607,28 @@ fi
 
 wtcmmi https://ftp.gnu.org/gnu/coreutils/coreutils-8.11.tar.xz 9c03e0de95ac6ec65129eaf0b3605982a77d8fedaeca5b665ad44fe901695b3b
 
+## distcc
+
+# # new m4 automake autoconf
+
+wtcmmi https://ftp.gnu.org/gnu/automake/automake-1.16.1.tar.xz 1012bc79956013d53da0890f8493388a6cb20831 
+wtcmmi https://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz 228604686ca23f42e48b98930babeb5d217f1899
+wtcmmi https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz e891c3193029775e83e0534ac0ee0c4c711f6d23
+configure_name="/usr/bin/env bash ./configure" \
+wtcmmi https://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz 3e7504b832eb2dd23170c91b6af72e15b56eb94e
+
+# python 3.7.0
+
+#wtcmmi https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tar.xz eb8c2a6b1447d50813c02714af4681f3
+wtcmmi https://www.python.org/ftp/python/3.1.5/Python-3.1.5.tar.xz 20dd2b7f801dc97db948dd168df4dd52 \
+LDFLAGS="-L/usr/local/lib -R/usr/local/lib"
+
+#mkdir -p distcc/_include_server
+
+use_dirname=distcc \
+pre_configure_command=./autogen.sh \
+wtcmmi https://github.com/distcc/distcc/releases/download/v3.3.2/distcc-3.3.2.tar.gz 4f2200e74e22b2cdf316c1126eb180e568756d39 --without-libiberty
+
 exit 1
 
 ## gcc-4.x
@@ -691,13 +703,13 @@ wtcmmi https://sourceforge.net/projects/lcms/files/lcms/2.9/lcms2-2.9.tar.gz/dow
 wtcmmi https://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz 228604686ca23f42e48b98930babeb5d217f1899
 wtcmmi https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz e891c3193029775e83e0534ac0ee0c4c711f6d23
 
+exit 1
+
 #pkg install gnome
 pkg install libxau_devel
 pkg install libxcb_devel
 pkg install libxdmcp_devel
 pkg install x11_renderproto
-
-exit 1
 
 # dead end; there is no g++ with C++11 that supports this system
 
