@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -e
+
+if [ ! -f config.log ]; then
+	echo "The current directory has no config.log" 1>&2
+	exit 1
+fi
+
+set -x
+
+last_checking_line=$(grep -n 'checking ' config.log | tail -n 1 | cut -d':' -f1)
+
+if [ "$last_checking_line" == "" ]; then
+	set +x
+	echo "No checking line found" 1>&2
+	exit 1
+fi
+
+tail +$last_checking_line config.log
