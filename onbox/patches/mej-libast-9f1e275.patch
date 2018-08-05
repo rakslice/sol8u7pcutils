@@ -1,0 +1,24 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur mej-libast-9f1e275.orig/configure.ac mej-libast-9f1e275/configure.ac
+--- mej-libast-9f1e275.orig/configure.ac	2018-08-04 18:55:20.444534000 -0700
++++ mej-libast-9f1e275/configure.ac	2018-08-04 18:55:35.392566000 -0700
+@@ -36,7 +36,7 @@
+ 
+ AC_CONFIG_HEADERS([config.h include/libast/sysdefs.h])
+ AC_CONFIG_FILES([include/libast/types.h Makefile include/Makefile
+-                 include/libast/Makefile src/Makefile test/Makefile
++                 src/Makefile test/Makefile
+                  libast-config])
+ 
+ dnl# Set some basic variables
+diff '--exclude=.deps' '--exclude=*.log' -ur mej-libast-9f1e275.orig/include/Makefile.am mej-libast-9f1e275/include/Makefile.am
+--- mej-libast-9f1e275.orig/include/Makefile.am	2018-08-04 18:55:20.469968000 -0700
++++ mej-libast-9f1e275/include/Makefile.am	2018-08-04 18:55:48.488197000 -0700
+@@ -7,7 +7,7 @@
+ 	libast/thread_if.h libast/tok.h libast/url.h libast/ustr.h	\
+ 	libast/vector_if.h
+ 
+-nodist_include_HEADERS = libast/sysdefs.h libast/types.h
++nobase_nodist_include_HEADERS = libast/sysdefs.h libast/types.h
+ noinst_HEADERS = libast_internal.h
+ 
+ libast/types.h: libast/types.h.in

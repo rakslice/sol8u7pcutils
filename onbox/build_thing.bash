@@ -387,44 +387,25 @@ pkg install libtool
 pkg install autoconf
 pkg install automake
 
-mkdir -p ~/src/mej-libast-9f1e275/include/libast
+# # new m4 automake autoconf
 
-cat > ~/src/mej-libast-9f1e275/include/libast/Makefile.am <<EOF
-# $Id: Makefile.am,v 1.6 2001/09/22 16:25:29 mej Exp $
+#wtcmmi https://ftp.gnu.org/gnu/automake/automake-1.16.1.tar.xz 1012bc79956013d53da0890f8493388a6cb20831 
 
-EXTRA_HEADERS = array.h avl_tree.h dlinked_list.h iterator_if.h         \
-linked_list.h list_if.h map_if.h mbuff.h obj.h objpair.h regexp.h       \
-socket.h str.h sysdefs.h tok.h types.h url.h vector_if.h
+#wtcmmi https://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz 228604686ca23f42e48b98930babeb5d217f1899
+#wtcmmi https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz e891c3193029775e83e0534ac0ee0c4c711f6d23
 
-install-exec-hook:
-        $(mkinstalldirs) $(DESTDIR)$(includedir)/$(PACKAGE)
-        for i in $(EXTRA_HEADERS) ; do \
-            $(INSTALL_DATA) $(srcdir)/$$i $(DESTDIR)$(includedir)/$(PACKAGE)/ ; \
-        done
+#configure_name="/usr/bin/env bash ./configure" \
+#wtcmmi https://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz 3e7504b832eb2dd23170c91b6af72e15b56eb94e
 
-uninstall-hook:
-        rm -rf $(DESTDIR)$(includedir)/$(PACKAGE)
 
-EXTRA_DIST = $(EXTRA_HEADERS) sysdefs.h.in types.h.in
-
-all: types.h sysdefs.h
-
-types.h: types.h.in
-        (cd $(top_srcdir) && ./config.status)
-
-sysdefs.h: sysdefs.h.in
-        (cd $(top_srcdir) && ./config.status)
-MAINTAINERCLEANFILES = Makefile.in
-EOF
-
+patch_before_configure="1" \
 configure_name=autogen.sh \
 archive_filename=mej-libast-9f1e275.tar.gz \
 wtcmmi https://api.github.com/repos/mej/libast/tarball/9f1e275 590664bf913095e658ff5d01b8d3a4e68ccdc708
 #wtcmmi http://www.eterm.org/download/libast-0.7.tar.gz 8449049642c5a945336a326b8d512e4d261232d0
 
-#libast_lib=$(libast-config --prefix)/lib
-libast_lib=/usr/local/lib
-
+libast_lib=$(libast-config --prefix)/lib
+#libast_lib=/usr/local/lib
 
 ## Eterm-0.9.6
 
@@ -454,7 +435,7 @@ popd
 
 pkg install libxdmcp
 
-wtcmmi http://eterm.org/download/Eterm-0.9.6.tar.gz b4cb00f898ffd2de9bf7ae0ecde1cc3a5fee9f02 --with-imlib=/opt/csw LDFLAGS="-L$libast_lib /opt/csw/X11/lib/libXdmcp.so -R/opt/csw/X11/lib -R/opt/csw/lib" --disable-xim
+wtcmmi http://eterm.org/download/Eterm-0.9.6.tar.gz b4cb00f898ffd2de9bf7ae0ecde1cc3a5fee9f02 --with-imlib=/opt/csw LDFLAGS="-L$libast_lib /opt/csw/X11/lib/libXdmcp.so -R/opt/csw/X11/lib -R/opt/csw/lib" CPPFLAGS=-DMEMSET=memset --disable-xim
 
 # setup terminfo for Eterm
 ensure_link "/usr/share/lib/terminfo/E/Eterm" "/opt/csw/share/terminfo/x/xterm-256color"
