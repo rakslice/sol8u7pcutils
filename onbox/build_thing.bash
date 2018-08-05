@@ -560,6 +560,8 @@ wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 7a6317168fe7aa21
 use_dirname=vim74 \
 wtcmmi ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2 601abf7cc2b5ab186f40d8790e542f86afca86b7
 
+ensure_link "/usr/local/bin/vi" "/usr/local/bin/vim"
+
 
 ## zaycakitayca/gnome-menu-editor-qt
 
