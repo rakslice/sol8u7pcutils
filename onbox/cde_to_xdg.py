@@ -64,7 +64,19 @@ def choose_action_obj(action_obj, allow_fail=False):
 	return action_obj
 
 
+def obj_dump(obj, output, indent="  "):
+	for key, value in obj.iteritems():
+		if type(value) == dict:
+			print >> output, "%s%s:" % (indent, key)
+			obj_dump(value, output, indent + "  ")
+		else:
+			print >> output, "%s%s: %r" % (indent, key, value)
+
+
 def main():
+
+	error_missing_actions = set()
+
 	# Load the objects from the dtwm front panel configuration (dtwm.fp)
 	obj_list, obj_index = load_fp()
 
@@ -79,8 +91,11 @@ def main():
 		if action_name not in dt_obj_index["ACTION"]:
 			# We just didn't encounter an action definition with a name that corresponds to this
 			# appmanager directory entry
+			print >> sys.stderr, "NO ACTION %s" % action_name
 			print >> sys.stderr, "appmanager action %s/%s not found" % (app_path, action_name)
-			assert False
+			if action_name not in error_missing_actions:
+				error_missing_actions.add(action_name)
+			continue
 
 		action_obj = choose_action_obj(dt_obj_index["ACTION"][action_name], allow_fail=True)
 
@@ -128,6 +143,17 @@ def main():
 			assert not type(action_obj) == list
 
 			create_desktop_entry_for_action(action_name, action_obj, label, icon_name, dt_obj_index)
+
+	had_errors = False
+
+	if error_missing_actions != set():
+		had_errors = True
+		print >> sys.stderr, "There were actions missing:"
+		for action_name in error_missing_actions:
+			print >> sys.stderr, (u"  %s" % action_name).encode("utf-8")
+
+	if had_errors:
+		sys.exit(1)
 
 
 def create_desktop_entry_for_action(action_name, action_obj, label, icon_name, dt_obj_index):
