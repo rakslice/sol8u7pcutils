@@ -12,8 +12,15 @@ fi
 set -e
 set -x
 
+function die() {
+	echo "$1" 1>&2
+	exit 1
+}
+
 PROC_DIR="$(pwd)"
-[ "$(dirname $PROC_DIR)" == ~/src ]
+if [ "$(dirname $PROC_DIR)" != ~/src ]; then
+	die "We don't seem to be in a subdirectory of src"
+fi
 ORIG_DIR="$(pwd).orig"
 
 [ -d "$ORIG_DIR" ]
