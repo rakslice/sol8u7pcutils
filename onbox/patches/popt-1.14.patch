@@ -1,0 +1,23 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur popt-1.14.orig/popthelp.c popt-1.14/popthelp.c
+--- popt-1.14.orig/popthelp.c	2018-09-18 06:53:25.380071000 -0700
++++ popt-1.14/popthelp.c	2018-09-18 06:53:59.770008000 -0700
+@@ -15,7 +15,7 @@
+ #include <sys/ioctl.h>
+ #endif
+ 
+-#define	POPT_WCHAR_HACK
++#undef	POPT_WCHAR_HACK
+ #ifdef 	POPT_WCHAR_HACK
+ #include <wchar.h>			/* for mbsrtowcs */
+ /*@access mbstate_t @*/
+Only in popt-1.14: popthelp.lo
+Only in popt-1.14.orig: popthelp.loT
+Only in popt-1.14: popthelp.o
+Only in popt-1.14: poptint.lo
+Only in popt-1.14: poptint.o
+Only in popt-1.14: test1
+Only in popt-1.14: test1.o
+Only in popt-1.14: test2
+Only in popt-1.14: test2.o
+Only in popt-1.14: test3
+Only in popt-1.14: test3.o

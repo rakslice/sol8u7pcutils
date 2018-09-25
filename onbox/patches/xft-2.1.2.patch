@@ -1,0 +1,19 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur xft-2.1.2.orig/Xft.h xft-2.1.2/Xft.h
+--- xft-2.1.2.orig/Xft.h	2018-09-17 04:57:54.150028000 -0700
++++ xft-2.1.2/Xft.h	2018-09-17 05:11:38.650005000 -0700
+@@ -38,11 +38,11 @@
+ #define XftVersion	XFT_VERSION
+ 
+ #include <stdarg.h>
+-#include <freetype/freetype.h>
++#include <ft2build.h>
++#include FT_FREETYPE_H
+ #include <fontconfig/fontconfig.h>
+-#include <X11/extensions/Xrender.h>
+-
+ #include <X11/Xfuncproto.h>
++#include <X11/extensions/Xrender.h>
+ /* #include <X11/Xosdefs.h>*/
+ 
+ #ifndef _XFT_NO_COMPAT_
+Only in xft-2.1.2: config.status.rej

@@ -1,0 +1,13 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur glib-1.2.10.orig/glib.h glib-1.2.10/glib.h
+--- glib-1.2.10.orig/glib.h	2018-09-17 15:15:25.810103000 -0700
++++ glib-1.2.10/glib.h	2018-09-17 15:15:43.780024000 -0700
+@@ -272,7 +272,8 @@
+ /* Wrap the gcc __PRETTY_FUNCTION__ and __FUNCTION__ variables with
+  * macros, so we can refer to them as strings unconditionally.
+  */
+-#ifdef	__GNUC__
++#if 0
++/* #ifdef	__GNUC__ */
+ #define	G_GNUC_FUNCTION		__FUNCTION__
+ #define	G_GNUC_PRETTY_FUNCTION	__PRETTY_FUNCTION__
+ #else	/* !__GNUC__ */

@@ -1,0 +1,56 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur gnome-vfs-2.10.1.orig/libgnomevfs/gnome-vfs-address.c gnome-vfs-2.10.1/libgnomevfs/gnome-vfs-address.c
+--- gnome-vfs-2.10.1.orig/libgnomevfs/gnome-vfs-address.c	2018-09-18 15:29:36.620008000 -0700
++++ gnome-vfs-2.10.1/libgnomevfs/gnome-vfs-address.c	2018-09-18 15:35:17.140132000 -0700
+@@ -40,6 +40,10 @@
+ 	   struct sockaddr *sa;
+ };
+ 
++#ifndef INADDR_NONE
++#define INADDR_NONE     ((unsigned int)-1)
++#endif
++
+ #define SA(__s)				((struct sockaddr *) __s)
+ 
+ #define SIN_LEN				sizeof (struct sockaddr_in)
+Only in gnome-vfs-2.10.1.orig/libgnomevfs: gnome-vfs-address.loT
+diff '--exclude=.deps' '--exclude=*.log' -ur gnome-vfs-2.10.1.orig/libgnomevfs/gnome-vfs-dns-sd.c gnome-vfs-2.10.1/libgnomevfs/gnome-vfs-dns-sd.c
+--- gnome-vfs-2.10.1.orig/libgnomevfs/gnome-vfs-dns-sd.c	2018-09-18 15:29:36.600141000 -0700
++++ gnome-vfs-2.10.1/libgnomevfs/gnome-vfs-dns-sd.c	2018-09-18 15:35:17.140162000 -0700
+@@ -48,6 +48,9 @@
+ 
+ #define DNS_REPLY_SIZE (64*1024)
+ 
++#ifndef T_SRV
++#define T_SRV 33
++#endif
+ 
+ /* Some systems don't those namespaced constants defined, see 
+  * http://bugzilla.gnome.org/show_bug.cgi?id=162289
+diff '--exclude=.deps' '--exclude=*.log' -ur gnome-vfs-2.10.1.orig/modules/ftp-method.c gnome-vfs-2.10.1/modules/ftp-method.c
+--- gnome-vfs-2.10.1.orig/modules/ftp-method.c	2018-09-18 15:29:36.530050000 -0700
++++ gnome-vfs-2.10.1/modules/ftp-method.c	2018-09-18 15:41:16.550019000 -0700
+@@ -83,6 +83,10 @@
+ #define IS_400(X) ((X) >= 400 && (X) < 500)
+ #define IS_500(X) ((X) >= 500 && (X) < 600)
+ 
++#ifndef socklen_t
++typedef size_t socklen_t;
++#endif
++
+ typedef struct {
+ 	char *ip; /* Saved ip to get the same resolv each time */
+ 	gchar *server_type; /* the response from TYPE */
+diff '--exclude=.deps' '--exclude=*.log' -ur gnome-vfs-2.10.1.orig/modules/http-proxy.c gnome-vfs-2.10.1/modules/http-proxy.c
+--- gnome-vfs-2.10.1.orig/modules/http-proxy.c	2018-09-18 15:29:36.550003000 -0700
++++ gnome-vfs-2.10.1/modules/http-proxy.c	2018-09-18 15:38:17.230005000 -0700
+@@ -27,6 +27,10 @@
+ 
+ #include "http-proxy.h"
+ 
++#ifndef INET_ADDRSTRLEN
++#define INET_ADDRSTRLEN 16
++#endif
++
+ /* #define DEBUG_HTTP(x) (g_print x) */
+ #define DEBUG_HTTP(x)
+ 

@@ -1,0 +1,267 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/app/buildmenu.c gimp-1.0.0/app/buildmenu.c
+--- gimp-1.0.0.orig/app/buildmenu.c	2018-09-17 15:41:43.870215000 -0700
++++ gimp-1.0.0/app/buildmenu.c	2018-09-17 16:46:57.920002000 -0700
+@@ -21,7 +21,7 @@
+ 
+ GtkWidget *
+ build_menu (MenuItem            *items,
+-	    GtkAcceleratorTable *table)
++	    GtkAccelGroup *table)
+ {
+   GtkWidget *menu;
+   GtkWidget *menu_item;
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/app/buildmenu.h gimp-1.0.0/app/buildmenu.h
+--- gimp-1.0.0.orig/app/buildmenu.h	2018-09-17 15:41:43.870219000 -0700
++++ gimp-1.0.0/app/buildmenu.h	2018-09-17 16:47:10.850002000 -0700
+@@ -42,6 +42,6 @@
+ 
+ 
+ /* Function declarations */
+-GtkWidget *  build_menu (MenuItem *, GtkAcceleratorTable *);
++GtkWidget *  build_menu (MenuItem *, GtkAccelGroup *);
+ 
+ #endif /* BUILDMENU_H */
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/app/channels_dialog.c gimp-1.0.0/app/channels_dialog.c
+--- gimp-1.0.0.orig/app/channels_dialog.c	2018-09-17 15:41:43.880037000 -0700
++++ gimp-1.0.0/app/channels_dialog.c	2018-09-17 16:47:28.220016000 -0700
+@@ -92,7 +92,7 @@
+   GtkWidget *channel_list;
+   GtkWidget *preview;
+   GtkWidget *ops_menu;
+-  GtkAcceleratorTable *accel_table;
++  GtkAccelGroup *accel_table;
+ 
+   int num_components;
+   int base_type;
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/app/gradient.c gimp-1.0.0/app/gradient.c
+--- gimp-1.0.0.orig/app/gradient.c	2018-09-17 15:41:43.900119000 -0700
++++ gimp-1.0.0/app/gradient.c	2018-09-17 16:48:02.150061000 -0700
+@@ -320,7 +320,7 @@
+ 	GtkWidget           *control_coloring_popup;          /* Coloring type menu */
+ 	GtkWidget           *control_sel_ops_popup;           /* Selection ops menu */
+ 
+-	GtkAcceleratorTable *accelerator_table;
++	GtkAccelGroup *accelerator_table;
+ 
+ 	/* Blending and coloring menus */
+ 
+@@ -2871,7 +2871,7 @@
+ 	GtkWidget           *menu;
+ 	GtkWidget           *menuitem;
+ 	GtkWidget           *label;
+-	GtkAcceleratorTable *acc_table;
++	GtkAccelGroup *acc_table;
+ 
+ 	menu      = gtk_menu_new();
+ 	acc_table = gtk_accelerator_table_new();
+@@ -3476,7 +3476,7 @@
+ {
+ 	GtkWidget           *menu;
+ 	GtkWidget           *menuitem;
+-	GtkAcceleratorTable *acc_table;
++	GtkAccelGroup *acc_table;
+ 	int                  i;
+ 
+ 	menu      = gtk_menu_new();
+@@ -3886,7 +3886,7 @@
+ {
+ 	GtkWidget           *menu;
+ 	GtkWidget           *menuitem;
+-	GtkAcceleratorTable *acc_table;
++	GtkAccelGroup *acc_table;
+ 
+ 	menu      = gtk_menu_new();
+ 	acc_table = g_editor->accelerator_table;
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/app/indexed_palette.c gimp-1.0.0/app/indexed_palette.c
+--- gimp-1.0.0.orig/app/indexed_palette.c	2018-09-17 15:41:43.900203000 -0700
++++ gimp-1.0.0/app/indexed_palette.c	2018-09-17 16:48:32.090005000 -0700
+@@ -119,7 +119,7 @@
+   GtkWidget *menu_bar;
+   GtkWidget *menu_bar_item;
+   GtkWidget *hbox;
+-  GtkAcceleratorTable *table;
++  GtkAccelGroup *table;
+   int default_index;
+ 
+   if (!indexedP)
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/app/interface.c gimp-1.0.0/app/interface.c
+--- gimp-1.0.0.orig/app/interface.c	2018-09-17 15:41:43.900253000 -0700
++++ gimp-1.0.0/app/interface.c	2018-09-17 16:48:50.670008000 -0700
+@@ -499,7 +499,7 @@
+   GtkWidget *main_vbox;
+   GtkWidget *vbox;
+   GtkWidget *menubar;
+-  GtkAcceleratorTable *table;
++  GtkAccelGroup *table;
+ 
+   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+   gtk_window_set_wmclass (GTK_WINDOW (window), "toolbox", "Gimp");
+@@ -581,7 +581,7 @@
+ 		      int   type)
+ {
+   static GtkWidget *image_popup_menu = NULL;
+-  static GtkAcceleratorTable *image_accelerator_table = NULL;
++  static GtkAccelGroup *image_accelerator_table = NULL;
+   GDisplay *gdisp;
+   GtkWidget *table;
+   int n_width, n_height;
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/app/layers_dialog.c gimp-1.0.0/app/layers_dialog.c
+--- gimp-1.0.0.orig/app/layers_dialog.c	2018-09-17 15:41:43.910074000 -0700
++++ gimp-1.0.0/app/layers_dialog.c	2018-09-17 16:49:56.060029000 -0700
+@@ -87,7 +87,7 @@
+   GtkWidget *mode_box;
+   GtkWidget *opacity_box;
+   GtkWidget *ops_menu;
+-  GtkAcceleratorTable *accel_table;
++  GtkAccelGroup *accel_table;
+   GtkAdjustment *opacity_data;
+   GdkGC *red_gc;     /*  for non-applied layer masks  */
+   GdkGC *green_gc;   /*  for visible layer masks      */
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/app/menus.c gimp-1.0.0/app/menus.c
+--- gimp-1.0.0.orig/app/menus.c	2018-09-17 15:41:43.910123000 -0700
++++ gimp-1.0.0/app/menus.c	2018-09-17 16:50:07.700006000 -0700
+@@ -216,7 +216,7 @@
+ 
+ void
+ menus_get_toolbox_menubar (GtkWidget           **menubar,
+-			   GtkAcceleratorTable **table)
++			   GtkAccelGroup **table)
+ {
+   if (initialize)
+     menus_init ();
+@@ -229,7 +229,7 @@
+ 
+ void
+ menus_get_image_menu (GtkWidget           **menu,
+-		      GtkAcceleratorTable **table)
++		      GtkAccelGroup **table)
+ {
+   if (initialize)
+     menus_init ();
+@@ -242,7 +242,7 @@
+ 
+ void
+ menus_get_load_menu (GtkWidget           **menu,
+-		     GtkAcceleratorTable **table)
++		     GtkAccelGroup **table)
+ {
+   if (initialize)
+     menus_init ();
+@@ -255,7 +255,7 @@
+ 
+ void
+ menus_get_save_menu (GtkWidget           **menu,
+-		     GtkAcceleratorTable **table)
++		     GtkAccelGroup **table)
+ {
+   if (initialize)
+     menus_init ();
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/app/menus.h gimp-1.0.0/app/menus.h
+--- gimp-1.0.0.orig/app/menus.h	2018-09-17 15:41:43.910127000 -0700
++++ gimp-1.0.0/app/menus.h	2018-09-17 16:50:15.220002000 -0700
+@@ -23,13 +23,13 @@
+ 
+ 
+ void menus_get_toolbox_menubar (GtkWidget           **menubar,
+-				GtkAcceleratorTable **table);
++				GtkAccelGroup **table);
+ void menus_get_image_menu      (GtkWidget           **menu,
+-				GtkAcceleratorTable **table);
++				GtkAccelGroup **table);
+ void menus_get_load_menu       (GtkWidget           **menu,
+-				GtkAcceleratorTable **table);
++				GtkAccelGroup **table);
+ void menus_get_save_menu       (GtkWidget           **menu,
+-				GtkAcceleratorTable **table);
++				GtkAccelGroup **table);
+ void menus_create              (GtkMenuEntry         *entries,
+ 				int                   nmenu_entries);
+ void menus_set_sensitive       (char                 *path,
+Only in gimp-1.0.0.orig: confdefs.h
+Only in gimp-1.0.0: config.h
+Only in gimp-1.0.0: config.status
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/configure gimp-1.0.0/configure
+--- gimp-1.0.0.orig/configure	2018-09-17 15:41:44.000164000 -0700
++++ gimp-1.0.0/configure	2018-09-17 16:45:51.580481000 -0700
+@@ -1877,6 +1877,7 @@
+ 
+ #include <gtk/gtk.h>
+ #include <stdio.h>
++#include <stdlib.h>
+ 
+ int 
+ main ()
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/plug-ins/gfig/gfig.c gimp-1.0.0/plug-ins/gfig/gfig.c
+--- gimp-1.0.0.orig/plug-ins/gfig/gfig.c	2018-09-17 15:41:43.770178000 -0700
++++ gimp-1.0.0/plug-ins/gfig/gfig.c	2018-09-17 16:50:52.360162000 -0700
+@@ -6291,7 +6291,7 @@
+ {
+   GtkWidget *menu_item;
+ #if 0
+-  GtkAcceleratorTable *accelerator_table;
++  GtkAccelGroup *accelerator_table;
+ #endif /* 0 */
+ 
+   gfig_op_menu = gtk_menu_new();
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/plug-ins/ifscompose/ifscompose.c gimp-1.0.0/plug-ins/ifscompose/ifscompose.c
+--- gimp-1.0.0.orig/plug-ins/ifscompose/ifscompose.c	2018-09-17 15:41:43.790127000 -0700
++++ gimp-1.0.0/plug-ins/ifscompose/ifscompose.c	2018-09-17 16:51:04.100021000 -0700
+@@ -1104,7 +1104,7 @@
+ design_op_menu_create(GtkWidget *window)
+ {
+   GtkWidget *menu_item;
+-  GtkAcceleratorTable *accelerator_table;
++  GtkAccelGroup *accelerator_table;
+ 
+   ifsDesign->op_menu = gtk_menu_new();
+   gtk_object_ref (GTK_OBJECT (ifsDesign->op_menu));
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/plug-ins/libgck/gck/gcktypes.h gimp-1.0.0/plug-ins/libgck/gck/gcktypes.h
+--- gimp-1.0.0.orig/plug-ins/libgck/gck/gcktypes.h	2018-09-17 15:41:43.670218000 -0700
++++ gimp-1.0.0/plug-ins/libgck/gck/gcktypes.h	2018-09-17 16:50:41.450003000 -0700
+@@ -119,7 +119,7 @@
+ {
+   GtkWidget *widget;
+   GtkStyle *style;
+-  GtkAcceleratorTable *accelerator_table;
++  GtkAccelGroup *accelerator_table;
+   GckVisualInfo *visinfo;
+ } GckApplicationWindow;
+ 
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/plug-ins/libgck/gck/gckui.c gimp-1.0.0/plug-ins/libgck/gck/gckui.c
+--- gimp-1.0.0.orig/plug-ins/libgck/gck/gckui.c	2018-09-17 15:41:43.670182000 -0700
++++ gimp-1.0.0/plug-ins/libgck/gck/gckui.c	2018-09-17 16:50:31.290010000 -0700
+@@ -1036,7 +1036,7 @@
+ /******************/
+ 
+ GtkWidget *gck_menu_bar_new(GtkWidget *container,GckMenuItem menu_items[],
+-                            GtkAcceleratorTable *acc_table)
++                            GtkAccelGroup *acc_table)
+ {
+   GtkWidget *menubar,*menu_item;
+   gint container_type;
+@@ -1089,7 +1089,7 @@
+ /* Create menu */
+ /***************/
+ 
+-GtkWidget *gck_menu_new(GckMenuItem *menu_items,GtkAcceleratorTable *acc_table)
++GtkWidget *gck_menu_new(GckMenuItem *menu_items,GtkAccelGroup *acc_table)
+ {
+   GtkWidget *menu,*menu_item;
+   gint i=0;
+diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.0.0.orig/plug-ins/libgck/gck/gckui.h gimp-1.0.0/plug-ins/libgck/gck/gckui.h
+--- gimp-1.0.0.orig/plug-ins/libgck/gck/gckui.h	2018-09-17 15:41:43.670223000 -0700
++++ gimp-1.0.0/plug-ins/libgck/gck/gckui.h	2018-09-17 16:45:51.580506000 -0700
+@@ -126,10 +126,10 @@
+ 
+ GtkWidget            *gck_menu_bar_new               (GtkWidget *container,
+                                                       GckMenuItem menu_items[],
+-                                                      GtkAcceleratorTable *acc_table);
++                                                      GtkAccelGroup *acc_table);
+ 
+ GtkWidget            *gck_menu_new                   (GckMenuItem *menu_items,
+-                                                      GtkAcceleratorTable *acc_table);
++                                                      GtkAccelGroup *acc_table);
+ 
+ GtkWidget            *gck_option_menu_new            (char *name,GtkWidget *container,
+                                                       gint expand,gint fill,
+Only in gimp-1.0.0: stamp-h

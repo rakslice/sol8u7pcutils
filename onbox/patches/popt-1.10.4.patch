@@ -1,0 +1,12 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur popt-1.10.4.orig/system.h popt-1.10.4/system.h
+--- popt-1.10.4.orig/system.h	2018-09-18 06:39:58.390112000 -0700
++++ popt-1.10.4/system.h	2018-09-18 06:40:53.850002000 -0700
+@@ -61,6 +61,8 @@
+ #define alloca __builtin_alloca
+ #endif
+ 
++#include <alloca.h>
++
+ /*@-redecl -redef@*/
+ /*@mayexit@*/ /*@only@*/ /*@unused@*/
+ char * xstrdup (const char *str)

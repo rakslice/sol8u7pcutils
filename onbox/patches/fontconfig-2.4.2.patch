@@ -1,0 +1,12 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur fontconfig-2.4.2.orig/src/fcint.h fontconfig-2.4.2/src/fcint.h
+--- fontconfig-2.4.2.orig/src/fcint.h	2018-09-17 03:01:58.570010000 -0700
++++ fontconfig-2.4.2/src/fcint.h	2018-09-17 03:02:18.440008000 -0700
+@@ -111,7 +111,7 @@
+ #define FC_BANK_LANGS	    0xfcfcfcfc
+ 
+ /* slim_internal.h */
+-#if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3)) && defined(__ELF__)
++#if 0 /* (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3)) && defined(__ELF__) */
+ #define FcPrivate		__attribute__((__visibility__("hidden")))
+ #define HAVE_GNUC_ATTRIBUTE 1
+ #include "fcalias.h"

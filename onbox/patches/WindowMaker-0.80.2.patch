@@ -1,0 +1,12 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur WindowMaker-0.80.2.orig/wrlib/png.c WindowMaker-0.80.2/wrlib/png.c
+--- WindowMaker-0.80.2.orig/wrlib/png.c	2018-09-17 23:51:51.890028000 -0700
++++ WindowMaker-0.80.2/wrlib/png.c	2018-09-17 23:52:59.930003000 -0700
+@@ -97,7 +97,7 @@
+     }
+ 
+     RErrorCode = RERR_INTERNAL;
+-    if (setjmp(png->jmpbuf)) {
++    if (setjmp(png_jmpbuf(png))) {
+ 	fclose(f);
+ 	png_destroy_read_struct(&png, &pinfo, &einfo);
+ 	if (image)

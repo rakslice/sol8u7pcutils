@@ -1,0 +1,20 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur esound-0.2.41.orig/clients.c esound-0.2.41/clients.c
+--- esound-0.2.41.orig/clients.c	2018-09-18 16:02:48.710027000 -0700
++++ esound-0.2.41/clients.c	2018-09-18 16:03:17.750004000 -0700
+@@ -134,6 +134,9 @@
+     return;
+ }
+ 
++#ifndef socklen_t
++typedef size_t socklen_t;
++#endif
+ 
+ /*******************************************************************/
+ /* checks for new connections at listener - zero when done */
+Only in esound-0.2.41: clients.o
+Only in esound-0.2.41: esd
+Only in esound-0.2.41: filter.o
+Only in esound-0.2.41: mix.o
+Only in esound-0.2.41: players.o
+Only in esound-0.2.41: proto.o
+Only in esound-0.2.41: samples.o

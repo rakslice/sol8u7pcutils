@@ -1,0 +1,66 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur gtk+-2.5.6.orig/gdk-pixbuf/io-png.c gtk+-2.5.6/gdk-pixbuf/io-png.c
+--- gtk+-2.5.6.orig/gdk-pixbuf/io-png.c	2018-09-18 06:06:25.010022000 -0700
++++ gtk+-2.5.6/gdk-pixbuf/io-png.c	2018-09-18 06:11:36.740010000 -0700
+@@ -184,7 +184,7 @@
+                              error_msg);
+         }
+ 
+-        longjmp (png_save_ptr->jmpbuf, 1);
++        longjmp (png_jmpbuf(png_save_ptr), 1);
+ }
+ 
+ static void
+@@ -272,7 +272,7 @@
+ 		return NULL;
+ 	}
+ 
+-	if (setjmp (png_ptr->jmpbuf)) {
++	if (setjmp (png_jmpbuf(png_ptr))) {
+ 	    	if (rows)
+ 		  	g_free (rows);
+ 
+@@ -433,7 +433,7 @@
+                 return NULL;
+         }
+         
+-	if (setjmp (lc->png_read_ptr->jmpbuf)) {
++	if (setjmp (png_jmpbuf(lc->png_read_ptr))) {
+ 		if (lc->png_info_ptr)
+ 			png_destroy_read_struct(&lc->png_read_ptr, NULL, NULL);
+                 g_free(lc);
+@@ -505,7 +505,7 @@
+         lc->error = error;
+         
+         /* Invokes our callbacks as needed */
+-	if (setjmp (lc->png_read_ptr->jmpbuf)) {
++	if (setjmp (png_jmpbuf(lc->png_read_ptr))) {
+                 lc->error = NULL;
+ 		return FALSE;
+ 	} else {
+@@ -615,7 +615,7 @@
+                         g_set_error (lc->error,
+                                      GDK_PIXBUF_ERROR,
+                                      GDK_PIXBUF_ERROR_INSUFFICIENT_MEMORY,
+-                                     _("Insufficient memory to store a %ld by %ld image; try exiting some applications to reduce memory usage"),
++                                     _("Insufficient memory to store a %d by %d image; try exiting some applications to reduce memory usage"),
+                                      width, height);
+                 }
+                 return;
+@@ -719,7 +719,7 @@
+                              error_msg);
+         }
+ 
+-        longjmp (png_read_ptr->jmpbuf, 1);
++        longjmp (png_jmpbuf(png_read_ptr), 1);
+ }
+ 
+ static void
+@@ -880,7 +880,7 @@
+ 	       success = FALSE;
+ 	       goto cleanup;
+        }
+-       if (setjmp (png_ptr->jmpbuf)) {
++       if (setjmp (png_jmpbuf(png_ptr))) {
+ 	       success = FALSE;
+ 	       goto cleanup;
+        }

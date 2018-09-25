@@ -1,0 +1,87 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur imlib2-1.4.4.orig/src/lib/Imlib2.h imlib2-1.4.4/src/lib/Imlib2.h
+--- imlib2-1.4.4.orig/src/lib/Imlib2.h	2018-09-17 03:42:23.810054000 -0700
++++ imlib2-1.4.4/src/lib/Imlib2.h	2018-09-17 04:11:06.870434000 -0700
+@@ -12,7 +12,7 @@
+ #  endif
+ # else
+ #  ifdef __GNUC__
+-#   if __GNUC__ >= 4
++#   if 0 /* __GNUC__ >= 4 */
+ #    define EAPI __attribute__ ((visibility("default")))
+ #   else
+ #    define EAPI
+diff '--exclude=.deps' '--exclude=*.log' -ur imlib2-1.4.4.orig/src/lib/asm.h imlib2-1.4.4/src/lib/asm.h
+--- imlib2-1.4.4.orig/src/lib/asm.h	2018-09-17 03:42:23.810138000 -0700
++++ imlib2-1.4.4/src/lib/asm.h	2018-09-17 04:11:06.870459000 -0700
+@@ -9,7 +9,7 @@
+ # define PR_(sym) __##sym
+ #endif
+ 
+-#if defined(__GNUC__) && (__GNUC__ >= 4)
++#if 0 /* defined(__GNUC__) && (__GNUC__ >= 4) */
+ # define HIDDEN_(sym) .hidden PR_(sym)
+ #else
+ # define HIDDEN_(sym)
+diff '--exclude=.deps' '--exclude=*.log' -ur imlib2-1.4.4.orig/src/lib/common.h imlib2-1.4.4/src/lib/common.h
+--- imlib2-1.4.4.orig/src/lib/common.h	2018-09-17 03:42:23.810070000 -0700
++++ imlib2-1.4.4/src/lib/common.h	2018-09-17 04:11:06.870501000 -0700
+@@ -16,7 +16,7 @@
+ #include <sys/types.h>
+ #endif
+ 
+-#if defined(__GNUC__) && (__GNUC__ >= 4)
++#if 0 /* defined(__GNUC__) && (__GNUC__ >= 4) */
+ #define __hidden __attribute__((visibility("hidden")))
+ #else
+ #define __hidden
+diff '--exclude=.deps' '--exclude=*.log' -ur imlib2-1.4.4.orig/src/modules/loaders/loader_png.c imlib2-1.4.4/src/modules/loaders/loader_png.c
+--- imlib2-1.4.4.orig/src/modules/loaders/loader_png.c	2018-09-17 03:42:23.860109000 -0700
++++ imlib2-1.4.4/src/modules/loaders/loader_png.c	2018-09-17 04:11:56.310005000 -0700
+@@ -58,7 +58,7 @@
+              fclose(f);
+              return 0;
+           }
+-        if (setjmp(png_ptr->jmpbuf))
++        if (setjmp(png_jmpbuf(png_ptr)))
+           {
+              png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+              fclose(f);
+@@ -265,7 +265,7 @@
+         png_destroy_write_struct(&png_ptr, (png_infopp) NULL);
+         return 0;
+      }
+-   if (setjmp(png_ptr->jmpbuf))
++   if (setjmp(png_jmpbuf(png_ptr)))
+      {
+         fclose(f);
+         png_destroy_write_struct(&png_ptr, (png_infopp) & info_ptr);
+@@ -276,17 +276,19 @@
+    /* check whether we should use interlacing */
+    if ((tag = __imlib_GetTag(im, "interlacing")) && tag->val)
+      {
++/*
+ #ifdef PNG_WRITE_INTERLACING_SUPPORTED
+           png_ptr->interlaced = PNG_INTERLACE_ADAM7;
+           num_passes = png_set_interlace_handling(png_ptr);
+ #endif
++*/
+      }
+ 
+    png_init_io(png_ptr, f);
+    if (im->flags & F_HAS_ALPHA)
+      {
+         png_set_IHDR(png_ptr, info_ptr, im->w, im->h, 8,
+-                     PNG_COLOR_TYPE_RGB_ALPHA, png_ptr->interlaced,
++                     PNG_COLOR_TYPE_RGB_ALPHA, PNG_INTERLACE_NONE /* png_ptr->interlaced */,
+                      PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+ #ifdef WORDS_BIGENDIAN
+         png_set_swap_alpha(png_ptr);
+@@ -297,7 +299,7 @@
+    else
+      {
+         png_set_IHDR(png_ptr, info_ptr, im->w, im->h, 8, PNG_COLOR_TYPE_RGB,
+-                     png_ptr->interlaced, PNG_COMPRESSION_TYPE_BASE,
++                     PNG_INTERLACE_NONE /* png_ptr->interlaced */, PNG_COMPRESSION_TYPE_BASE,
+                      PNG_FILTER_TYPE_BASE);
+         data = malloc(im->w * 3 * sizeof(char));
+      }

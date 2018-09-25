@@ -1,7 +1,6 @@
 #!/usr/local/bin/bash
 set -e
 
-
 # A package helper script
 
 if [ $# -lt 1 ]; then
@@ -18,7 +17,6 @@ checksums_file=$packages_dir/checksums/tcg.list
 #package sites for 2.6 sparc
 #####################################
 
-#BASE_URL=http://ftp.sunet.se/mirror/archive/ftp.sunet.se/pub/vendor/sun/freeware/sparc/2.6/
 BASE_URL=http://sandsys:8121/
 
 PACKAGE_PREFIX=TGC
@@ -34,6 +32,7 @@ PACKAGE_PREFIX=TGC
 
 # TCGWare - has some things the other doesn't
 #https://jupiterrise.com/tgcware/sunos5.6_sparc/stable/
+#BASE_URL=https://jupiterrise.com/tgcware/sunos5.6_x86/stable/
 
 #####################################
 
