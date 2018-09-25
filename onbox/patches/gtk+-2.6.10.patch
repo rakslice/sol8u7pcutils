@@ -1,6 +1,28 @@
-diff '--exclude=.deps' '--exclude=*.log' -ur gtk+-2.5.6.orig/gdk-pixbuf/io-png.c gtk+-2.5.6/gdk-pixbuf/io-png.c
---- gtk+-2.5.6.orig/gdk-pixbuf/io-png.c	2018-09-18 06:06:25.010022000 -0700
-+++ gtk+-2.5.6/gdk-pixbuf/io-png.c	2018-09-18 06:11:36.740010000 -0700
+diff '--exclude=.deps' '--exclude=*.log' -ur gtk+-2.6.10.orig/demos/Makefile gtk+-2.6.10/demos/Makefile
+--- gtk+-2.6.10.orig/demos/Makefile	2018-09-24 21:26:38.440441000 -0700
++++ gtk+-2.6.10/demos/Makefile	2018-09-24 21:48:49.330008000 -0700
+@@ -292,7 +292,6 @@
+ INCLUDES = \
+ 	-I$(top_srcdir) 				\
+ 	-I$(top_builddir)/gdk				\
+-	-DG_DISABLE_DEPRECATED	 			\
+ 	-DGDK_PIXBUF_DISABLE_DEPRECATED			\
+ 	-DGDK_DISABLE_DEPRECATED			\
+ 	-DGTK_DISABLE_DEPRECATED			\
+diff '--exclude=.deps' '--exclude=*.log' -ur gtk+-2.6.10.orig/demos/gtk-demo/Makefile gtk+-2.6.10/demos/gtk-demo/Makefile
+--- gtk+-2.6.10.orig/demos/gtk-demo/Makefile	2018-09-24 21:25:52.370220000 -0700
++++ gtk+-2.6.10/demos/gtk-demo/Makefile	2018-09-24 21:48:37.810008000 -0700
+@@ -320,7 +320,6 @@
+ 	-DDEMOCODEDIR="\"$(democodedir)\""		\
+ 	-I$(top_srcdir) 				\
+ 	-I$(top_builddir)/gdk				\
+-	-DG_DISABLE_DEPRECATED	 			\
+ 	-DGDK_PIXBUF_DISABLE_DEPRECATED			\
+ 	-DGDK_DISABLE_DEPRECATED			\
+ 	-DGTK_DISABLE_DEPRECATED 			\
+diff '--exclude=.deps' '--exclude=*.log' -ur gtk+-2.6.10.orig/gdk-pixbuf/io-png.c gtk+-2.6.10/gdk-pixbuf/io-png.c
+--- gtk+-2.6.10.orig/gdk-pixbuf/io-png.c	2018-09-18 15:06:28.030183000 -0700
++++ gtk+-2.6.10/gdk-pixbuf/io-png.c	2018-09-24 21:28:52.500100000 -0700
 @@ -184,7 +184,7 @@
                               error_msg);
          }
@@ -64,3 +86,32 @@ diff '--exclude=.deps' '--exclude=*.log' -ur gtk+-2.5.6.orig/gdk-pixbuf/io-png.c
  	       success = FALSE;
  	       goto cleanup;
         }
+Only in gtk+-2.6.10.orig/gdk-pixbuf: io-png.loT
+Binary files gtk+-2.6.10.orig/gdk-pixbuf/pixops/.libs/composite_line_22_4a4_mmx.o and gtk+-2.6.10/gdk-pixbuf/pixops/.libs/composite_line_22_4a4_mmx.o differ
+Binary files gtk+-2.6.10.orig/gdk-pixbuf/pixops/.libs/composite_line_color_22_4a4_mmx.o and gtk+-2.6.10/gdk-pixbuf/pixops/.libs/composite_line_color_22_4a4_mmx.o differ
+Binary files gtk+-2.6.10.orig/gdk-pixbuf/pixops/.libs/have_mmx.o and gtk+-2.6.10/gdk-pixbuf/pixops/.libs/have_mmx.o differ
+Binary files gtk+-2.6.10.orig/gdk-pixbuf/pixops/.libs/libpixops.a and gtk+-2.6.10/gdk-pixbuf/pixops/.libs/libpixops.a differ
+Binary files gtk+-2.6.10.orig/gdk-pixbuf/pixops/.libs/pixops.o and gtk+-2.6.10/gdk-pixbuf/pixops/.libs/pixops.o differ
+Binary files gtk+-2.6.10.orig/gdk-pixbuf/pixops/.libs/scale_line_22_33_mmx.o and gtk+-2.6.10/gdk-pixbuf/pixops/.libs/scale_line_22_33_mmx.o differ
+diff '--exclude=.deps' '--exclude=*.log' -ur gtk+-2.6.10.orig/modules/engines/pixbuf/Makefile gtk+-2.6.10/modules/engines/pixbuf/Makefile
+--- gtk+-2.6.10.orig/modules/engines/pixbuf/Makefile	2018-09-24 21:08:43.900344000 -0700
++++ gtk+-2.6.10/modules/engines/pixbuf/Makefile	2018-09-24 21:48:24.160007000 -0700
+@@ -291,7 +291,6 @@
+ 	-I$(top_srcdir) 				\
+ 	-I$(top_srcdir)/gdk				\
+ 	-I$(top_builddir)/gdk				\
+-	-DG_DISABLE_DEPRECATED	 			\
+ 	-DGDK_PIXBUF_DISABLE_DEPRECATED			\
+ 	-DGDK_DISABLE_DEPRECATED			\
+ 	$(GTK_DEP_CFLAGS)
+diff '--exclude=.deps' '--exclude=*.log' -ur gtk+-2.6.10.orig/tests/Makefile gtk+-2.6.10/tests/Makefile
+--- gtk+-2.6.10.orig/tests/Makefile	2018-09-24 21:27:05.280003000 -0700
++++ gtk+-2.6.10/tests/Makefile	2018-09-24 21:46:11.490012000 -0700
+@@ -290,7 +290,6 @@
+ 	-I$(top_srcdir)				\
+ 	-I$(top_builddir)/gdk			\
+ 	-I$(top_srcdir)/gdk			\
+-	-DG_DISABLE_DEPRECATED			\
+ 	-DGDK_PIXBUF_DISABLE_DEPRECATED		\
+ 	-DGDK_DISABLE_DEPRECATED		\
+ 	-DGTK_DISABLE_DEPRECATED		\
