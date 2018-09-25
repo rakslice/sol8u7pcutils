@@ -1,0 +1,46 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur cairo-1.0.4.orig/pixman/src/slim_internal.h cairo-1.0.4/pixman/src/slim_internal.h
+--- cairo-1.0.4.orig/pixman/src/slim_internal.h	2018-09-25 00:05:40.130011000 -0700
++++ cairo-1.0.4/pixman/src/slim_internal.h	2018-09-25 00:36:07.370313000 -0700
+@@ -47,7 +47,7 @@
+ /* ??? Not marked with "slim" because that makes it look too much
+    like the function name instead of just an attribute.  */
+ 
+-#if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3)) && defined(__ELF__)
++#if 0 /* (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3)) && defined(__ELF__) */
+ #define pixman_private	__attribute__((__visibility__("hidden")))
+ #else
+ #define pixman_private
+diff '--exclude=.deps' '--exclude=*.log' -ur cairo-1.0.4.orig/src/cairo-xlib-xrender.h cairo-1.0.4/src/cairo-xlib-xrender.h
+--- cairo-1.0.4.orig/src/cairo-xlib-xrender.h	2018-09-25 00:05:39.920070000 -0700
++++ cairo-1.0.4/src/cairo-xlib-xrender.h	2018-09-25 00:37:52.140002000 -0700
+@@ -41,6 +41,9 @@
+ 
+ #if CAIRO_HAS_XLIB_SURFACE
+ 
++#include <X11/X.h>
++#include <X11/Xdefs.h>
++#include <X11/Xlib.h>
+ #include <X11/extensions/Xrender.h>
+ 
+ CAIRO_BEGIN_DECLS
+diff '--exclude=.deps' '--exclude=*.log' -ur cairo-1.0.4.orig/src/cairoint.h cairo-1.0.4/src/cairoint.h
+--- cairo-1.0.4.orig/src/cairoint.h	2018-09-25 00:05:39.930162000 -0700
++++ cairo-1.0.4/src/cairoint.h	2018-09-25 00:36:07.370377000 -0700
+@@ -66,7 +66,7 @@
+ #include "cairo-debug.h"
+ #include <pixman.h>
+ 
+-#if __GNUC__ >= 3 && defined(__ELF__)
++#if 0 /* __GNUC__ >= 3 && defined(__ELF__) */
+ # define slim_hidden_proto(name)	slim_hidden_proto1(name, INT_##name)
+ # define slim_hidden_def(name)		slim_hidden_def1(name, INT_##name)
+ # define slim_hidden_proto1(name, internal)				\
+@@ -94,7 +94,7 @@
+ #endif
+ 
+ /* slim_internal.h */
+-#if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3)) && defined(__ELF__)
++#if 0 /* (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3)) && defined(__ELF__) */
+ #define cairo_private		__attribute__((__visibility__("hidden")))
+ #else
+ #define cairo_private
