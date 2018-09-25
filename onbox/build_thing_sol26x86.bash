@@ -280,8 +280,10 @@ function wtcmmi() {
 
 	if [ "$use_dirname" == "" ]; then
 		dirname="${archive%.tar.gz}"
+		dirname="${dirname%.tgz}"
 		dirname="${dirname%.tar.bz2}"
 		dirname="${dirname%.tar.xz}"
+		[ "$dirname" != "$archive" ]
 	else
 		dirname="$use_dirname"
 	fi
@@ -319,6 +321,10 @@ function wtcmmi() {
 	# apply a patch if there is one to apply and patch_before_configure is specified
 	if [ "$patch_before_configure" != "" ] && [ -f "${patches_dir}/${dirname}.patch" ]; then
 		gpatch -p1 -i "${patches_dir}/${dirname}.patch" 2>&1 | tee ~/src/logs/${dirname}.patch.out
+	fi
+
+	if [ "$before_configure" != "" ]; then
+		$before_configure
 	fi
 
 	if [ "$configure_name" == "" ]; then
@@ -503,8 +509,12 @@ tgcpkg install libtool
 configure_name="$(which bash) autogen.sh" \
 wtcmmi http://downloads.sourceforge.net/freetype/freetype-2.3.9.tar.bz2 db08969cb5053879ff9e973fe6dd2c52c7ea2d4e
 wtcmmi http://xmlsoft.org/sources/libxml2-2.7.7.tar.gz 8592824a2788574a172cbddcdc72f734ff87abe3 LDFLAGS="-R/usr/tgcware/lib"
-wtcmmi http://fontconfig.org/release/fontconfig-2.4.2.tar.gz cd5e30625680a0435563b586275156eaf8d0d34a LDFLAGS="-R/usr/tgcware/lib"
+
+# NB: We explicitly pass --prefix for fontconfig to work around https://bugs.freedesktop.org/show_bug.cgi?id=18675
+wtcmmi http://fontconfig.org/release/fontconfig-2.4.2.tar.gz cd5e30625680a0435563b586275156eaf8d0d34a LDFLAGS="-R/usr/tgcware/lib" --prefix=/usr/local
 #wtcmmi ftp://ftp.deu.edu.tr/pub/Solaris/sunfreeware/SOURCES/fontconfig-2.4.2.tar.gz cd5e30625680a0435563b586275156eaf8d0d34a
+
+source ${script_path}/fonts.bash
 
 # we also need image format libraries
 use_dirname=jpeg-8d \

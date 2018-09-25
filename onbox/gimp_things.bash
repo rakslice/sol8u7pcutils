@@ -29,6 +29,9 @@ function patch_pkgconfig_libs() {
 	fi
 }
 
+# NB: gtk will fail to find glib due to a libintl link failure in the test if a gettext other 
+# than the system one in /usr/lib is present at build time. If this happens,
+# remove gettext-devel, uninstall glib-1.2.10 and rebuild
 
 wtcmmi https://ftp.gtk.org/pub/gtk/v1.2/glib-1.2.10.tar.gz e5a9361c594608d152d5d9650154c2e3260b87fa
 patch_pkgconfig_libs /usr/local/lib/pkgconfig/glib.pc

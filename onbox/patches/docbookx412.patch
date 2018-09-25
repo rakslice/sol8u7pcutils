@@ -1,0 +1,33 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur docbookx412.orig/Makefile docbookx412/Makefile
+--- docbookx412.orig/Makefile	2018-09-25 05:19:34.010064000 -0700
++++ docbookx412/Makefile	2018-09-25 05:21:10.290284000 -0700
+@@ -10,7 +10,7 @@
+ 
+ install-dtd:
+ 	mkdir -p $(DESTDIR)/ent	
+-	chown -R root.root .
++	chown -R root:root .
+ 	chmod -R a+rX,g-w,o-w .
+ 	install docbook.cat $(DESTDIR)/catalog
+ 	install *.dtd $(DESTDIR)
+diff '--exclude=.deps' '--exclude=*.log' -ur docbookx412.orig/buildDocBookCatalog docbookx412/buildDocBookCatalog
+--- docbookx412.orig/buildDocBookCatalog	2018-09-25 05:19:34.010069000 -0700
++++ docbookx412/buildDocBookCatalog	2018-09-25 05:23:58.550004000 -0700
+@@ -51,7 +51,7 @@
+ #
+ if [ ! -r $ROOTCATALOG ] ; then
+    echo creating XML Catalog root $ROOTCATALOG
+-   /usr/bin/xmlcatalog --noout --create $ROOTCATALOG
++   /usr/local/bin/xmlcatalog --noout --create $ROOTCATALOG
+ fi
+ if [ ! -r $ROOTCATALOG ] ; then
+    echo Failed creating XML Catalog root $ROOTCATALOG
+@@ -59,7 +59,7 @@
+ fi
+ if [ ! -r $CATALOG ] ; then
+    echo creating DocBook XML Catalog $CATALOG
+-   /usr/bin/xmlcatalog --noout --create $CATALOG
++   /usr/local/bin/xmlcatalog --noout --create $CATALOG
+ fi
+ if [ ! -r $CATALOG ] ; then
+    echo Failed creating DocBook XML Catalog $CATALOG

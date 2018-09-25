@@ -1,0 +1,12 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur docbook-xsl-1.48.orig/Makefile docbook-xsl-1.48/Makefile
+--- docbook-xsl-1.48.orig/Makefile	2018-09-25 12:22:29.240064000 -0700
++++ docbook-xsl-1.48/Makefile	2018-09-25 12:26:15.660002000 -0700
+@@ -9,7 +9,7 @@
+ install: install-xsl install-img install-extensions install-misc catalog-entries
+ 
+ install-xsl:
+-	mkdir -p $(DESTDIR)/{common,fo,html,htmlhelp/doc,javahelp,lib,template,xhtml}
++	for f in common fo html htmlhelp/doc javahelp lib template xhtml; do mkdir -p $(DESTDIR)/$$f; done
+ 	cp common/*.dtd $(DESTDIR)/common
+ 	cp common/*.xml $(DESTDIR)/common
+ 	cp common/*.xsl $(DESTDIR)/common

@@ -1,0 +1,83 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur gpdf-2.10.0.orig/xpdf/Makefile gpdf-2.10.0/xpdf/Makefile
+--- gpdf-2.10.0.orig/xpdf/Makefile	2018-09-25 04:31:35.280438000 -0700
++++ gpdf-2.10.0/xpdf/Makefile	2018-09-25 04:51:25.300011000 -0700
+@@ -89,7 +89,7 @@
+ EGREP = grep -E
+ EXEEXT = 
+ EXTRA_GNOME_CFLAGS = -DORBIT2=1 -pthreads -I/usr/local/include/gtk-2.0 -I/usr/local/lib/gtk-2.0/include -I/usr/local/include/atk-1.0 -I/usr/local/include/cairo -I/usr/local/include/pango-1.0 -I/usr/local/include/glib-2.0 -I/usr/local/lib/glib-2.0/include -I/usr/local/include/libgnomeui-2.0 -I/usr/local/include/libgnome-2.0 -I/usr/local/include/libgnomecanvas-2.0 -I/usr/local/include/libart-2.0 -I/usr/local/include/gconf/2 -I/usr/local/include/libbonoboui-2.0 -I/usr/local/include/orbit-2.0 -I/usr/local/include/libbonobo-2.0 -I/usr/local/include/gnome-vfs-2.0 -I/usr/local/lib/gnome-vfs-2.0/include -I/usr/local/include/bonobo-activation-2.0 -I/usr/local/include -I/usr/local/include/freetype2 -I/usr/local/include/libxml2 -I/usr/local/include/gnome-vfs-module-2.0 -I/usr/local/include/libgnomeprint-2.2 -I/usr/local/include/libgnomeprintui-2.2 -I/usr/local/include/libglade-2.0  
+-EXTRA_GNOME_LIBS = -R/usr/openwin/lib -pthreads -L/usr/local/lib -L/usr/openwin/lib -lgnomeui-2 -lSM -lICE -lbonoboui-2 -lgnome-2 -lpopt -lbonobo-2 -lgnomevfs-2 -lbonobo-activation -lgnomeprintui-2-2 -lgnomeprint-2-2 -lz -lgnomecanvas-2 -lart_lgpl_2 -lpangoft2-1.0 -lglade-2.0 -lgtk-x11-2.0 -lxml2 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lpangocairo-1.0 -lpango-1.0 -lcairo -lgobject-2.0 -lgconf-2 -lORBit-2 -lm -lgmodule-2.0 -ldl -lgthread-2.0 -lglib-2.0 -lintl  
++EXTRA_GNOME_LIBS = -R/usr/openwin/lib -pthreads -L/usr/local/lib -L/usr/openwin/lib -lgnomeui-2 -lSM -lICE -lbonoboui-2 -lgnome-2 -lpopt -lbonobo-2 -lgnomevfs-2 -lbonobo-activation -lgnomeprintui-2-2 -lgnomeprint-2-2 -lz -lgnomecanvas-2 -lart_lgpl_2 -lpangoft2-1.0 -lglade-2.0 -lgtk-x11-2.0 -lxml2 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lpangocairo-1.0 -lpango-1.0 -lcairo -lgobject-2.0 -lgconf-2 -lORBit-2 -lm -lgmodule-2.0 -ldl -lgthread-2.0 -lglib-2.0 -lintl
+ FREETYPE_CONFIG = /usr/local/bin/freetype-config
+ GCONFTOOL = /usr/local/bin/gconftool-2
+ GCONF_REQUIRED = 2.0.0
+@@ -141,7 +141,7 @@
+ LIBBONOBO_REQUIRED = 2.2.1
+ LIBGNOMEPRINT_REQUIRED = 2.5.1
+ LIBOBJS = 
+-LIBS = 
++LIBS = -lfreetype -lsupc++
+ LTLIBOBJS = 
+ MAINT = #
+ MAINTAINER_MODE_FALSE = 
+Binary files gpdf-2.10.0.orig/xpdf/Object.o and gpdf-2.10.0/xpdf/Object.o differ
+Binary files gpdf-2.10.0.orig/xpdf/Outline.o and gpdf-2.10.0/xpdf/Outline.o differ
+Binary files gpdf-2.10.0.orig/xpdf/PDFDoc.o and gpdf-2.10.0/xpdf/PDFDoc.o differ
+Binary files gpdf-2.10.0.orig/xpdf/PSOutputDev.o and gpdf-2.10.0/xpdf/PSOutputDev.o differ
+Binary files gpdf-2.10.0.orig/xpdf/Parser.o and gpdf-2.10.0/xpdf/Parser.o differ
+diff '--exclude=.deps' '--exclude=*.log' -ur gpdf-2.10.0.orig/xpdf/TextOutputDev.h gpdf-2.10.0/xpdf/TextOutputDev.h
+--- gpdf-2.10.0.orig/xpdf/TextOutputDev.h	2018-09-25 04:17:01.950012000 -0700
++++ gpdf-2.10.0/xpdf/TextOutputDev.h	2018-09-25 04:48:16.320150000 -0700
+@@ -166,6 +166,8 @@
+ // TextLine
+ //------------------------------------------------------------------------
+ 
++class TextBlock;
++
+ class TextLine {
+ public:
+ 
+@@ -223,6 +225,8 @@
+ // TextBlock
+ //------------------------------------------------------------------------
+ 
++class TextPage;
++
+ class TextBlock {
+ public:
+ 
+@@ -342,6 +346,8 @@
+ // TextPage
+ //------------------------------------------------------------------------
+ 
++class TextLineFrag;
++
+ class TextPage {
+ public:
+ 
+Binary files gpdf-2.10.0.orig/xpdf/UnicodeMap.o and gpdf-2.10.0/xpdf/UnicodeMap.o differ
+Binary files gpdf-2.10.0.orig/xpdf/gpdf-bookmarks-view.o and gpdf-2.10.0/xpdf/gpdf-bookmarks-view.o differ
+Binary files gpdf-2.10.0.orig/xpdf/gpdf-view.o and gpdf-2.10.0/xpdf/gpdf-view.o differ
+Binary files gpdf-2.10.0.orig/xpdf/libgpdf.a and gpdf-2.10.0/xpdf/libgpdf.a differ
+Only in gpdf-2.10.0.orig/xpdf: libxpdf.a
+Binary files gpdf-2.10.0.orig/xpdf/pdf-info-dict-util.o and gpdf-2.10.0/xpdf/pdf-info-dict-util.o differ
+diff '--exclude=.deps' '--exclude=*.log' -ur gpdf-2.10.0.orig/xpdf/tests/Makefile gpdf-2.10.0/xpdf/tests/Makefile
+--- gpdf-2.10.0.orig/xpdf/tests/Makefile	2018-09-25 04:32:32.610437000 -0700
++++ gpdf-2.10.0/xpdf/tests/Makefile	2018-09-25 04:50:33.170008000 -0700
+@@ -65,7 +65,7 @@
+ EGREP = grep -E
+ EXEEXT = 
+ EXTRA_GNOME_CFLAGS = -DORBIT2=1 -pthreads -I/usr/local/include/gtk-2.0 -I/usr/local/lib/gtk-2.0/include -I/usr/local/include/atk-1.0 -I/usr/local/include/cairo -I/usr/local/include/pango-1.0 -I/usr/local/include/glib-2.0 -I/usr/local/lib/glib-2.0/include -I/usr/local/include/libgnomeui-2.0 -I/usr/local/include/libgnome-2.0 -I/usr/local/include/libgnomecanvas-2.0 -I/usr/local/include/libart-2.0 -I/usr/local/include/gconf/2 -I/usr/local/include/libbonoboui-2.0 -I/usr/local/include/orbit-2.0 -I/usr/local/include/libbonobo-2.0 -I/usr/local/include/gnome-vfs-2.0 -I/usr/local/lib/gnome-vfs-2.0/include -I/usr/local/include/bonobo-activation-2.0 -I/usr/local/include -I/usr/local/include/freetype2 -I/usr/local/include/libxml2 -I/usr/local/include/gnome-vfs-module-2.0 -I/usr/local/include/libgnomeprint-2.2 -I/usr/local/include/libgnomeprintui-2.2 -I/usr/local/include/libglade-2.0  
+-EXTRA_GNOME_LIBS = -R/usr/openwin/lib -pthreads -L/usr/local/lib -L/usr/openwin/lib -lgnomeui-2 -lSM -lICE -lbonoboui-2 -lgnome-2 -lpopt -lbonobo-2 -lgnomevfs-2 -lbonobo-activation -lgnomeprintui-2-2 -lgnomeprint-2-2 -lz -lgnomecanvas-2 -lart_lgpl_2 -lpangoft2-1.0 -lglade-2.0 -lgtk-x11-2.0 -lxml2 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lpangocairo-1.0 -lpango-1.0 -lcairo -lgobject-2.0 -lgconf-2 -lORBit-2 -lm -lgmodule-2.0 -ldl -lgthread-2.0 -lglib-2.0 -lintl  
++EXTRA_GNOME_LIBS = -R/usr/openwin/lib -pthreads -L/usr/local/lib -L/usr/openwin/lib -lgnomeui-2 -lSM -lICE -lbonoboui-2 -lgnome-2 -lpopt -lbonobo-2 -lgnomevfs-2 -lbonobo-activation -lgnomeprintui-2-2 -lgnomeprint-2-2 -lz -lgnomecanvas-2 -lart_lgpl_2 -lpangoft2-1.0 -lglade-2.0 -lgtk-x11-2.0 -lxml2 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lpangocairo-1.0 -lpango-1.0 -lcairo -lgobject-2.0 -lgconf-2 -lORBit-2 -lm -lgmodule-2.0 -ldl -lgthread-2.0 -lglib-2.0 -lintl
+ FREETYPE_CONFIG = /usr/local/bin/freetype-config
+ GCONFTOOL = /usr/local/bin/gconftool-2
+ GCONF_REQUIRED = 2.0.0
+@@ -117,7 +117,7 @@
+ LIBBONOBO_REQUIRED = 2.2.1
+ LIBGNOMEPRINT_REQUIRED = 2.5.1
+ LIBOBJS = 
+-LIBS = 
++LIBS = -lsupc++ -lfreetype
+ LTLIBOBJS = 
+ MAINT = #
+ MAINTAINER_MODE_FALSE = 

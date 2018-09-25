@@ -1,0 +1,26 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur gnome-keyring-2.19.91.orig/common/gkr-buffer.h gnome-keyring-2.19.91/common/gkr-buffer.h
+--- gnome-keyring-2.19.91.orig/common/gkr-buffer.h	2018-09-25 02:23:19.810085000 -0700
++++ gnome-keyring-2.19.91/common/gkr-buffer.h	2018-09-25 02:55:49.110002000 -0700
+@@ -25,7 +25,8 @@
+ #define GKR_BUFFER_H
+ 
+ #include <stdlib.h>
+-#include <stdint.h>
++/* #include <stdint.h> */
++#include <inttypes.h>
+ 
+ /* -------------------------------------------------------------------
+  * GkrBuffer 
+diff '--exclude=.deps' '--exclude=*.log' -ur gnome-keyring-2.19.91.orig/common/gkr-secure-memory.c gnome-keyring-2.19.91/common/gkr-secure-memory.c
+--- gnome-keyring-2.19.91.orig/common/gkr-secure-memory.c	2018-09-25 02:23:19.810081000 -0700
++++ gnome-keyring-2.19.91/common/gkr-secure-memory.c	2018-09-25 02:54:52.990124000 -0700
+@@ -413,7 +413,7 @@
+ 	lock_warning = 0;
+ 	return NULL;
+ #else
+-	pages = mmap (0, *sz, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
++	pages = mmap (0, *sz, PROT_READ | PROT_WRITE, MAP_PRIVATE /* | MAP_ANON */, -1, 0);
+ 	if (pages == MAP_FAILED) {
+ 		if (lock_warning)
+ 			fprintf (stderr, "couldn't map %lu bytes of private memory: %s\n", 
+Only in gnome-keyring-2.19.91.orig/common: libgkr_daemon_common_la-gkr-buffer.loT
