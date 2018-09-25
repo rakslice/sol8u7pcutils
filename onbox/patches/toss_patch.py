@@ -49,7 +49,7 @@ def toss_patch(patch_filename):
 			filename_proper = filename.rsplit("/", 1)[-1]
 			if filename in skip_filenames:
 				continue
-			if filename_proper.startswith("Makefile"):
+			if filename_proper.startswith("Makefile") and filename_proper != "Makefile.am":
 				continue
 			if filename_proper == "confdefs.h":
 				continue
