@@ -2,20 +2,24 @@
 set -e
 set -x
 
-if false; then
-	true
-uninstall_thing libart_lgpl-2.3.21
-uninstall_thing libgnome-2.10.1
-uninstall_thing gnome-vfs-2.10.1
-uninstall_thing gnome-mime-data-2.18.0
-uninstall_thing GConf-2.10.1 
-uninstall_thing libbonobo-2.8.1
-uninstall_thing gtk+-2.6.10
-fi
-uninstall_thing pango-1.8.2
-uninstall_thing atk-1.9.1
-uninstall_thing glib-2.6.6
-if false; then
-uninstall_thing esound-0.2.41
-uninstall_thing audiofile-0.2.6
-fi
+function uninstall_things() {
+	[ $# -eq 1 ]
+	for f in ~/src/installed-"$1"-*; do
+		filename_proper="$(basename "$f")"
+		pkg="${filename_proper#installed-}"
+		uninstall_thing "$pkg"
+	done
+}
+
+uninstall_things libart_lgpl
+uninstall_things libgnome
+uninstall_things gnome-vfs
+uninstall_things gnome-mime-data
+uninstall_things GConf
+uninstall_things libbonobo
+uninstall_things gtk+
+uninstall_things pango
+uninstall_things atk
+uninstall_things glib
+uninstall_things esound
+uninstall_things audiofile
