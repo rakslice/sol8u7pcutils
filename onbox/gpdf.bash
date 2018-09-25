@@ -26,7 +26,6 @@ wtcmmi https://www.x.org/releases/individual/lib/libXft-2.1.8.2.tar.bz2 2f0141e2
 wtcmmi https://xlibs.freedesktop.org/release/xproto-6.6.2.tar.bz2 f8f82255af3b15bdc5e9766eeebf8d696b8d8215
 
 wtcmmi https://www.cairographics.org/releases/cairo-1.0.4.tar.gz 89e72202e5b51a8914fce60f52f7c51ecdea982a  LDFLAGS="-R/usr/tgcware/lib -R/usr/local/lib" CPPFLAGS="-I/usr/local/include"
-# PNG_CFLAGS="$(pkg-config libpng --cflags)" PNG_LIBS="$(pkg-config libpng --libs)"
 
 #wtcmmi https://ftp.acc.umu.se/pub/gnome/sources/pango/1.8/pango-1.8.2.tar.bz2 4cf04489ff291f3f1835783b8cfa8347d99f6a05d7d9da21c8d737f441bea3ac LDFLAGS="-R/usr/tgcware/lib -R/usr/local/lib"
 #wtcmmi https://ftp.acc.umu.se/pub/gnome/sources/pango/1.9/pango-1.9.1.tar.bz2 97cc77b93ce65e4f138e284f799c9ae7153b6f81720553c3c120b7317692b537 LDFLAGS="-R/usr/tgcware/lib -R/usr/local/lib"
@@ -42,7 +41,6 @@ tgcpkg install expat-devel
 
 tgcpkg install perl
 sudo cpan App::cpanminus
-#EXPATLIBPATH=/usr/local/lib EXPATINCPATH=/usr/local/include 
 sudo cpanm install XML::Parser
 
 wtcmmi https://ftp.acc.umu.se/pub/gnome/sources/libIDL/0.8/libIDL-0.8.14.tar.bz2 c5d24d8c096546353fbc7cedf208392d5a02afe9d56ebcc1cccb258d7c4d2220 LDFLAGS="-R/usr/local/lib -R/usr/tgcware/lib"
@@ -52,7 +50,6 @@ need_util xgettext
 #wtcmmi http://rpm5.org/files/popt/popt-1.10.4.tar.gz 10e6649c4c37ecfb6fb4296aeca609b5fdd5e34d LDFLAGS="-R/usr/local/lib -R/usr/tgcware/lib" --disable-nls
 #wtcmmi http://rpm5.org/files/popt/popt-1.16.tar.gz 3743beefa3dd6247a73f8f7a32c14c33 LDFLAGS="-R/usr/local/lib -R/usr/tgcware/lib"
 wtcmmi http://ftp.sunet.se/mirror/archive/ftp.sunet.se/pub/vendor/sun/freeware/SOURCES/popt-1.14.tar.gz af0a7e2b187d600d624515a53d88374c15104e15 LDFLAGS="-R/usr/local/lib -R/usr/tgcware/lib"
-# --disable-nls
 
 wtcmmi https://ftp.acc.umu.se/pub/gnome/sources/ORBit2/2.12/ORBit2-2.12.5.tar.bz2 dc6d9c22875b178ed26103b445e6c937a7120225de581ca56d3865c069722591 LDFLAGS="-R/usr/local/lib -L/usr/local/lib -R/usr/tgcware/lib" CPPFLAGS="-I/usr/local/include"
 
@@ -95,8 +92,6 @@ wtcmmi https://ftp.gnome.org/pub/GNOME/sources/gnome-keyring/0.7/gnome-keyring-0
 wtcmmi https://ftp.acc.umu.se/pub/gnome/sources/libbonoboui/2.10/libbonoboui-2.10.1.tar.bz2 7b1eb566f2485a97d3c3f2ab507b1b3112fce93ea588a8675e62da3ef6e17b40 LDFLAGS="-R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib" CPPFLAGS=-I/usr/local/include
 
 wtcmmi https://ftp.acc.umu.se/pub/gnome/sources/libgnomeui/2.10/libgnomeui-2.10.1.tar.bz2 956a28baf43ed80b4e6eab7d2975e3c83aec018d32c894cbb165835858300353 LDFLAGS="-R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib" CPPFLAGS=-I/usr/local/include
-
-###
 
 wtcmmi https://ftp.gnome.org/pub/GNOME/sources/libgnomeprint/2.10/libgnomeprint-2.10.3.tar.bz2 69a1f7e2b17ac2e27cdcf123189f59f7d5726864ec0c2d1309b57a28fe4df56a LDFLAGS="-R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib" CPPFLAGS=-I/usr/local/include
 
