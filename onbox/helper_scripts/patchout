@@ -9,9 +9,9 @@ if [ "$1" == "-f" ]; then
 	shift
 fi
 
-if [ $# -ne 1 ]; then
+if [ $# -lt 1 ]; then
 	echo "Usage:"
-	echo "$0 [-f] {dirname}"
+	echo "$0 [-f] {dirname} [args for patchout]"
 	exit 1
 fi
 
@@ -19,6 +19,7 @@ set -x
 dirname="$1"
 origdirname="${dirname}.orig"
 outputfile="${patches_dir}/${dirname}.patch"
+shift
 
 if [ ! -d "$dirname" ]; then
 	echo "$dirname not found"
@@ -37,7 +38,7 @@ fi
 
 gdiff --exclude=".deps" --exclude="*.log" -ur "$origdirname" "$dirname" | fgrep -v "Only in $dirname/" > "$outputfile"
 
-"${patches_dir}/toss_patch.py" "$outputfile"
+"${patches_dir}/toss_patch.py" $* "$outputfile"
 
 cat "$outputfile"
 
