@@ -50,6 +50,7 @@ def toss_patch(patch_filename, include_list):
 
 	with open(output_filename, "w") as output_handle:
 		for filename, section_lines in sections(patch_filename):
+			assert filename is not None
 			filename_subpath = filename.split("/", 1)[-1]
 			force_include = filename_subpath in include_list
 			skip = False
@@ -88,7 +89,10 @@ def sections(patch_filename):
 					yield filename, prev_section_lines
 				filename = line[len(source_file_prefix):].split("\t", 1)[0]
 			section_lines.append(line)
-		yield filename, section_lines
+		if filename is not None:
+			yield filename, section_lines
+		else:
+			print >> sys.stderr, "WARNING: Patch is empty"
 
 
 def main():
