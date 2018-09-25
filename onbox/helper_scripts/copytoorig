@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# copy the given files from the current src directory to its corresponding orig directory
+# to prevent them from going into the patch subsequently to be created with patchout
+
+if [ $# -eq 0 ]; then
+	echo "Usage:" 1>&2
+	echo "$0 {files to copy to orig dir}" 1>&2
+	exit 1
+fi
+
+set -e
+set -x
+
+PROC_DIR="$(pwd)"
+[ "$(dirname $PROC_DIR)" == ~/src ]
+ORIG_DIR="$(pwd).orig"
+
+[ -d "$ORIG_DIR" ]
+
+for f in $*; do
+	if [ ! -f "$PROC_DIR/$f" ]; then
+		echo "$f not found" 1>&2
+		exit 1
+	fi
+	cp "$PROC_DIR/$f" "$ORIG_DIR/$f"
+done
