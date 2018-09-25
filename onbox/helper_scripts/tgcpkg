@@ -88,6 +88,15 @@ function check_package_bins() {
 
 }
 
+function check_packages_installed() {
+	for pkg in $*; do
+		if ! pkginfo "$pkg" > /dev/null 2> /dev/null; then
+			return 1
+		fi
+	done
+	return 0
+}
+
 
 cmd="$1"
 
@@ -120,7 +129,7 @@ case "$cmd" in
 		fi
 
 		installed_package_name="${PACKAGE_PREFIX}$2"
-		if pkginfo "${installed_package_name}" > /dev/null 2> /dev/null; then
+		if check_packages_installed "${installed_package_name}"; then
 			echo "There's already a package $installed_package_name installed"
 			exit 0
 		fi
@@ -140,6 +149,19 @@ case "$cmd" in
 		
 		pkg_url="${BASE_URL}${pkg_filename}"
 		local_filename="$packages_dir/$pkg_filename"
+		extracted_filename="${local_filename%.gz}"
+		[ "${local_filename}" != "${extracted_filename}" ]
+		package_names_filename="${extracted_filename}.package_names"
+
+		if [ -f "$package_names_filename" ]; then
+			# check if all the constituent packages are installed
+			package_names="$(cat $package_names_filename)"
+			if check_packages_installed $package_names; then
+				echo "The packages of $extracted_filename are already installed"
+				exit 0
+			fi
+		fi
+
 		if [ ! -f "$local_filename" ]; then
 			wget -O "${local_filename}.incomplete" "$pkg_url"
 			mv "${local_filename}.incomplete" "${local_filename}"
@@ -149,7 +171,6 @@ case "$cmd" in
 		#assert_checksum "$local_filename" "$pkg_checksum"
 
 		# extract the pkg temporarily as it's compressed
-		extracted_filename="${local_filename%.gz}"
 		gunzip -c "${local_filename}" > "${extracted_filename}"
 
 		# TCGWARE has dependencies... need to process them
@@ -158,6 +179,8 @@ case "$cmd" in
 		#/usr/sbin/pkgchk -l -d "${extracted_filename}" all
 
 		package_names="$(/bin/pkginfo -d "${extracted_filename}" | awk '{print $2}')"
+
+		echo "$package_names" > "$package_names_filename"
 
 		# transform this package to directory-style temporarily
 		# so we can access the dependencies list
