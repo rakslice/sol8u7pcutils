@@ -1,0 +1,102 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur gnome-games-2.10.2.orig/blackjack/Makefile gnome-games-2.10.2/blackjack/Makefile
+--- gnome-games-2.10.2.orig/blackjack/Makefile	2018-09-25 15:14:28.500439000 -0700
++++ gnome-games-2.10.2/blackjack/Makefile	2018-09-25 16:16:30.590161000 -0700
+@@ -126,7 +126,7 @@
+ INTLTOOL_XML_RULE = %.xml:       %.xml.in       $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -x -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
+ LDFLAGS = -R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib
+ LIBOBJS = 
+-LIBS = 
++LIBS = -lsupc++
+ LIBTOOL = $(SHELL) $(top_builddir)/libtool
+ LN_S = ln -s
+ LTLIBOBJS = 
+diff '--exclude=.deps' '--exclude=*.log' -ur gnome-games-2.10.2.orig/blackjack/src/Makefile gnome-games-2.10.2/blackjack/src/Makefile
+--- gnome-games-2.10.2.orig/blackjack/src/Makefile	2018-09-25 16:17:34.030061000 -0700
++++ gnome-games-2.10.2/blackjack/src/Makefile	2018-09-25 16:17:44.100007000 -0700
+@@ -126,7 +126,7 @@
+ INTLTOOL_XML_RULE = %.xml:       %.xml.in       $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -x -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
+ LDFLAGS = -R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib
+ LIBOBJS = 
+-LIBS = 
++LIBS = -lsupc++
+ LIBTOOL = $(SHELL) $(top_builddir)/libtool
+ LN_S = ln -s
+ LTLIBOBJS = 
+diff '--exclude=.deps' '--exclude=*.log' -ur gnome-games-2.10.2.orig/gnometris/Makefile gnome-games-2.10.2/gnometris/Makefile
+--- gnome-games-2.10.2.orig/gnometris/Makefile	2018-09-25 14:47:23.680439000 -0700
++++ gnome-games-2.10.2/gnometris/Makefile	2018-09-25 16:16:30.590186000 -0700
+@@ -126,7 +126,7 @@
+ INTLTOOL_XML_RULE = %.xml:       %.xml.in       $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -x -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
+ LDFLAGS = -R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib
+ LIBOBJS = 
+-LIBS = 
++LIBS = -lsupc++
+ LIBTOOL = $(SHELL) $(top_builddir)/libtool
+ LN_S = ln -s
+ LTLIBOBJS = 
+diff '--exclude=.deps' '--exclude=*.log' -ur gnome-games-2.10.2.orig/libgames-support/games-network.c gnome-games-2.10.2/libgames-support/games-network.c
+--- gnome-games-2.10.2.orig/libgames-support/games-network.c	2018-09-25 14:15:01.620067000 -0700
++++ gnome-games-2.10.2/libgames-support/games-network.c	2018-09-25 16:16:30.590217000 -0700
+@@ -257,6 +257,8 @@
+   return network_io_setup (ng, CALLER_READ_CB);
+ }
+ 
++typedef size_t socklen_t;
++
+ static gboolean
+ network_handle_write (GIOChannel *source, GIOCondition cond, gpointer data)
+ {
+@@ -267,7 +269,7 @@
+     {
+       int errval;
+       socklen_t optlen = sizeof (errval);
+-      if (getsockopt (ng->fd, SOL_SOCKET, SO_ERROR, &errval, &optlen))
++      if (getsockopt (ng->fd, SOL_SOCKET, SO_ERROR, (void *) &errval, &optlen))
+ 	g_error ("getsockopt failed!");
+ 
+       if (errval)
+@@ -323,16 +325,21 @@
+ network_connect (void)
+ {
+   int x;
+-  struct addrinfo *res = NULL, hints;
++  /* struct addrinfo *res = NULL, hints; */
++  struct hostent * host_result;
+ 
+   g_string_truncate (netgame->outbuf, 0);
+   netgame->inpos = 0;
+ 
++  /* 
+   memset (&hints, 0, sizeof(hints));
+   hints.ai_socktype = SOCK_STREAM;
+-  x = getaddrinfo (game_server, game_port, &hints, &res);
+-  if (x) {
+-    network_set_status (netgame, DISCONNECTED, gai_strerror(x));
++  x = getaddrinfo (game_server, game_port, &hints, &res); 
++  */
++  host_result = gethostbyname(game_server);
++
++  if (host_result == NULL || host_result->h_addrtype != AF_INET /* x */) {
++    network_set_status (netgame, DISCONNECTED, "could not find host");
+     return;
+   }
+ 
+@@ -346,7 +353,7 @@
+   g_assert (netgame->fd >= 0);
+   fcntl (netgame->fd, F_SETFL, O_NONBLOCK);
+   netgame->fd_gioc = g_io_channel_unix_new (netgame->fd);
+-  x = connect (netgame->fd, res->ai_addr, res->ai_addrlen);
++  x = connect (netgame->fd, (struct in_addr *) host_result->h_addr /* res->ai_addr */, sizeof(struct in_addr) /* res->ai_addrlen */ );
+   if (x)
+     {
+       if (errno == EINPROGRESS)
+@@ -363,7 +370,7 @@
+ 
+   network_io_setup (netgame, CALLER_OTHER);
+ 
+-  freeaddrinfo (res);
++  /* freeaddrinfo (res); */
+ }
+ 
+ void 
+Only in gnome-games-2.10.2.orig/libgames-support: games-network.loT

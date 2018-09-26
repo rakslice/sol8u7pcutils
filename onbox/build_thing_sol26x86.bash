@@ -658,8 +658,6 @@ wtcmmi https://download.qt.io/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-
 
 fi
 
-if false; then
-
 ## Qt 4.6.4
 
 #sudo pkg install gcc4g++ gcc4g++rt
@@ -670,9 +668,10 @@ tgcpkg install gcc-c++
 #GCC_LIB=/opt/csw/gcc4/lib
 GCC_LIB=/usr/tgcware/lib
 
+patch_before_configure=1 \
 make_params=-j2 \
 LD_RUN_PATH=$GCC_LIB \
-wtcmmi https://mirror.csclub.uwaterloo.ca/qtproject/archive/qt/4.6/qt-everywhere-opensource-src-4.6.4.tar.gz df3a8570cfec2793a76818c9b31244f3ba8a2f3b -opensource -confirm-license -platform "solaris-g++" -nomake examples -no-sse -no-sse2
+wtcmmi https://mirror.csclub.uwaterloo.ca/qtproject/archive/qt/4.6/qt-everywhere-opensource-src-4.6.4.tar.gz df3a8570cfec2793a76818c9b31244f3ba8a2f3b -opensource -confirm-license -platform "solaris-g++" -nomake examples -no-sse -no-sse2 -R $GCC_LIB -R /usr/local/lib
 
 QT464=/usr/local/Trolltech/Qt-4.6.4
 
@@ -708,8 +707,6 @@ boost_dir=/opt/csw/include
 configure_name="${QT464}/bin/qmake -r -unix Launchy.pro" \
 wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 7a6317168fe7aa219c138fbbc0f84539be9bce9e "INCLUDEPATH+=$boost_dir" "LIBS+=-L/usr/openwin/lib -R/usr/openwin/lib -lX11" 
 
-fi
-
 
 ## VIM 7.4
 
@@ -720,6 +717,10 @@ wtcmmi ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2 601abf7cc2b5ab186f40d8790e
 
 source ${script_path}/gpdf.bash
 source ${script_path}/xpdf.bash
+
+## more gnome
+
+source ${script_path}/more_gnome.bash
 
 
 exit 1
