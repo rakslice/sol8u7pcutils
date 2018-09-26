@@ -728,10 +728,6 @@ source ${script_path}/xpdf.bash
 
 source ${script_path}/more_gnome.bash
 
-
-exit 1
-
-
 ## zaycakitayca/gnome-menu-editor-qt
 
 # form of github tarball link is https://api.github.com/repos/User/repo/tarball/master
@@ -743,6 +739,7 @@ wtcmmi https://api.github.com/repos/zaycakitayca/gnome-menu-editor-qt/tarball/c5
 
 sudo cp -r zaycakitayca-gnome-menu-editor-qt-c50bc7a/gnome-menu-editor-qt /usr/local/bin/gnome-menu-editor-qt
 
+exit 1
 
 if false; then
 

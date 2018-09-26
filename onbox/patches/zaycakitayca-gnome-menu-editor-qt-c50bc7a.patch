@@ -1,13 +1,14 @@
 diff '--exclude=.deps' '--exclude=*.log' -ur zaycakitayca-gnome-menu-editor-qt-c50bc7a.orig/gnome-menu-editor-qt.pro zaycakitayca-gnome-menu-editor-qt-c50bc7a/gnome-menu-editor-qt.pro
 --- zaycakitayca-gnome-menu-editor-qt-c50bc7a.orig/gnome-menu-editor-qt.pro	2014-10-03 06:14:18.000000000 -0700
 +++ zaycakitayca-gnome-menu-editor-qt-c50bc7a/gnome-menu-editor-qt.pro	2018-07-09 18:56:20.970701000 -0700
-@@ -25,5 +25,5 @@
+@@ -25,5 +25,6 @@
  
  QMAKE_CXXFLAGS -= -O2
  QMAKE_CFLAGS -= -O2
 -QMAKE_CXXFLAGS += -std=c++11 -O3
 +QMAKE_CXXFLAGS += -std=c++0x -O3
  QMAKE_CFLAGS += -O3
++LIBS += -R/usr/tgcware/lib
 Only in zaycakitayca-gnome-menu-editor-qt-c50bc7a: main.o
 diff '--exclude=.deps' '--exclude=*.log' -ur zaycakitayca-gnome-menu-editor-qt-c50bc7a.orig/mainwindow.cpp zaycakitayca-gnome-menu-editor-qt-c50bc7a/mainwindow.cpp
 --- zaycakitayca-gnome-menu-editor-qt-c50bc7a.orig/mainwindow.cpp	2014-10-03 06:14:18.000000000 -0700
