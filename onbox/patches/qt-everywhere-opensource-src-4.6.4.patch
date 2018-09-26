@@ -1,6 +1,6 @@
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/interpreter/RegisterFile.h qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/interpreter/RegisterFile.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/interpreter/RegisterFile.h	2018-09-25 19:57:51.010082000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/interpreter/RegisterFile.h	2018-09-26 00:45:11.900196000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/interpreter/RegisterFile.h	2018-09-26 00:53:28.710179000 -0700
 @@ -174,7 +174,7 @@
  
          size_t bufferLength = (capacity + maxGlobals) * sizeof(Register);
@@ -12,7 +12,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
              fprintf(stderr, "Could not allocate register file: %d\n", GetLastError());
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/jit/ExecutableAllocatorFixedVMPool.cpp qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/jit/ExecutableAllocatorFixedVMPool.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/jit/ExecutableAllocatorFixedVMPool.cpp	2018-09-25 19:57:50.880088000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/jit/ExecutableAllocatorFixedVMPool.cpp	2018-09-26 00:45:11.910007000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/jit/ExecutableAllocatorFixedVMPool.cpp	2018-09-26 00:53:28.720012000 -0700
 @@ -294,7 +294,7 @@
          intptr_t randomLocation = arc4random() & ((1 << 25) - 1);
          randomLocation += (1 << 24);
@@ -24,7 +24,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
  
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/jit/ExecutableAllocatorPosix.cpp qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/jit/ExecutableAllocatorPosix.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/jit/ExecutableAllocatorPosix.cpp	2018-09-25 19:57:50.880119000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/jit/ExecutableAllocatorPosix.cpp	2018-09-26 00:45:11.910023000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/jit/ExecutableAllocatorPosix.cpp	2018-09-26 00:53:28.720040000 -0700
 @@ -44,7 +44,7 @@
  
  ExecutablePool::Allocation ExecutablePool::systemAlloc(size_t n)
@@ -36,7 +36,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
      ExecutablePool::Allocation alloc = { reinterpret_cast<char*>(allocation), n };
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/Collector.cpp qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/Collector.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/Collector.cpp	2018-09-25 19:57:51.070063000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/Collector.cpp	2018-09-26 00:45:11.910044000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/Collector.cpp	2018-09-26 00:53:28.720068000 -0700
 @@ -262,7 +262,7 @@
      if (BLOCK_SIZE > pagesize)
          extra = BLOCK_SIZE - pagesize;
@@ -48,7 +48,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
      size_t adjust = 0;
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/Error.h qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/Error.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/Error.h	2018-09-25 20:28:19.420089000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/Error.h	2018-09-26 00:45:11.910060000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/Error.h	2018-09-26 00:53:28.720084000 -0700
 @@ -23,7 +23,7 @@
  #ifndef Error_h
  #define Error_h
@@ -62,7 +62,7 @@ Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/Java
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime: Error.h.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSImmediate.h qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSImmediate.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSImmediate.h	2018-09-25 20:28:19.420107000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSImmediate.h	2018-09-26 00:45:11.910079000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSImmediate.h	2018-09-26 00:53:28.720103000 -0700
 @@ -34,7 +34,7 @@
  #include <limits>
  #include <limits.h>
@@ -75,7 +75,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime: JSImmediate.h.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.cpp qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.cpp	2018-09-25 20:28:19.420122000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.cpp	2018-09-26 00:45:11.910095000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.cpp	2018-09-26 00:53:28.730006000 -0700
 @@ -37,6 +37,14 @@
  
  static const double D32 = 4294967296.0;
@@ -94,7 +94,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime: JSValue.cpp.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.h qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.h	2018-09-25 20:28:19.420139000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.h	2018-09-26 00:45:11.910113000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSValue.h	2018-09-26 00:53:28.730024000 -0700
 @@ -27,7 +27,7 @@
  #include "ConstructData.h"
  #include <math.h>
@@ -107,7 +107,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime: JSValue.h.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/MarkStackPosix.cpp qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/MarkStackPosix.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/MarkStackPosix.cpp	2018-09-25 19:57:51.030014000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/MarkStackPosix.cpp	2018-09-26 00:45:11.920012000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/MarkStackPosix.cpp	2018-09-26 00:53:28.730040000 -0700
 @@ -57,7 +57,7 @@
  #if defined (__SYMBIAN32__)
      return fastMalloc(size);
@@ -119,7 +119,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
  void MarkStack::releaseStack(void* addr, size_t size)
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/UString.h qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/UString.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/UString.h	2018-09-25 20:28:19.420156000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/UString.h	2018-09-26 00:45:11.920030000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/UString.h	2018-09-26 00:53:28.730058000 -0700
 @@ -24,7 +24,7 @@
  #define UString_h
  
@@ -132,7 +132,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime: UString.h.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/CurrentTime.cpp qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/CurrentTime.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/CurrentTime.cpp	2018-09-25 20:28:19.440007000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/CurrentTime.cpp	2018-09-26 00:45:11.920047000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/CurrentTime.cpp	2018-09-26 00:53:28.730075000 -0700
 @@ -41,7 +41,7 @@
  #undef WIN32_LEAN_AND_MEAN
  #include <windows.h>
@@ -145,7 +145,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf: CurrentTime.cpp.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/DateMath.cpp qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/DateMath.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/DateMath.cpp	2018-09-25 20:28:19.440027000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/DateMath.cpp	2018-09-26 00:45:11.920068000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/DateMath.cpp	2018-09-26 00:53:28.730096000 -0700
 @@ -53,7 +53,7 @@
  #include <algorithm>
  #include <limits.h>
@@ -173,7 +173,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf: DateMath.cpp.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastAllocBase.h qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastAllocBase.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastAllocBase.h	2018-09-25 20:28:19.440043000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastAllocBase.h	2018-09-26 00:45:11.930007000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastAllocBase.h	2018-09-26 00:53:28.740013000 -0700
 @@ -76,7 +76,7 @@
  //
  
@@ -186,7 +186,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf: FastAllocBase.h.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastMalloc.cpp qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastMalloc.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastMalloc.cpp	2018-09-25 20:28:19.440075000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastMalloc.cpp	2018-09-26 00:45:11.930040000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/FastMalloc.cpp	2018-09-26 00:53:28.740046000 -0700
 @@ -363,7 +363,7 @@
  #else // FORCE_SYSTEM_MALLOC
  
@@ -199,7 +199,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf: FastMalloc.cpp.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/HashFunctions.h qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/HashFunctions.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/HashFunctions.h	2018-09-25 20:28:19.450005000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/HashFunctions.h	2018-09-26 00:45:11.930056000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/HashFunctions.h	2018-09-26 00:53:28.740062000 -0700
 @@ -22,7 +22,7 @@
  #define WTF_HashFunctions_h
  
@@ -212,7 +212,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf: HashFunctions.h.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/RandomNumber.cpp qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/RandomNumber.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/RandomNumber.cpp	2018-09-25 20:28:19.450020000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/RandomNumber.cpp	2018-09-26 00:45:11.930072000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/RandomNumber.cpp	2018-09-26 00:53:28.750005000 -0700
 @@ -31,7 +31,7 @@
  
  #include <limits>
@@ -225,7 +225,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf: RandomNumber.cpp.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCPageMap.h qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCPageMap.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCPageMap.h	2018-09-25 20:28:19.450036000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCPageMap.h	2018-09-26 00:45:11.930089000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCPageMap.h	2018-09-26 00:53:28.750022000 -0700
 @@ -46,7 +46,7 @@
  #define TCMALLOC_PAGEMAP_H__
  
@@ -238,7 +238,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf: TCPageMap.h.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCSpinLock.h qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCSpinLock.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCSpinLock.h	2018-09-25 20:28:19.450051000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCSpinLock.h	2018-09-26 00:45:11.930105000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCSpinLock.h	2018-09-26 00:53:28.750038000 -0700
 @@ -40,7 +40,7 @@
  #include <sched.h>      /* For sched_yield() */
  
@@ -251,7 +251,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf: TCSpinLock.h.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCSystemAlloc.cpp qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCSystemAlloc.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCSystemAlloc.cpp	2018-09-25 20:28:19.450067000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCSystemAlloc.cpp	2018-09-26 00:45:11.940017000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/TCSystemAlloc.cpp	2018-09-26 00:53:28.750059000 -0700
 @@ -40,7 +40,7 @@
  #include "UnusedParam.h"
  
@@ -282,7 +282,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf: TCSystemAlloc.cpp.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/Threading.h qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/Threading.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/Threading.h	2018-09-25 20:28:19.460014000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/Threading.h	2018-09-26 00:45:11.940034000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/Threading.h	2018-09-26 00:53:28.750076000 -0700
 @@ -97,7 +97,7 @@
  QT_END_NAMESPACE
  #endif
@@ -295,7 +295,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf: Threading.h.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/dtoa.cpp qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/dtoa.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/dtoa.cpp	2018-09-25 20:28:19.460036000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/dtoa.cpp	2018-09-26 00:45:11.940057000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/dtoa.cpp	2018-09-26 00:53:28.760016000 -0700
 @@ -142,7 +142,7 @@
  #endif
  #include <float.h>
@@ -308,7 +308,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf: dtoa.cpp.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/unicode/qt4/UnicodeQt4.h qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/unicode/qt4/UnicodeQt4.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/unicode/qt4/UnicodeQt4.h	2018-09-25 20:28:19.460053000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/unicode/qt4/UnicodeQt4.h	2018-09-26 00:45:11.940074000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/javascriptcore/JavaScriptCore/wtf/unicode/qt4/UnicodeQt4.h	2018-09-26 00:53:28.760033000 -0700
 @@ -28,7 +28,7 @@
  
  #include <config.h>
@@ -321,7 +321,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
 Only in qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/wtf/unicode/qt4: UnicodeQt4.h.rej
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/sqlite/sqlite3.c qt-everywhere-opensource-src-4.6.4/src/3rdparty/sqlite/sqlite3.c
 --- qt-everywhere-opensource-src-4.6.4.orig/src/3rdparty/sqlite/sqlite3.c	2018-09-25 19:57:49.450085000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/sqlite/sqlite3.c	2018-09-26 00:45:11.980245000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/3rdparty/sqlite/sqlite3.c	2018-09-26 00:53:28.810088000 -0700
 @@ -571,6 +571,9 @@
  # include <ioLib.h>
  #endif
@@ -334,7 +334,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
  /*
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/corelib/io/qfsfileengine_unix.cpp qt-everywhere-opensource-src-4.6.4/src/corelib/io/qfsfileengine_unix.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/corelib/io/qfsfileengine_unix.cpp	2018-09-25 19:57:45.840131000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/corelib/io/qfsfileengine_unix.cpp	2018-09-26 00:45:11.990020000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/corelib/io/qfsfileengine_unix.cpp	2018-09-26 00:53:28.810111000 -0700
 @@ -1335,7 +1335,7 @@
          errno = EINVAL;
      }
@@ -355,7 +355,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
      }
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/corelib/kernel/qsharedmemory_unix.cpp qt-everywhere-opensource-src-4.6.4/src/corelib/kernel/qsharedmemory_unix.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/corelib/kernel/qsharedmemory_unix.cpp	2018-09-25 19:57:46.180051000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/corelib/kernel/qsharedmemory_unix.cpp	2018-09-26 00:45:11.990037000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/corelib/kernel/qsharedmemory_unix.cpp	2018-09-26 00:53:28.810128000 -0700
 @@ -252,7 +252,7 @@
  bool QSharedMemoryPrivate::detach()
  {
@@ -365,9 +365,46 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
          QString function = QLatin1String("QSharedMemory::detach");
          switch (errno) {
          case EINVAL:
+diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/corelib/tools/qunicodetables.cpp qt-everywhere-opensource-src-4.6.4/src/corelib/tools/qunicodetables.cpp
+--- qt-everywhere-opensource-src-4.6.4.orig/src/corelib/tools/qunicodetables.cpp	2018-09-25 19:57:46.000046000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/corelib/tools/qunicodetables.cpp	2018-09-26 02:35:48.760297000 -0700
+@@ -4336,13 +4336,15 @@
+     return uc_properties + index;
+ }
+ 
+-Q_CORE_EXPORT const QUnicodeTables::Properties * QT_FASTCALL QUnicodeTables::properties(uint ucs4)
++/* Q_CORE_EXPORT const QUnicodeTables::Properties * QT_FASTCALL QUnicodeTables::properties(uint ucs4) */
++Q_CORE_EXPORT const QUnicodeTables::Properties * QUnicodeTables::properties(uint ucs4)
+ {
+     int index = GET_PROP_INDEX(ucs4);
+     return uc_properties + index;
+ }
+ 
+-Q_CORE_EXPORT const QUnicodeTables::Properties * QT_FASTCALL QUnicodeTables::properties(ushort ucs2)
++/* Q_CORE_EXPORT const QUnicodeTables::Properties * QT_FASTCALL QUnicodeTables::properties(ushort ucs2) */
++Q_CORE_EXPORT const QUnicodeTables::Properties * QUnicodeTables::properties(ushort ucs2)
+ {
+     int index = GET_PROP_INDEX_UCS2(ucs2);
+     return uc_properties + index;
+diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/corelib/tools/qunicodetables_p.h qt-everywhere-opensource-src-4.6.4/src/corelib/tools/qunicodetables_p.h
+--- qt-everywhere-opensource-src-4.6.4.orig/src/corelib/tools/qunicodetables_p.h	2018-09-25 19:57:46.000147000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/corelib/tools/qunicodetables_p.h	2018-09-26 02:36:28.930003000 -0700
+@@ -81,8 +81,10 @@
+         ushort wordBreak : 8;
+         ushort sentenceBreak : 8;
+     };
+-    Q_CORE_EXPORT const Properties * QT_FASTCALL properties(uint ucs4);
+-    Q_CORE_EXPORT const Properties * QT_FASTCALL properties(ushort ucs2);
++    /* Q_CORE_EXPORT const Properties * QT_FASTCALL properties(uint ucs4); */
++    Q_CORE_EXPORT const Properties * properties(uint ucs4);
++    /* Q_CORE_EXPORT const Properties * QT_FASTCALL properties(ushort ucs2); */
++    Q_CORE_EXPORT const Properties * properties(ushort ucs2);
+ 
+     // See http://www.unicode.org/reports/tr24/tr24-5.html
+ 
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/network/kernel/qhostinfo_unix.cpp qt-everywhere-opensource-src-4.6.4/src/network/kernel/qhostinfo_unix.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/network/kernel/qhostinfo_unix.cpp	2018-09-25 19:57:41.450058000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/network/kernel/qhostinfo_unix.cpp	2018-09-26 00:45:11.990054000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/network/kernel/qhostinfo_unix.cpp	2018-09-26 00:53:28.820013000 -0700
 @@ -59,6 +59,7 @@
  #if defined(Q_OS_VXWORKS)
  #  include <hostLib.h>
@@ -378,7 +415,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
  
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/network/socket/qnativesocketengine_unix.cpp qt-everywhere-opensource-src-4.6.4/src/network/socket/qnativesocketengine_unix.cpp
 --- qt-everywhere-opensource-src-4.6.4.orig/src/network/socket/qnativesocketengine_unix.cpp	2018-09-25 19:57:41.450009000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/network/socket/qnativesocketengine_unix.cpp	2018-09-26 00:45:12.000010000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/network/socket/qnativesocketengine_unix.cpp	2018-09-26 00:53:28.820033000 -0700
 @@ -797,7 +797,7 @@
      // Determine the socket type (UDP/TCP)
      int value = 0;
@@ -390,7 +427,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
          else if (value == SOCK_DGRAM)
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/src/network/socket/qnet_unix_p.h qt-everywhere-opensource-src-4.6.4/src/network/socket/qnet_unix_p.h
 --- qt-everywhere-opensource-src-4.6.4.orig/src/network/socket/qnet_unix_p.h	2018-09-25 19:57:41.410072000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/src/network/socket/qnet_unix_p.h	2018-09-26 00:45:12.000028000 -0700
++++ qt-everywhere-opensource-src-4.6.4/src/network/socket/qnet_unix_p.h	2018-09-26 00:53:28.820051000 -0700
 @@ -69,6 +69,7 @@
  #if defined(Q_OS_VXWORKS)
  #  include <hostLib.h>
@@ -410,7 +447,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.
  }
 diff '--exclude=.deps' '--exclude=*.log' -ur qt-everywhere-opensource-src-4.6.4.orig/tools/qtconfig/qtconfig.pro qt-everywhere-opensource-src-4.6.4/tools/qtconfig/qtconfig.pro
 --- qt-everywhere-opensource-src-4.6.4.orig/tools/qtconfig/qtconfig.pro	2018-09-25 19:57:40.990035000 -0700
-+++ qt-everywhere-opensource-src-4.6.4/tools/qtconfig/qtconfig.pro	2018-09-26 00:50:18.100002000 -0700
++++ qt-everywhere-opensource-src-4.6.4/tools/qtconfig/qtconfig.pro	2018-09-26 00:53:28.820068000 -0700
 @@ -7,6 +7,8 @@
  LANGUAGE = C++
  QT += qt3support

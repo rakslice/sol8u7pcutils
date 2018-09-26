@@ -697,15 +697,28 @@ wtcmmi https://sourceforge.net/projects/boost/files/boost/1.52.0/boost_1_52_0.ta
 
 fi
 
+# Boost 1.33.1 from source
+
+wtcmmi https://sourceforge.net/projects/boost/files/boost/1.33.1/boost_1_33_1.tar.bz2 22682f75ff0d1ea548688e78c8cca83d599ca576
+
 ## Launchy 2.5
 # requires: Qt 4.6.x+, Boost
 
-pkg install boost_devel boost_rt
+# FIXME we need boost of some kind
+# pkg install boost_devel boost_rt
 
-boost_dir=/opt/csw/include
+boost_dir=/usr/local/include/boost-1_33_1
+libstdcpp_dir=/usr/tgcware/lib
 
+function fix_launchy_line_endings() {
+	for f in {platforms,plugins}/*/*.pro src/*.pro plugins/calcy/precompiled.h; do
+		d2u "$f"
+	done
+}
+
+before_configure=fix_launchy_line_endings \
 configure_name="${QT464}/bin/qmake -r -unix Launchy.pro" \
-wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 7a6317168fe7aa219c138fbbc0f84539be9bce9e "INCLUDEPATH+=$boost_dir" "LIBS+=-L/usr/openwin/lib -R/usr/openwin/lib -lX11" 
+wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 7a6317168fe7aa219c138fbbc0f84539be9bce9e "INCLUDEPATH+=$boost_dir" "LIBS+=-R${libstdcpp_dir} -L/usr/openwin/lib -R/usr/openwin/lib -lX11" 
 
 
 ## VIM 7.4
