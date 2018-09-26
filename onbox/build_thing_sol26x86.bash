@@ -710,13 +710,6 @@ wtcmmi https://sourceforge.net/projects/boost/files/boost/1.33.1/boost_1_33_1.ta
 boost_dir=/usr/local/include/boost-1_33_1
 libstdcpp_dir=/usr/tgcware/lib
 
-function fix_launchy_line_endings() {
-	for f in {platforms,plugins}/*/*.pro src/*.pro plugins/calcy/precompiled.h; do
-		d2u "$f"
-	done
-}
-
-before_configure=fix_launchy_line_endings \
 configure_name="${QT464}/bin/qmake -r -unix Launchy.pro" \
 wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 7a6317168fe7aa219c138fbbc0f84539be9bce9e "INCLUDEPATH+=$boost_dir" "LIBS+=-R${libstdcpp_dir} -L/usr/openwin/lib -R/usr/openwin/lib -lX11" 
 
