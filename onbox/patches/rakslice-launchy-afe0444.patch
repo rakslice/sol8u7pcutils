@@ -1,0 +1,27 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur rakslice-launchy-afe0444.orig/platforms/unix/platform_unix.cpp rakslice-launchy-afe0444/platforms/unix/platform_unix.cpp
+--- rakslice-launchy-afe0444.orig/platforms/unix/platform_unix.cpp	2018-09-26 03:58:13.710026000 -0700
++++ rakslice-launchy-afe0444/platforms/unix/platform_unix.cpp	2018-09-26 04:03:21.510004000 -0700
+@@ -22,7 +22,7 @@
+ #include <QApplication>
+ #include <QX11Info>
+ #include "platform_unix.h"
+-#include <boost/pointer_cast.hpp>  
++/* #include <boost/pointer_cast.hpp> */
+ #include <X11/Xlib.h>
+ #include <QFileIconProvider>
+ 
+diff '--exclude=.deps' '--exclude=*.log' -ur rakslice-launchy-afe0444.orig/plugins/calcy/precompiled.h rakslice-launchy-afe0444/plugins/calcy/precompiled.h
+--- rakslice-launchy-afe0444.orig/plugins/calcy/precompiled.h	2018-09-26 03:58:13.710163000 -0700
++++ rakslice-launchy-afe0444/plugins/calcy/precompiled.h	2018-09-26 03:58:13.890148000 -0700
+@@ -36,8 +36,8 @@
+ using namespace boost;
+ 
+ #define BOOST_SPIRIT_USE_OLD_NAMESPACE
+-#include <boost/spirit/include/classic_core.hpp>
+-#include <boost/spirit/include/classic_attribute.hpp>
+-#include <boost/spirit/include/phoenix1_functions.hpp>
++#include <boost/spirit/core.hpp> 
++#include <boost/spirit/attribute.hpp>
++#include <boost/spirit/phoenix/functions.hpp>
+ 
+ #endif // PRECOMPILED_H

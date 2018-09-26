@@ -718,7 +718,7 @@ fi
 make_params=-j2 \
 configure_name="${QT464}/bin/qmake -r -unix Launchy.pro" \
 archive_filename="rakslice-launchy-afe0444.tar.gz" \
-wtcmmi https://api.github.com/repos/rakslice/launchy/tarball/afe0444 f236db1cd06be72db9167d6dd91ca39f17282552 "INCLUDEPATH+=$boost_dir" "LIBS+=-L/usr/openwin/lib -R/usr/openwin/lib" 
+wtcmmi https://api.github.com/repos/rakslice/launchy/tarball/afe0444 f236db1cd06be72db9167d6dd91ca39f17282552 "INCLUDEPATH+=$boost_dir" "LIBS+=-R${libstdcpp_dir} -L/usr/openwin/lib -R/usr/openwin/lib"
 
 
 ## VIM 7.4
