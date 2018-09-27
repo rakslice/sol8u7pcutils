@@ -1,9 +1,63 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur gnome-games-2.10.2.orig/aisleriot/cscmi.h gnome-games-2.10.2/aisleriot/cscmi.h
+--- gnome-games-2.10.2.orig/aisleriot/cscmi.h	2018-09-25 14:15:02.190027000 -0700
++++ gnome-games-2.10.2/aisleriot/cscmi.h	2018-09-27 05:04:25.270002000 -0700
+@@ -19,6 +19,22 @@
+ 
+ #ifndef CSCMI_H
+ #define CSCMI_H
++
++#ifndef GUILE_THINGS_H  
++#define GUILE_THINGS_H
++
++typedef struct {                /* signal set type */
++        unsigned long   __sigbits[4];
++} sigset_t;
++
++typedef struct {
++        void    *ss_sp;
++        size_t  ss_size;
++        int     ss_flags;
++} stack_t;
++
++#endif
++
+ #include <libguile.h>
+ #include <math.h>
+ #include <time.h>
+diff '--exclude=.deps' '--exclude=*.log' -ur gnome-games-2.10.2.orig/aisleriot/sol.c gnome-games-2.10.2/aisleriot/sol.c
+--- gnome-games-2.10.2.orig/aisleriot/sol.c	2018-09-25 14:15:02.190062000 -0700
++++ gnome-games-2.10.2/aisleriot/sol.c	2018-09-27 05:03:59.020005000 -0700
+@@ -26,6 +26,22 @@
+ #include <sys/types.h>
+ #include <string.h>
+ #include <stdlib.h>
++
++#ifndef GUILE_THINGS_H
++#define GUILE_THINGS_H
++
++typedef struct {                /* signal set type */
++        unsigned long   __sigbits[4];
++} sigset_t;
++
++typedef struct {
++        void    *ss_sp;
++        size_t  ss_size;
++        int     ss_flags;
++} stack_t;
++
++#endif
++
+ #include <libguile.h>
+ #include <ctype.h>
+ #include "sol.h"
 diff '--exclude=.deps' '--exclude=*.log' -ur gnome-games-2.10.2.orig/blackjack/Makefile gnome-games-2.10.2/blackjack/Makefile
 --- gnome-games-2.10.2.orig/blackjack/Makefile	2018-09-25 15:14:28.500439000 -0700
-+++ gnome-games-2.10.2/blackjack/Makefile	2018-09-25 16:16:30.590161000 -0700
-@@ -126,7 +126,7 @@
++++ gnome-games-2.10.2/blackjack/Makefile	2018-09-27 04:45:42.790355000 -0700
+@@ -124,9 +124,9 @@
+ INTLTOOL_XGETTEXT = /usr/tgcware/bin/xgettext
+ INTLTOOL_XML_NOMERGE_RULE = %.xml:       %.xml.in       $(INTLTOOL_MERGE) ; LC_ALL=C $(INTLTOOL_MERGE) -x -u /tmp $< $@
  INTLTOOL_XML_RULE = %.xml:       %.xml.in       $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -x -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
- LDFLAGS = -R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib
+ LDFLAGS = /usr/tgcware/lib/libstdc++.so.6 -R/usr/tgcware/lib -L/usr/tgcware/lib -R/usr/local/lib -R/usr/ucblib
  LIBOBJS = 
 -LIBS = 
 +LIBS = -lsupc++
@@ -12,10 +66,12 @@ diff '--exclude=.deps' '--exclude=*.log' -ur gnome-games-2.10.2.orig/blackjack/M
  LTLIBOBJS = 
 diff '--exclude=.deps' '--exclude=*.log' -ur gnome-games-2.10.2.orig/blackjack/src/Makefile gnome-games-2.10.2/blackjack/src/Makefile
 --- gnome-games-2.10.2.orig/blackjack/src/Makefile	2018-09-25 16:17:34.030061000 -0700
-+++ gnome-games-2.10.2/blackjack/src/Makefile	2018-09-25 16:17:44.100007000 -0700
-@@ -126,7 +126,7 @@
++++ gnome-games-2.10.2/blackjack/src/Makefile	2018-09-27 04:45:42.800003000 -0700
+@@ -124,9 +124,9 @@
+ INTLTOOL_XGETTEXT = /usr/tgcware/bin/xgettext
+ INTLTOOL_XML_NOMERGE_RULE = %.xml:       %.xml.in       $(INTLTOOL_MERGE) ; LC_ALL=C $(INTLTOOL_MERGE) -x -u /tmp $< $@
  INTLTOOL_XML_RULE = %.xml:       %.xml.in       $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -x -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
- LDFLAGS = -R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib
+ LDFLAGS = /usr/tgcware/lib/libstdc++.so.6 -R/usr/tgcware/lib -L/usr/tgcware/lib -R/usr/local/lib -R/usr/ucblib
  LIBOBJS = 
 -LIBS = 
 +LIBS = -lsupc++
@@ -24,10 +80,12 @@ diff '--exclude=.deps' '--exclude=*.log' -ur gnome-games-2.10.2.orig/blackjack/s
  LTLIBOBJS = 
 diff '--exclude=.deps' '--exclude=*.log' -ur gnome-games-2.10.2.orig/gnometris/Makefile gnome-games-2.10.2/gnometris/Makefile
 --- gnome-games-2.10.2.orig/gnometris/Makefile	2018-09-25 14:47:23.680439000 -0700
-+++ gnome-games-2.10.2/gnometris/Makefile	2018-09-25 16:16:30.590186000 -0700
-@@ -126,7 +126,7 @@
++++ gnome-games-2.10.2/gnometris/Makefile	2018-09-27 04:45:42.800036000 -0700
+@@ -124,9 +124,9 @@
+ INTLTOOL_XGETTEXT = /usr/tgcware/bin/xgettext
+ INTLTOOL_XML_NOMERGE_RULE = %.xml:       %.xml.in       $(INTLTOOL_MERGE) ; LC_ALL=C $(INTLTOOL_MERGE) -x -u /tmp $< $@
  INTLTOOL_XML_RULE = %.xml:       %.xml.in       $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -x -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
- LDFLAGS = -R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib
+ LDFLAGS = /usr/tgcware/lib/libstdc++.so.6 -R/usr/tgcware/lib -L/usr/tgcware/lib -R/usr/local/lib -R/usr/ucblib
  LIBOBJS = 
 -LIBS = 
 +LIBS = -lsupc++
@@ -36,7 +94,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur gnome-games-2.10.2.orig/gnometris/M
  LTLIBOBJS = 
 diff '--exclude=.deps' '--exclude=*.log' -ur gnome-games-2.10.2.orig/libgames-support/games-network.c gnome-games-2.10.2/libgames-support/games-network.c
 --- gnome-games-2.10.2.orig/libgames-support/games-network.c	2018-09-25 14:15:01.620067000 -0700
-+++ gnome-games-2.10.2/libgames-support/games-network.c	2018-09-25 16:16:30.590217000 -0700
++++ gnome-games-2.10.2/libgames-support/games-network.c	2018-09-27 04:45:42.800102000 -0700
 @@ -257,6 +257,8 @@
    return network_io_setup (ng, CALLER_READ_CB);
  }
