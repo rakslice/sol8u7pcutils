@@ -1,0 +1,16 @@
+        gail                    >= 0.16
+        gconf-2.0               >= 1.1.11
+        gdk-pixbuf-2.0          >= 2
+        glib-2.0                >= 2
+        gnome-vfs-2.0           >= 2.9.1
+        gnome-vfs-module-2.0    >= 2.9.1
+        gthread-2.0             >= 2
+        gtk+-2.0                >= 2.3.0
+        libart-2.0              >= 2.3.8
+        libglade-2.0            >= 2.0.0
+        libgnome-2.0            >= 2.0
+        libgnomeui-2.0          >= 2.7.92
+        libxml-2.0              >= 2.4.7
+        libgnome-menu           >= 2.9.1
+        gnome-desktop-2.0       >= 2.1.4
+

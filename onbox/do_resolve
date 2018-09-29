@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e -x
+set -o pipefail
+
+. ./build_thing.bash
+
+. ${script_path}/gnome_resolver.bash
+
+do_gnome_resolve "$@"

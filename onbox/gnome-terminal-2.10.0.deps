@@ -1,0 +1,1 @@
+gtk+-2.0 >= 2.5.4  gconf-2.0 >= 1.1.9  libglade-2.0  libgnomeui-2.0  libstartup-notification-1.0 >= 0.8  vte >= 0.11.10  gnome-vfs-2.0 >= 2.4
