@@ -159,9 +159,13 @@ function download_and_sha() {
 	url="$1"
 	sha_expected="$2"
 
-	archive="$(basename "$url")"
+	if [ "$output_filename" != "" ]; then
+		archive="$output_filename"
+	else
+		archive="$(basename "$url")"
+	fi
 	if [ ! -f "$archive" ]; then
-		wget "$url"
+		wget "$url" -O "$archive" $extra_wget_args
 	fi	
 	verify_sha "$archive" "$sha_expected"
 }
