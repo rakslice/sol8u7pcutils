@@ -1,4 +1,4 @@
-# status: work in progress; abandoned while adding all the part of gnome, need newer glib
+# status: working
 
 tgcpkg install gettext-devel
 
@@ -9,7 +9,12 @@ wtcmmi https://ftp.gnome.org/pub/GNOME/sources/audiofile/0.2/audiofile-0.2.6.tar
 wtcmmi https://ftp.gnome.org/pub/GNOME/sources/esound/0.2/esound-0.2.41.tar.bz2 5eb5dd29a64b3462a29a5b20652aba7aa926742cef43577bf0796b787ca34911 LDFLAGS="-R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib" CPPFLAGS=-I/usr/local/include
 
 #wtcmmi https://ftp.gnome.org/pub/GNOME/sources/glib/2.6/glib-2.6.6.tar.bz2 de4f25424840b8e3b1fb03e6bac0c095affc3ca9c228f8b780817489914bdebf 
-wtcmmi https://ftp.gnome.org/pub/GNOME/sources/glib/2.10/glib-2.10.3.tar.bz2 1d3700e35ca7240a9ce28cf222429648ea50271d62524e008191ccd04a3f8f6f LDFLAGS="-R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib" CPPFLAGS=-I/usr/local/include
+
+tgcpkg install libiconv-devel
+
+ensure_link /usr/tgcware/bin/iconv /usr/tgcware/bin/giconv
+
+wtcmmi https://ftp.gnome.org/pub/GNOME/sources/glib/2.10/glib-2.10.3.tar.bz2 1d3700e35ca7240a9ce28cf222429648ea50271d62524e008191ccd04a3f8f6f LDFLAGS="-R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib" CPPFLAGS=-I/usr/local/include --with-libiconv=gnu
 
 #wtcmmi https://ftp.gnome.org/pub/gnome/sources/atk/1.1/atk-1.1.5.tar.bz2 961c757e1b819566af0e87ea772849182d4c41f8c01457e4ae42e0ca03f2fa99 LDFLAGS="-R/usr/tgcware/lib -R/usr/local/lib"
 wtcmmi https://ftp.gnome.org/pub/GNOME/sources/atk/1.9/atk-1.9.1.tar.bz2 65732d71c6c02e957673f49f8c5818f2cad3f451116b58ab1636c73dc8ab0dc6 LDFLAGS="-R/usr/tgcware/lib -R/usr/local/lib"
