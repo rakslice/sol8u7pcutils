@@ -357,8 +357,8 @@ function wtcmmi() {
 	# apply a patch if there is one to apply, post-config by default so it can change makefiles
 	if [ "$patch_before_configure" == "" ] && [ -f "${patches_dir}/${dirname}.patch" ]; then
 		# for easy patch creation make a .orig copy of the directory if we don't already have one
-		if [ ! -d ../${dirname}.orig ]; then
-			cp -R ../${dirname} ../${dirname}.orig
+		if [ ! -d ~/src/${dirname}.orig ]; then
+			cp -R ~/src/${dirname} ~/src/${dirname}.orig
 		fi
 
 		gpatch -p1 -i "${patches_dir}/${dirname}.patch" 2>&1 | tee ~/src/logs/${dirname}.patch.out
