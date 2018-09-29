@@ -1,0 +1,49 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/af/util/xp/ut_iconv.cpp abiword-2.3.4/abi/src/af/util/xp/ut_iconv.cpp
+--- abiword-2.3.4.orig/abi/src/af/util/xp/ut_iconv.cpp	2018-09-29 04:01:14.680045000 -0700
++++ abiword-2.3.4/abi/src/af/util/xp/ut_iconv.cpp	2018-09-29 14:58:06.580095000 -0700
+@@ -339,7 +339,7 @@
+ #ifdef UT_ICONV_USING_GLIB
+   return g_iconv((GIConv)cd, (char **)inbuf, inbytesleft, outbuf, outbytesleft);
+ #else
+-  return iconv( (iconv_t)cd, (ICONV_CONST char **)inbuf, inbytesleft, outbuf, outbytesleft );
++  return iconv( (iconv_t)cd, (/* ICONV_CONST */ const char **)inbuf, inbytesleft, outbuf, outbytesleft );
+ #endif
+ }
+ 
+diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/text/ptbl/xp/pd_Style.cpp abiword-2.3.4/abi/src/text/ptbl/xp/pd_Style.cpp
+--- abiword-2.3.4.orig/abi/src/text/ptbl/xp/pd_Style.cpp	2018-09-29 04:01:15.870045000 -0700
++++ abiword-2.3.4/abi/src/text/ptbl/xp/pd_Style.cpp	2018-09-29 14:58:06.580134000 -0700
+@@ -251,7 +251,8 @@
+ 		return UT_stricmp(szListStyle, "None") != NULL;
+ 	}
+ 	else {
+-		return FALSE;
++		/* return FALSE; */
++		return false;
+ 	}
+ }
+ 
+diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/wp/ap/unix/ap_UnixApp.cpp abiword-2.3.4/abi/src/wp/ap/unix/ap_UnixApp.cpp
+--- abiword-2.3.4.orig/abi/src/wp/ap/unix/ap_UnixApp.cpp	2018-09-29 04:01:16.320009000 -0700
++++ abiword-2.3.4/abi/src/wp/ap/unix/ap_UnixApp.cpp	2018-09-29 15:00:35.850021000 -0700
+@@ -753,7 +753,7 @@
+ extern "C" {
+ 
+ 	// return > 0 for directory entries ending in ".so" ".sl" and the like
+-	static int so_only (ABI_SCANDIR_SELECT_QUALIFIER struct dirent *d)
++	static int so_only (ABI_SCANDIR_SELECT_QUALIFIER const struct dirent *d)
+ 	{
+ 		const char * name = d->d_name;
+ 		
+diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/wp/ap/unix/ap_UnixDialog_New.cpp abiword-2.3.4/abi/src/wp/ap/unix/ap_UnixDialog_New.cpp
+--- abiword-2.3.4.orig/abi/src/wp/ap/unix/ap_UnixDialog_New.cpp	2018-09-29 04:01:16.360077000 -0700
++++ abiword-2.3.4/abi/src/wp/ap/unix/ap_UnixDialog_New.cpp	2018-09-29 15:04:04.630013000 -0700
+@@ -237,7 +237,7 @@
+ extern "C" {
+ 
+ 	// return > 0 for directory entries ending in ".awt" and ".dot"
+-	static int awt_only (ABI_SCANDIR_SELECT_QUALIFIER struct dirent *d)
++	static int awt_only (ABI_SCANDIR_SELECT_QUALIFIER const struct dirent *d)
+ 	{
+ 		const char * name = d->d_name;
+ 		

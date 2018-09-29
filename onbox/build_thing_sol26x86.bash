@@ -322,13 +322,14 @@ function wtcmmi() {
 
 	# 3) configure
 
-	if [ "$configure_subdir" != "" ]; then
-		cd "$configure_subdir"
-	fi
-
 	# apply a patch if there is one to apply and patch_before_configure is specified
 	if [ "$patch_before_configure" != "" ] && [ -f "${patches_dir}/${dirname}.patch" ]; then
+		pwd
 		gpatch -p1 -i "${patches_dir}/${dirname}.patch" 2>&1 | tee ~/src/logs/${dirname}.patch.out
+	fi
+
+	if [ "$configure_subdir" != "" ]; then
+		cd "$configure_subdir"
 	fi
 
 	if [ "$before_configure" != "" ]; then
@@ -361,6 +362,7 @@ function wtcmmi() {
 			cp -R ~/src/${dirname} ~/src/${dirname}.orig
 		fi
 
+		pwd
 		gpatch -p1 -i "${patches_dir}/${dirname}.patch" 2>&1 | tee ~/src/logs/${dirname}.patch.out
 	fi
 

@@ -60,6 +60,8 @@ def toss_patch(patch_filename, include_list):
 			if filename_proper.startswith("Makefile") and filename_proper != "Makefile.am" \
 			  and not force_include:
 				continue
+			if filename_proper == "GNUmakefile" and not force_include:
+				continue
 			if filename_proper == "confdefs.h" and not force_include:
 				continue
 			if filename_proper.startswith("ui_") and filename_proper.endswith(".h") and \
