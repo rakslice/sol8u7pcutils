@@ -20,7 +20,12 @@ script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 patches_dir="${script_path}/patches"
 
-main_packages_prefix=/usr/local
+uname_rm="$(uname -r) $(uname -m)"
+if [ "$uname_rm" == "5.6 i86pc" ]; then
+	main_packages_prefix=/usr/tgcware
+else
+	main_packages_prefix=/usr/local
+fi
 
 cd ~/src
 
@@ -161,7 +166,6 @@ function download_and_sha() {
 	verify_sha "$archive" "$sha_expected"
 }
 
-uname_rm="$(uname -r) $(uname -m)"
 
 function need_util() {
 	util_name="$1"
@@ -569,11 +573,7 @@ popd
 wtcmmi http://eterm.org/download/Eterm-0.9.6.tar.gz b4cb00f898ffd2de9bf7ae0ecde1cc3a5fee9f02 --with-imlib=/opt/csw LDFLAGS="-L$libast_lib /usr/lib/libresolv.so.2 -R$libast_lib" --disable-xim
 
 # setup terminfo for Eterm
-if [ "$uname_rm" == "5.6 i86pc" ]; then
-	ensure_link "/usr/share/lib/terminfo/E/Eterm" "/usr/share/lib/terminfo/x/xterm"
-else
-	ensure_link "/usr/share/lib/terminfo/E/Eterm" "${main_packages_prefix}/share/terminfo/x/xterm-256color"
-fi
+ensure_link "/usr/share/lib/terminfo/E/Eterm" "${main_packages_prefix}/share/terminfo/x/xterm-256color"
 
 fi # ETerm-0.9.6
 
