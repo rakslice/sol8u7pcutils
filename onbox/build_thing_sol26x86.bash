@@ -512,8 +512,10 @@ tgcpkg install automake
 tgcpkg install autoconf
 tgcpkg install libtool
 
-configure_name="$(which bash) autogen.sh" \
-wtcmmi http://downloads.sourceforge.net/freetype/freetype-2.3.9.tar.bz2 db08969cb5053879ff9e973fe6dd2c52c7ea2d4e
+before_configure="$(which bash) autogen.sh" \
+GNUMAKE=gmake \
+wtcmmi http://downloads.sourceforge.net/freetype/freetype-2.3.9.tar.bz2 db08969cb5053879ff9e973fe6dd2c52c7ea2d4e LDFLAGS="-R/usr/tgcware/lib"
+
 wtcmmi http://xmlsoft.org/sources/libxml2-2.7.7.tar.gz 8592824a2788574a172cbddcdc72f734ff87abe3 LDFLAGS="-R/usr/tgcware/lib"
 
 # NB: We explicitly pass --prefix for fontconfig to work around https://bugs.freedesktop.org/show_bug.cgi?id=18675
@@ -752,8 +754,6 @@ wtcmmi https://api.github.com/repos/zaycakitayca/gnome-menu-editor-qt/tarball/c5
 
 sudo cp -r zaycakitayca-gnome-menu-editor-qt-c50bc7a/gnome-menu-editor-qt /usr/local/bin/gnome-menu-editor-qt
 
-exit 1
-
 if false; then
 
 ## Imagemagick 7
@@ -761,8 +761,7 @@ wtcmmi https://www.imagemagick.org/download/ImageMagick-7.0.8-6.tar.xz 4c1a95ea1
 
 fi
 
-exit 1
-
+if false; then
 
 ## Gtk3 3.22.30
 
@@ -784,3 +783,4 @@ wtcmmi http://ftp.gnome.org/pub/gnome/sources/glib/2.56/glib-2.56.1.tar.xz 988af
 
 wtcmmi http://ftp.gnome.org/pub/gnome/sources/gtk+/3.22/gtk+-3.22.30.tar.xz 1be769c97b4dac9221d63f62f61ef724c55a14a3
 
+fi
