@@ -65,9 +65,16 @@ for f in *.[tT][tT][fF]; do
 	fi
 done
 ls -l
-sudo ginstall -v -d -m755 /usr/share/fonts/$msfont
-sudo ginstall -v -m644 *.ttf /usr/share/fonts/$msfont
-sudo fc-cache -v /usr/share/fonts/$msfont
+
+# do installation of the font if any ttf is not already installed
+for f in *.ttf; do
+	if [ ! -f /usr/share/fonts/$msfont/$f ]; then
+		sudo ginstall -v -d -m755 /usr/share/fonts/$msfont
+		sudo ginstall -v -m644 *.ttf /usr/share/fonts/$msfont
+		sudo fc-cache -v /usr/share/fonts/$msfont
+		break
+	fi
+done
 cd ..
 rm -rf $msfont
 done
