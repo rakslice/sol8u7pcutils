@@ -48,5 +48,7 @@ sed_patch /usr/local/bin/gtk-config '^glib_thread_libs=' '^glib_thread_libs=\"-L
 #wtcmmi https://download.gimp.org/pub/gimp/v1.0/old/v1.0.0/gimp-1.0.0.tar.bz2 b602f0fa1fa916592cf3995fdaab71eafb412945 
 # actually gimp-1.0.0 needs gtk 1.0 but we've already got gtk 1.2.x building; let's just use newer gimp
 LD_RUN_PATH=/usr/local/lib:/usr/tgcware/lib \
+make_params="MAKE=gmake" \
+make_install_params="MAKE=gmake" \
 wtcmmi https://download.gimp.org/pub/gimp/v1.2/v1.2.5/gimp-1.2.5.tar.bz2 1cb7fdbd4e6b191a62011c906e1b0aaef6e623ef LDFLAGS="-L/usr/local/lib -R/usr/local/lib -L/usr/tgcware/lib -R/usr/tgcware/lib" CPPFLAGS="-I/usr/local/include" --disable-print
 

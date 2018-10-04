@@ -1,0 +1,7 @@
+plug-ins/perl/config.pl
+plug-ins/perl/blib/man3/Gimp::Config.3pm
+plug-ins/perl/Gimp/Config.pm
+gimptool-1.2
+gimptool-win32.c
+config.h
+config.status

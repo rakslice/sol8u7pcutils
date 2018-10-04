@@ -51,13 +51,13 @@ diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.2.5.orig/plug-ins/common/pap
      {
 diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.2.5.orig/plug-ins/common/png.c gimp-1.2.5/plug-ins/common/png.c
 --- gimp-1.2.5.orig/plug-ins/common/png.c	2018-09-17 18:04:03.740094000 -0700
-+++ gimp-1.2.5/plug-ins/common/png.c	2018-09-17 19:01:26.440579000 -0700
++++ gimp-1.2.5/plug-ins/common/png.c	2018-10-04 04:03:15.330016000 -0700
 @@ -465,7 +465,7 @@
    info = (png_infop)calloc(sizeof(png_info), 1);
  #endif /* PNG_LIBPNG_VER > 88 */
  
 -  if (setjmp (pp->jmpbuf))
-+  if (setjmp (png_jmpbuf(pp)))
++  if (0 /*setjmp (png_jmpbuf(pp))*/)
    {
      g_message (_("%s\nPNG error. File corrupted?"), filename);
      return image;
@@ -195,7 +195,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur gimp-1.2.5.orig/plug-ins/common/png
  #endif /* PNG_LIBPNG_VER > 88 */
  
 -  if (setjmp (pp->jmpbuf))
-+  if (setjmp (png_jmpbuf(pp)))
++  if (0 /*setjmp (png_jmpbuf(pp))*/)
    {
      g_message (_("%s\nPNG error. Couldn't save image"), filename);
      return 0;
