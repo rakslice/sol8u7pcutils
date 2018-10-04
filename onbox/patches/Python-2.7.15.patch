@@ -1,0 +1,52 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur Python-2.7.15.orig/Modules/_ctypes/libffi/src/closures.c Python-2.7.15/Modules/_ctypes/libffi/src/closures.c
+--- Python-2.7.15.orig/Modules/_ctypes/libffi/src/closures.c	2018-09-30 15:00:08.590014000 -0700
++++ Python-2.7.15/Modules/_ctypes/libffi/src/closures.c	2018-09-30 15:46:14.950164000 -0700
+@@ -445,7 +445,7 @@
+   if (ftruncate (execfd, offset + length))
+     return MFAIL;
+ 
+-  flags &= ~(MAP_PRIVATE | MAP_ANONYMOUS);
++  flags &= ~(MAP_PRIVATE /*| MAP_ANONYMOUS*/);
+   flags |= MAP_SHARED;
+ 
+   ptr = mmap (NULL, length, (prot & ~PROT_WRITE) | PROT_EXEC,
+@@ -490,7 +490,7 @@
+ 
+   assert (start == NULL && length % malloc_getpagesize == 0
+ 	  && prot == (PROT_READ | PROT_WRITE)
+-	  && flags == (MAP_PRIVATE | MAP_ANONYMOUS)
++	  && flags == (MAP_PRIVATE /*| MAP_ANONYMOUS*/)
+ 	  && fd == -1 && offset == 0);
+ 
+ #if FFI_CLOSURE_TEST
+diff '--exclude=.deps' '--exclude=*.log' -ur Python-2.7.15.orig/Modules/expat/siphash.h Python-2.7.15/Modules/expat/siphash.h
+--- Python-2.7.15.orig/Modules/expat/siphash.h	2018-09-30 15:00:09.250002000 -0700
++++ Python-2.7.15/Modules/expat/siphash.h	2018-09-30 15:46:14.950185000 -0700
+@@ -93,7 +93,8 @@
+   typedef unsigned __int32 uint32_t;
+   typedef unsigned __int64 uint64_t;
+ #else
+- #include <stdint.h> /* uint64_t uint32_t uint8_t */
++ /*#include <stdint.h>*/ /* uint64_t uint32_t uint8_t */
++ #include <inttypes.h>
+ #endif
+ 
+ 
+Binary files Python-2.7.15.orig/Modules/getbuildinfo.o and Python-2.7.15/Modules/getbuildinfo.o differ
+diff '--exclude=.deps' '--exclude=*.log' -ur Python-2.7.15.orig/Python/bltinmodule.c Python-2.7.15/Python/bltinmodule.c
+--- Python-2.7.15.orig/Python/bltinmodule.c	2018-09-30 15:00:06.410024000 -0700
++++ Python-2.7.15/Python/bltinmodule.c	2018-09-30 16:08:21.570022000 -0700
+@@ -22,7 +22,7 @@
+ #elif defined(__APPLE__)
+ const char *Py_FileSystemDefaultEncoding = "utf-8";
+ #else
+-const char *Py_FileSystemDefaultEncoding = NULL; /* use default */
++const char *Py_FileSystemDefaultEncoding = "utf-8" /*NULL*/; /* use default */
+ #endif
+ 
+ /* Forward */
+Binary files Python-2.7.15.orig/build/lib.solaris-2.6-i86pc.32bit-2.7/_sysconfigdata.pyc and Python-2.7.15/build/lib.solaris-2.6-i86pc.32bit-2.7/_sysconfigdata.pyc differ
+Binary files Python-2.7.15.orig/build/lib.solaris-2.6-i86pc.32bit-2.7/_sysconfigdata.pyo and Python-2.7.15/build/lib.solaris-2.6-i86pc.32bit-2.7/_sysconfigdata.pyo differ
+Only in Python-2.7.15: core
+Binary files Python-2.7.15.orig/libpython2.7.a and Python-2.7.15/libpython2.7.a differ
+Binary files Python-2.7.15.orig/python and Python-2.7.15/python differ

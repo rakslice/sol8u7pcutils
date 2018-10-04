@@ -1,0 +1,102 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur libpng-1.2.59.orig/png.c libpng-1.2.59/png.c
+--- libpng-1.2.59.orig/png.c	2018-10-04 03:15:50.960093000 -0700
++++ libpng-1.2.59/png.c	2018-10-04 03:09:41.090089000 -0700
+@@ -665,7 +665,13 @@
+    if (png_ptr == NULL)
+       return;
+ 
++   fprintf(stderr, "before png_ptr 0x%08x set just io_ptr 0x%08x, read_data_fn 0x%08x\n",
++         png_ptr, png_ptr->io_ptr, png_ptr->read_data_fn);
++
+    png_ptr->io_ptr = (png_voidp)fp;
++
++   fprintf(stderr, "png_ptr 0x%08x set just io_ptr 0x%08x, read_data_fn 0x%08x\n",
++         png_ptr, png_ptr->io_ptr, png_ptr->read_data_fn);
+ }
+ #endif
+ 
+diff '--exclude=.deps' '--exclude=*.log' -ur libpng-1.2.59.orig/png.h libpng-1.2.59/png.h
+--- libpng-1.2.59.orig/png.h	2018-10-04 03:15:50.690063000 -0700
++++ libpng-1.2.59/png.h	2018-10-04 03:09:40.490014000 -0700
+@@ -1040,6 +1040,7 @@
+ {
+ #ifdef PNG_SETJMP_SUPPORTED
+    jmp_buf jmpbuf;            /* used in png_error */
++   int some_kinda_guard[10];
+ #endif
+    png_error_ptr error_fn PNG_DEPSTRUCT;    /* function for printing errors and aborting */
+    png_error_ptr warning_fn PNG_DEPSTRUCT;  /* function for printing warnings */
+diff '--exclude=.deps' '--exclude=*.log' -ur libpng-1.2.59.orig/pngconf.h libpng-1.2.59/pngconf.h
+--- libpng-1.2.59.orig/pngconf.h	2018-10-04 03:15:50.840007000 -0700
++++ libpng-1.2.59/pngconf.h	2018-10-04 03:09:40.770082000 -0700
+@@ -355,9 +355,11 @@
+ #  include <sys/types.h>
+ #endif
+ 
++/*
+ #if !defined(PNG_SETJMP_NOT_SUPPORTED) && !defined(PNG_NO_SETJMP_SUPPORTED)
+-#  define PNG_SETJMP_SUPPORTED
++#  define PNG_SETJMP_SUPPORTED 
+ #endif
++*/
+ 
+ #ifdef PNG_SETJMP_SUPPORTED
+ /* This is an attempt to force a single setjmp behaviour on Linux.  If
+diff '--exclude=.deps' '--exclude=*.log' -ur libpng-1.2.59.orig/pngread.c libpng-1.2.59/pngread.c
+--- libpng-1.2.59.orig/pngread.c	2018-10-04 03:15:50.840140000 -0700
++++ libpng-1.2.59/pngread.c	2018-10-04 03:09:40.800052000 -0700
+@@ -61,8 +61,10 @@
+ #else
+    png_ptr = (png_structp)png_create_struct(PNG_STRUCT_PNG);
+ #endif
++   fprintf(stderr, "after create struct inside create read struct \n");
+    if (png_ptr == NULL)
+       return (NULL);
++   /* fprintf(stderr, "pngread.c jmp_buf size is %d\n", sizeof(png_ptr->jmpbuf)); */
+ 
+    /* Added at libpng-1.2.6 */
+ #ifdef PNG_USER_LIMITS_SUPPORTED
+@@ -176,6 +178,8 @@
+    png_ptr->zstream.avail_out = (uInt)png_ptr->zbuf_size;
+ 
+    png_set_read_fn(png_ptr, png_voidp_NULL, png_rw_ptr_NULL);
++   fprintf(stderr, "after set_read_fn inside create read struct; "
++		"png_ptr 0x%08x, read_data_fn 0x%08x\n", png_ptr, png_ptr->read_data_fn);
+ 
+ #ifdef PNG_SETJMP_SUPPORTED
+ /* Applications that neglect to set up their own setjmp() and then
+diff '--exclude=.deps' '--exclude=*.log' -ur libpng-1.2.59.orig/pngrio.c libpng-1.2.59/pngrio.c
+--- libpng-1.2.59.orig/pngrio.c	2018-10-04 03:15:50.840131000 -0700
++++ libpng-1.2.59/pngrio.c	2018-10-04 03:09:40.800043000 -0700
+@@ -33,6 +33,10 @@
+ png_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
+ {
+    png_debug1(4, "reading %d bytes", (int)length);
++
++   fprintf(stderr, "png_ptr 0x%08x read time io_ptr 0x%08x, read_data_fn 0x%08x\n", 
++         png_ptr, png_ptr->io_ptr, png_ptr->read_data_fn);
++
+  
+    if (png_ptr->read_data_fn != NULL)
+       (*(png_ptr->read_data_fn))(png_ptr, data, length);
+@@ -155,10 +159,11 @@
+    png_ptr->io_ptr = io_ptr;
+ 
+ #ifdef PNG_STDIO_SUPPORTED
+-   if (read_data_fn != NULL)
++   if (read_data_fn != NULL) {
+       png_ptr->read_data_fn = read_data_fn;
+-   else
++   } else {
+       png_ptr->read_data_fn = png_default_read_data;
++   }
+ #else
+    png_ptr->read_data_fn = read_data_fn;
+ #endif
+@@ -176,5 +181,6 @@
+ #ifdef PNG_WRITE_FLUSH_SUPPORTED
+    png_ptr->output_flush_fn = NULL;
+ #endif
++   fprintf(stderr, "png_set_read_fn pngrio.c png_ptr 0x%08x set io_ptr 0x%08x, read_data_fn 0x%08x\n", png_ptr, png_ptr->io_ptr, png_ptr->read_data_fn);
+ }
+ #endif /* PNG_READ_SUPPORTED */

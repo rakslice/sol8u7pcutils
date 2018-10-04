@@ -1,0 +1,180 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Compiler/Code.c Cython-0.28.5/Cython/Compiler/Code.c
+--- Cython-0.28.5.orig/Cython/Compiler/Code.c	2018-09-30 20:51:08.680066000 -0700
++++ Cython-0.28.5/Cython/Compiler/Code.c	2018-09-30 20:53:52.030345000 -0700
+@@ -254,7 +254,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ #ifndef CYTHON_FALLTHROUGH
+   #if defined(__cplusplus) && __cplusplus >= 201103L
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Compiler/FlowControl.c Cython-0.28.5/Cython/Compiler/FlowControl.c
+--- Cython-0.28.5.orig/Cython/Compiler/FlowControl.c	2018-09-30 20:51:08.690043000 -0700
++++ Cython-0.28.5/Cython/Compiler/FlowControl.c	2018-09-30 20:53:52.220050000 -0700
+@@ -254,7 +254,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ #ifndef CYTHON_FALLTHROUGH
+   #if defined(__cplusplus) && __cplusplus >= 201103L
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Compiler/FusedNode.c Cython-0.28.5/Cython/Compiler/FusedNode.c
+--- Cython-0.28.5.orig/Cython/Compiler/FusedNode.c	2018-09-30 20:51:08.690102000 -0700
++++ Cython-0.28.5/Cython/Compiler/FusedNode.c	2018-09-30 20:53:52.320538000 -0700
+@@ -251,7 +251,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ #ifndef CYTHON_FALLTHROUGH
+   #if defined(__cplusplus) && __cplusplus >= 201103L
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Compiler/Lexicon.c Cython-0.28.5/Cython/Compiler/Lexicon.c
+--- Cython-0.28.5.orig/Cython/Compiler/Lexicon.c	2018-09-30 20:51:08.690122000 -0700
++++ Cython-0.28.5/Cython/Compiler/Lexicon.c	2018-09-30 20:53:52.342879000 -0700
+@@ -251,7 +251,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ #ifndef CYTHON_FALLTHROUGH
+   #if defined(__cplusplus) && __cplusplus >= 201103L
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Compiler/Parsing.c Cython-0.28.5/Cython/Compiler/Parsing.c
+--- Cython-0.28.5.orig/Cython/Compiler/Parsing.c	2018-09-30 20:51:08.700126000 -0700
++++ Cython-0.28.5/Cython/Compiler/Parsing.c	2018-09-30 20:53:52.620039000 -0700
+@@ -254,7 +254,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ #ifndef CYTHON_FALLTHROUGH
+   #if defined(__cplusplus) && __cplusplus >= 201103L
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Compiler/Pythran.c Cython-0.28.5/Cython/Compiler/Pythran.c
+--- Cython-0.28.5.orig/Cython/Compiler/Pythran.c	2018-09-30 20:51:08.710008000 -0700
++++ Cython-0.28.5/Cython/Compiler/Pythran.c	2018-09-30 20:53:52.660366000 -0700
+@@ -251,7 +251,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ #ifndef CYTHON_FALLTHROUGH
+   #if defined(__cplusplus) && __cplusplus >= 201103L
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Compiler/Scanning.c Cython-0.28.5/Cython/Compiler/Scanning.c
+--- Cython-0.28.5.orig/Cython/Compiler/Scanning.c	2018-09-30 20:51:08.710055000 -0700
++++ Cython-0.28.5/Cython/Compiler/Scanning.c	2018-09-30 20:53:52.731524000 -0700
+@@ -254,7 +254,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ #ifndef CYTHON_FALLTHROUGH
+   #if defined(__cplusplus) && __cplusplus >= 201103L
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Compiler/Visitor.c Cython-0.28.5/Cython/Compiler/Visitor.c
+--- Cython-0.28.5.orig/Cython/Compiler/Visitor.c	2018-09-30 20:51:08.710113000 -0700
++++ Cython-0.28.5/Cython/Compiler/Visitor.c	2018-09-30 20:53:52.842371000 -0700
+@@ -254,7 +254,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ #ifndef CYTHON_FALLTHROUGH
+   #if defined(__cplusplus) && __cplusplus >= 201103L
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Plex/Actions.c Cython-0.28.5/Cython/Plex/Actions.c
+--- Cython-0.28.5.orig/Cython/Plex/Actions.c	2018-09-30 20:51:08.800049000 -0700
++++ Cython-0.28.5/Cython/Plex/Actions.c	2018-09-30 20:53:52.912472000 -0700
+@@ -254,7 +254,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ #ifndef CYTHON_FALLTHROUGH
+   #if defined(__cplusplus) && __cplusplus >= 201103L
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Plex/Scanners.c Cython-0.28.5/Cython/Plex/Scanners.c
+--- Cython-0.28.5.orig/Cython/Plex/Scanners.c	2018-09-30 20:51:08.810013000 -0700
++++ Cython-0.28.5/Cython/Plex/Scanners.c	2018-09-30 20:53:52.953120000 -0700
+@@ -254,7 +254,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ #ifndef CYTHON_FALLTHROUGH
+   #if defined(__cplusplus) && __cplusplus >= 201103L
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Runtime/refnanny.c Cython-0.28.5/Cython/Runtime/refnanny.c
+--- Cython-0.28.5.orig/Cython/Runtime/refnanny.c	2018-09-30 20:51:08.770113000 -0700
++++ Cython-0.28.5/Cython/Runtime/refnanny.c	2018-09-30 20:53:52.870812000 -0700
+@@ -252,7 +252,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ #ifndef CYTHON_FALLTHROUGH
+   #if defined(__cplusplus) && __cplusplus >= 201103L
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/StringIOTree.c Cython-0.28.5/Cython/StringIOTree.c
+--- Cython-0.28.5.orig/Cython/StringIOTree.c	2018-09-30 20:51:08.850020000 -0700
++++ Cython-0.28.5/Cython/StringIOTree.c	2018-09-30 20:53:53.121658000 -0700
+@@ -254,7 +254,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ #ifndef CYTHON_FALLTHROUGH
+   #if defined(__cplusplus) && __cplusplus >= 201103L
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Tempita/_tempita.c Cython-0.28.5/Cython/Tempita/_tempita.c
+--- Cython-0.28.5.orig/Cython/Tempita/_tempita.c	2018-09-30 20:51:08.830048000 -0700
++++ Cython-0.28.5/Cython/Tempita/_tempita.c	2018-09-30 20:53:53.100206000 -0700
+@@ -251,7 +251,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ #ifndef CYTHON_FALLTHROUGH
+   #if defined(__cplusplus) && __cplusplus >= 201103L
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Utility/ModuleSetupCode.c Cython-0.28.5/Cython/Utility/ModuleSetupCode.c
+--- Cython-0.28.5.orig/Cython/Utility/ModuleSetupCode.c	2018-09-30 20:51:08.770129000 -0700
++++ Cython-0.28.5/Cython/Utility/ModuleSetupCode.c	2018-09-30 20:53:52.872335000 -0700
+@@ -260,7 +260,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ 
+ 
+diff '--exclude=.deps' '--exclude=*.log' -ur Cython-0.28.5.orig/Cython/Utility/TypeConversion.c Cython-0.28.5/Cython/Utility/TypeConversion.c
+--- Cython-0.28.5.orig/Cython/Utility/TypeConversion.c	2018-09-30 20:51:08.780105000 -0700
++++ Cython-0.28.5/Cython/Utility/TypeConversion.c	2018-09-30 20:53:52.873379000 -0700
+@@ -673,7 +673,7 @@
+         #endif
+     #endif
+ #else
+-   #include <stdint.h>
++   #include <inttypes.h>
+ #endif
+ 
+ // NOTE: inlining because most arguments are constant, which collapses lots of code below

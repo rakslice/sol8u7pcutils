@@ -1,0 +1,56 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur gevent-1.3.6.orig/_setupares.py gevent-1.3.6/_setupares.py
+--- gevent-1.3.6.orig/_setupares.py	2018-09-30 20:20:10.610014000 -0700
++++ gevent-1.3.6/_setupares.py	2018-09-30 21:16:27.360012000 -0700
+@@ -62,12 +62,13 @@
+         return
+ 
+     cwd = os.getcwd()
++    bdir_abs = os.path.abspath(bdir)
+     os.chdir(bdir)
+     try:
+         if os.path.exists('ares_config.h') and os.path.exists('ares_build.h'):
+             return
+         try:
+-            system(ares_configure_command)
++            system(ares_configure_command.replace("$OLDPWD", bdir_abs))
+         except:
+             with open('configure-output.txt', 'r') as t:
+                 print(t.read(), file=sys.stderr)
+diff '--exclude=.deps' '--exclude=*.log' -ur gevent-1.3.6.orig/_setuplibev.py gevent-1.3.6/_setuplibev.py
+--- gevent-1.3.6.orig/_setuplibev.py	2018-09-30 20:20:10.610018000 -0700
++++ gevent-1.3.6/_setuplibev.py	2018-09-30 21:14:20.280274000 -0700
+@@ -49,11 +49,12 @@
+         os.makedirs(bdir)
+ 
+     cwd = os.getcwd()
++    bdir_abs = os.path.abspath(bdir)
+     os.chdir(bdir)
+     try:
+         if os.path.exists('config.h'):
+             return
+-        system(libev_configure_command)
++        system(libev_configure_command.replace("$OLDPWD", bdir_abs))
+         if sys.platform == 'darwin':
+             make_universal_header('config.h',
+                                   'SIZEOF_LONG', 'SIZEOF_SIZE_T', 'SIZEOF_TIME_T')
+Binary files gevent-1.3.6.orig/_setuplibev.pyc and gevent-1.3.6/_setuplibev.pyc differ
+diff '--exclude=.deps' '--exclude=*.log' -ur gevent-1.3.6.orig/deps/libev/ev.c gevent-1.3.6/deps/libev/ev.c
+--- gevent-1.3.6.orig/deps/libev/ev.c	2018-09-30 20:20:10.740057000 -0700
++++ gevent-1.3.6/deps/libev/ev.c	2018-09-30 21:14:20.280315000 -0700
+@@ -480,7 +480,7 @@
+  * This value is good at least till the year 4000.
+  */
+ #define MIN_INTERVAL  0.0001220703125 /* 1/2**13, good till 4000 */
+-/*#define MIN_INTERVAL  0.00000095367431640625 /* 1/2**20, good till 2200 */
++/*#define MIN_INTERVAL  0.00000095367431640625 1/2**20, good till 2200 */
+ 
+ #define MIN_TIMEJUMP  1. /* minimum timejump that gets detected (if monotonic clock available) */
+ #define MAX_BLOCKTIME 59.743 /* never wait longer than this time (to detect time jumps) */
+@@ -561,6 +561,7 @@
+   #endif
+ #else
+   #include <inttypes.h>
++  #define INTPTR_MAX        0x7fffffff
+   #if (defined INTPTR_MAX ? INTPTR_MAX : ULONG_MAX) > 0xffffffffU
+     #define ECB_PTRSIZE 8
+   #else

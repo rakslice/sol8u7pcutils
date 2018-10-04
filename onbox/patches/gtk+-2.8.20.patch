@@ -1,43 +1,93 @@
-diff '--exclude=.deps' '--exclude=*.log' -ur gtk+-2.5.6.orig/gdk-pixbuf/io-png.c gtk+-2.5.6/gdk-pixbuf/io-png.c
---- gtk+-2.5.6.orig/gdk-pixbuf/io-png.c	2018-09-18 06:06:25.010022000 -0700
-+++ gtk+-2.5.6/gdk-pixbuf/io-png.c	2018-09-18 06:11:36.740010000 -0700
+diff '--exclude=.deps' '--exclude=*.log' -ur gtk+-2.8.20.orig/gdk-pixbuf/io-png.c gtk+-2.8.20/gdk-pixbuf/io-png.c
+--- gtk+-2.8.20.orig/gdk-pixbuf/io-png.c	2018-09-25 00:39:41.400021000 -0700
++++ gtk+-2.8.20/gdk-pixbuf/io-png.c	2018-10-02 01:47:04.320017000 -0700
 @@ -184,7 +184,7 @@
                               error_msg);
          }
  
 -        longjmp (png_save_ptr->jmpbuf, 1);
-+        longjmp (png_jmpbuf(png_save_ptr), 1);
++        /* longjmp (png_save_ptr->jmpbuf, 1); */
  }
  
  static void
-@@ -272,7 +272,7 @@
+@@ -249,6 +249,9 @@
+         gchar *key;
+         gchar *value;
+ 
++	/* fprintf(stderr, "jmp_buf size is %d\n", sizeof(png_ptr->jmpbuf)); */
++	fprintf(stderr, "gdk png_image_load 1 png_ptr 0x%08x before create_read_struct\n", png_ptr);
++
+ #ifdef PNG_USER_MEM_SUPPORTED
+ 	png_ptr = png_create_read_struct_2 (PNG_LIBPNG_VER_STRING,
+                                             error,
+@@ -266,13 +269,19 @@
+ 	if (!png_ptr)
+ 		return NULL;
+ 
++	fprintf(stderr, "gdk png_image_load 2 png_ptr 0x%08x,read_data_fn 0x%08x\n", png_ptr, png_ptr->read_data_fn);
++
+ 	info_ptr = png_create_info_struct (png_ptr);
+ 	if (!info_ptr) {
+ 		png_destroy_read_struct (&png_ptr, NULL, NULL);
  		return NULL;
  	}
  
--	if (setjmp (png_ptr->jmpbuf)) {
-+	if (setjmp (png_jmpbuf(png_ptr))) {
++	fprintf(stderr, "gdk png_image_load 3 png_ptr 0x%08x,read_data_fn 0x%08x\n", png_ptr, png_ptr->read_data_fn);
++
++	/*
+ 	if (setjmp (png_ptr->jmpbuf)) {
++		fprintf(stderr, "doing load 3 setjmp clear routine\n");
  	    	if (rows)
  		  	g_free (rows);
  
-@@ -433,7 +433,7 @@
+@@ -282,6 +291,9 @@
+ 		png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
+ 		return NULL;
+ 	}
++	*/
++
++	fprintf(stderr, "gdk png_image_load 4 png_ptr 0x%08x,read_data_fn 0x%08x\n", png_ptr, png_ptr->read_data_fn);
+ 
+ 	png_init_io (png_ptr, f);
+ 	png_read_info (png_ptr, info_ptr);
+@@ -432,14 +444,16 @@
+                 /* error callback should have set the error */
                  return NULL;
          }
-         
--	if (setjmp (lc->png_read_ptr->jmpbuf)) {
-+	if (setjmp (png_jmpbuf(lc->png_read_ptr))) {
+-        
++       
++	/* 
+ 	if (setjmp (lc->png_read_ptr->jmpbuf)) {
  		if (lc->png_info_ptr)
  			png_destroy_read_struct(&lc->png_read_ptr, NULL, NULL);
                  g_free(lc);
-@@ -505,7 +505,7 @@
+-                /* error callback should have set the error */
++                // error callback should have set the error 
+                 return NULL;
+ 	}
++	*/
+ 
+         /* Create the auxiliary context struct */
+ 
+@@ -505,13 +519,17 @@
          lc->error = error;
          
          /* Invokes our callbacks as needed */
--	if (setjmp (lc->png_read_ptr->jmpbuf)) {
-+	if (setjmp (png_jmpbuf(lc->png_read_ptr))) {
++	/*
+ 	if (setjmp (lc->png_read_ptr->jmpbuf)) {
                  lc->error = NULL;
  		return FALSE;
  	} else {
-@@ -615,7 +615,7 @@
++	*/
+ 		png_process_data(lc->png_read_ptr, lc->png_info_ptr,
+                                  (guchar*) buf, size);
++	/*
+ 	}
++	*/
+ 
+         if (lc->fatal_error_occurred) {
+                 lc->error = NULL;
+@@ -615,7 +633,7 @@
                          g_set_error (lc->error,
                                       GDK_PIXBUF_ERROR,
                                       GDK_PIXBUF_ERROR_INSUFFICIENT_MEMORY,
@@ -46,21 +96,26 @@ diff '--exclude=.deps' '--exclude=*.log' -ur gtk+-2.5.6.orig/gdk-pixbuf/io-png.c
                                       width, height);
                  }
                  return;
-@@ -719,7 +719,7 @@
+@@ -719,7 +737,9 @@
                               error_msg);
          }
  
--        longjmp (png_read_ptr->jmpbuf, 1);
-+        longjmp (png_jmpbuf(png_read_ptr), 1);
++	/*
+         longjmp (png_read_ptr->jmpbuf, 1);
++	*/
  }
  
  static void
-@@ -880,7 +880,7 @@
+@@ -909,10 +929,12 @@
  	       success = FALSE;
  	       goto cleanup;
         }
--       if (setjmp (png_ptr->jmpbuf)) {
-+       if (setjmp (png_jmpbuf(png_ptr))) {
++	/*
+        if (setjmp (png_ptr->jmpbuf)) {
  	       success = FALSE;
  	       goto cleanup;
         }
++	*/
+ 
+        if (num_keys > 0) {
+                png_set_text (png_ptr, info_ptr, text_ptr, num_keys);

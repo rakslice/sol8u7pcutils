@@ -1,7 +1,41 @@
-Index: glib2.0-2.13.4/glib/gutils.h
-===================================================================
---- glib2.0-2.13.4.orig/glib/gutils.h	2007-06-16 18:27:37.000000000 +0200
-+++ glib2.0-2.13.4/glib/gutils.h	2007-06-16 18:30:08.000000000 +0200
+diff '--exclude=.deps' '--exclude=*.log' -ur glib-2.10.3.orig/glib/gnulib/vasnprintf.c glib-2.10.3/glib/gnulib/vasnprintf.c
+--- glib-2.10.3.orig/glib/gnulib/vasnprintf.c	2018-09-25 01:17:16.150094000 -0700
++++ glib-2.10.3/glib/gnulib/vasnprintf.c	2018-09-29 18:09:46.280014000 -0700
+@@ -721,7 +721,17 @@
+ 		    switch (prefix_count)				    \
+ 		      {							    \
+ 		      case 0:						    \
+-			count = sprintf (tmp, buf, arg);		    \
++			count = sprintf (tmp, buf, arg); /*		    \
++			fprintf(stderr, "we are zero prefix case; the actual print output is \n");       \
++                        fprintf(stderr, buf, arg);                          \
++			fprintf(stderr, "\n");                              \
++			fprintf(stderr, "the part that should be the form has %s\n", buf);  \
++			fprintf(stderr, "the buffer address is 0x%08x\n", tmp);  \
++			fprintf(stderr, "the offset of the count from the buffer address is %d\n", ((int) tmp) - count); \
++			fprintf(stderr, "here after the sprintf, the buffer has %s\n", tmp); */ \
++			if (((int) tmp) == count) {                         \
++				count = strlen(tmp);                        \
++			}                                                   \
+ 			break;						    \
+ 		      case 1:						    \
+ 			count = sprintf (tmp, buf, prefixes[0], arg);	    \
+@@ -977,10 +987,11 @@
+ 		      }
+ 
+ #if !HAVE_SNPRINTF
+-		    if (count >= tmp_length)
++		    if (count >= tmp_length) {
+ 		      /* tmp_length was incorrectly calculated - fix the
+ 			 code above!  */
+ 		      abort ();
++		   }
+ #endif
+ 
+ 		    /* Make room for the result.  */
+diff '--exclude=.deps' '--exclude=*.log' -ur glib-2.10.3.orig/glib/gutils.h glib-2.10.3/glib/gutils.h
+--- glib-2.10.3.orig/glib/gutils.h	2018-09-25 01:17:16.210190000 -0700
++++ glib-2.10.3/glib/gutils.h	2018-09-29 03:09:50.690125000 -0700
 @@ -96,9 +96,14 @@
  #ifdef G_IMPLEMENT_INLINES
  #  define G_INLINE_FUNC

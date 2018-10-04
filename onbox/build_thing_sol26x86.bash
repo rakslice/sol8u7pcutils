@@ -386,7 +386,7 @@ function wtcmmi() {
 
 	# 5) install
 
-	sudo ${make_command} install ${make_install_params} 2>&1 | tee ~/src/logs/${dirname}.make_install.out
+	sudo ${make_command} ${make_install_pre_params} install ${make_install_params} 2>&1 | tee ~/src/logs/${dirname}.make_install.out
 
 	popd	
 
@@ -538,7 +538,9 @@ source ${script_path}/fonts.bash
 use_dirname=jpeg-8d \
 wtcmmi http://www.ijg.org/files/jpegsrc.v8d.tar.gz f080b2fffc7581f7d19b968092ba9ebc234556ff LDFLAGS="-R/usr/tgcware/lib"
 tgcpkg install zlib-devel
-wtcmmi http://downloads.sourceforge.net/libpng/libpng-1.5.13.tar.xz a6c0fc33b2031e4a9154da03c7d4e7807bc039e7 --disable-static LDFLAGS="-R/usr/tgcware/lib"
+wtcmmi https://sourceforge.net/projects/libpng/files/libpng12/1.2.59/libpng-1.2.59.tar.xz 4376e9ae6cf23efe63975067c4f135ff1777671a --disable-static LDFLAGS="-R/usr/tgcware/lib"
+#wtcmmi https://sourceforge.net/projects/libpng/files/libpng12/older-releases/1.2.14/libpng-1.2.14.tar.bz2 3cf3efcada7896982b165ea34ed6b399ef7fb4af --disable-static LDFLAGS="-R/usr/tgcware/lib"
+#wtcmmi http://downloads.sourceforge.net/libpng/libpng-1.5.13.tar.xz a6c0fc33b2031e4a9154da03c7d4e7807bc039e7 --disable-static LDFLAGS="-R/usr/tgcware/lib"
 wtcmmi http://download.osgeo.org/libtiff/old/tiff-3.9.1.tar.gz 675ad1977023a89201b80cd5cd4abadea7ba0897 --disable-static LDFLAGS="-L/usr/tgcware/lib -R/usr/tgcware/lib" --with-jpeg-include-dir=/usr/local/include --with-jpeg-lib-dir=/usr/local/lib
 
 #wtcmmi https://downloads.sourceforge.net/enlightenment/imlib2-1.5.1.tar.bz2 3e97e7157380f0cfbdf4f3c950a7a00bdfa6072c LDFLAGS="-L/usr/local/lib -R/usr/local/lib -L/usr/tgcware/lib -R/usr/tgcware/lib" CPPFLAGS="-I/usr/local/include -I/usr/tgcware/include -D__EXPORT__=" --disable-visibility-hiding
@@ -790,3 +792,56 @@ wtcmmi http://ftp.gnome.org/pub/gnome/sources/glib/2.56/glib-2.56.1.tar.xz 988af
 wtcmmi http://ftp.gnome.org/pub/gnome/sources/gtk+/3.22/gtk+-3.22.30.tar.xz 1be769c97b4dac9221d63f62f61ef724c55a14a3
 
 fi
+
+tgcpkg install tk-devel
+wtcmmi ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz 280c265b789e041c02e5c97815793dfc283fb1e6 LDFLAGS="-R/usr/tgcware/lib"
+wtcmmi https://www.python.org/ftp/python/2.7.15/Python-2.7.15.tar.xz a80ae3cc478460b922242f43a1b4094d \
+	LDFLAGS="-R/usr/tgcware/lib -L/usr/tgcware/lib" LIBS="/usr/tgcware/lib/libstdc++.so.6" \
+	--with-tcltk-includes="-I/usr/tgcware/include" --with-tcltk-libs="-L/usr/tgcware/lib" \
+	CPPFLAGS="-I/usr/tgcware/include"
+
+sudo /usr/local/bin/python -m pip install pip==18.0
+
+#wtcmmi https://gnupg.org/ftp/gcrypt/gnupg/gnupg-2.2.10.tar.bz2 3e87504e2ca317718aa9b6299947ebf7e906b54e LDFLAGS="-R/usr/tgcware/lib -L/usr/tgcware/lib -R/usr/local/lib -L/usr/local/lib" CPPFLAGS="-I/usr/tgcware/include -I/usr/local/include"
+
+noconfig=1 \
+make_command="/usr/local/bin/python2.7 setup.py" \
+make_params="build" \
+wtcmmi https://files.pythonhosted.org/packages/21/89/ca320e5b45d381ae0df74c4b5694f1471c1b2453c5eb4bac3449f5970481/Cython-0.28.5.tar.gz  b64575241f64f6ec005a4d4137339fb0ba5e156e826db2fdb5f458060d9979e0
+
+sudo /usr/local/bin/pip install setuptools
+
+archive_filename="gevent-1.3.6.tar.gz" \
+noconfig=1 \
+make_command="/usr/local/bin/python2.7 setup.py" \
+make_params="build" \
+make_install_pre_params="develop" \
+wtcmmi https://github.com/gevent/gevent/archive/1.3.6.tar.gz ad57cddf427b34f2ee8c20c99a13bcc028cefef7
+
+download_and_sha https://web.archive.org/web/20160427100902if_/http://www.cosy.sbg.ac.at:80/~andi/SUNrand/pkg/ANDIrand-0.7-5.8-x86-1.pkg ed51af1d3e96e0f07a8d8b68b911b6e233839fd0
+
+if ! pkginfo ANDIrand > /dev/null; then
+sudo /usr/sbin/pkgadd -d ANDIrand-0.7-5.8-x86-1.pkg ANDIrand
+fi
+
+function setup_nsc() {
+	cat > Makefile <<"EOF"
+src_dir=$(shell pwd)
+
+all:
+
+install:
+	mkdir -p /usr/local/netscape
+	mkdir -p /usr/local/netscape/java/classes
+	pwd
+	cp $(src_dir)/*.jar /usr/local/netscape/java/classes/
+	cd /usr/local/netscape; for f in $(src_dir)/*.nif; do gtar xvf $$f; done
+EOF
+}
+
+before_configure=setup_nsc \
+noconfig=1 \
+use_dirname=navigator-v478.x86-sun-solaris2.5.1 \
+wtcmmi "https://ftp.nluug.nl/netscape/communicator/english/4.78/unix/supported/sunos551_x86/navigator_standalone/navigator-v478-us.x86-sun-solaris2.5.1.tar.gz" d2d2ac7ea4ad9a492d4c8290d8f9e0968e878a17
+
+sudo pip install gdbgui

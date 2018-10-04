@@ -2,8 +2,6 @@
 
 tgcpkg install gettext-devel
 
-wtcmmi https://sourceforge.net/projects/libpng/files/libpng12/1.2.59/libpng-1.2.59.tar.xz 4376e9ae6cf23efe63975067c4f135ff1777671a --disable-static LDFLAGS="-R/usr/tgcware/lib"
-
 wtcmmi https://ftp.gnome.org/pub/GNOME/sources/audiofile/0.2/audiofile-0.2.6.tar.bz2 c2a8965a6ea4a8db4c92cd7d3214c741de8d7c4a4a7ac98c76d48dde61e200b4 LDFLAGS="-R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib" CPPFLAGS=-I/usr/local/include
 
 wtcmmi https://ftp.gnome.org/pub/GNOME/sources/esound/0.2/esound-0.2.41.tar.bz2 5eb5dd29a64b3462a29a5b20652aba7aa926742cef43577bf0796b787ca34911 LDFLAGS="-R/usr/local/lib -R/usr/tgcware/lib -L/usr/local/lib" CPPFLAGS=-I/usr/local/include
