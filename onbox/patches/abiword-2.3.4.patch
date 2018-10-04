@@ -1,6 +1,6 @@
 diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/af/util/xp/ut_iconv.cpp abiword-2.3.4/abi/src/af/util/xp/ut_iconv.cpp
 --- abiword-2.3.4.orig/abi/src/af/util/xp/ut_iconv.cpp	2018-09-29 04:01:14.680045000 -0700
-+++ abiword-2.3.4/abi/src/af/util/xp/ut_iconv.cpp	2018-09-29 14:58:06.580095000 -0700
++++ abiword-2.3.4/abi/src/af/util/xp/ut_iconv.cpp	2018-09-29 15:24:55.710133000 -0700
 @@ -339,7 +339,7 @@
  #ifdef UT_ICONV_USING_GLIB
    return g_iconv((GIConv)cd, (char **)inbuf, inbytesleft, outbuf, outbytesleft);
@@ -10,9 +10,34 @@ diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/af/util/
  #endif
  }
  
+diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/af/util/xp/ut_png.cpp abiword-2.3.4/abi/src/af/util/xp/ut_png.cpp
+--- abiword-2.3.4.orig/abi/src/af/util/xp/ut_png.cpp	2018-09-29 04:01:14.680124000 -0700
++++ abiword-2.3.4/abi/src/af/util/xp/ut_png.cpp	2018-10-04 03:28:48.010012000 -0700
+@@ -71,7 +71,7 @@
+ 	 * the normal method of doing things with libpng).  REQUIRED unless you
+ 	 * set up your own error handlers in the png_create_read_struct() earlier.
+ 	 */
+-	if (setjmp(png_ptr->jmpbuf))
++	if (false /*setjmp(png_ptr->jmpbuf)*/)
+ 	{
+ 		/* Free all of the memory associated with the png_ptr and info_ptr */
+ 		png_destroy_read_struct(&png_ptr, &info_ptr, static_cast<png_infopp>(NULL));
+Binary files abiword-2.3.4.orig/abi/src/af/util/xp/ut_png.o and abiword-2.3.4/abi/src/af/util/xp/ut_png.o differ
+diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/af/xap/unix/xap_UnixPSImage.cpp abiword-2.3.4/abi/src/af/xap/unix/xap_UnixPSImage.cpp
+--- abiword-2.3.4.orig/abi/src/af/xap/unix/xap_UnixPSImage.cpp	2018-09-29 04:01:15.090127000 -0700
++++ abiword-2.3.4/abi/src/af/xap/unix/xap_UnixPSImage.cpp	2018-10-04 03:29:30.940012000 -0700
+@@ -101,7 +101,7 @@
+ 	 * the normal method of doing things with libpng).  REQUIRED unless you
+ 	 * set up your own error handlers in the png_create_read_struct() earlier.
+ 	 */
+-	if (setjmp(png_ptr->jmpbuf))
++	if (0 /*setjmp(png_ptr->jmpbuf)*/)
+ 	{
+ 		/* Free all of the memory associated with the png_ptr and info_ptr */
+ 		png_destroy_read_struct(&png_ptr, &info_ptr, static_cast<png_infopp>(NULL));
 diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/text/ptbl/xp/pd_Style.cpp abiword-2.3.4/abi/src/text/ptbl/xp/pd_Style.cpp
 --- abiword-2.3.4.orig/abi/src/text/ptbl/xp/pd_Style.cpp	2018-09-29 04:01:15.870045000 -0700
-+++ abiword-2.3.4/abi/src/text/ptbl/xp/pd_Style.cpp	2018-09-29 14:58:06.580134000 -0700
++++ abiword-2.3.4/abi/src/text/ptbl/xp/pd_Style.cpp	2018-09-29 15:24:55.710173000 -0700
 @@ -251,7 +251,8 @@
  		return UT_stricmp(szListStyle, "None") != NULL;
  	}
@@ -25,7 +50,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/text/ptb
  
 diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/wp/ap/unix/ap_UnixApp.cpp abiword-2.3.4/abi/src/wp/ap/unix/ap_UnixApp.cpp
 --- abiword-2.3.4.orig/abi/src/wp/ap/unix/ap_UnixApp.cpp	2018-09-29 04:01:16.320009000 -0700
-+++ abiword-2.3.4/abi/src/wp/ap/unix/ap_UnixApp.cpp	2018-09-29 15:00:35.850021000 -0700
++++ abiword-2.3.4/abi/src/wp/ap/unix/ap_UnixApp.cpp	2018-09-29 15:24:55.710203000 -0700
 @@ -753,7 +753,7 @@
  extern "C" {
  
@@ -37,7 +62,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/wp/ap/un
  		
 diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/wp/ap/unix/ap_UnixDialog_New.cpp abiword-2.3.4/abi/src/wp/ap/unix/ap_UnixDialog_New.cpp
 --- abiword-2.3.4.orig/abi/src/wp/ap/unix/ap_UnixDialog_New.cpp	2018-09-29 04:01:16.360077000 -0700
-+++ abiword-2.3.4/abi/src/wp/ap/unix/ap_UnixDialog_New.cpp	2018-09-29 15:04:04.630013000 -0700
++++ abiword-2.3.4/abi/src/wp/ap/unix/ap_UnixDialog_New.cpp	2018-09-29 15:24:55.710240000 -0700
 @@ -237,7 +237,7 @@
  extern "C" {
  
@@ -47,3 +72,33 @@ diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/wp/ap/un
  	{
  		const char * name = d->d_name;
  		
+diff '--exclude=.deps' '--exclude=*.log' -ur abiword-2.3.4.orig/abi/src/wp/impexp/unix/ie_impGraphic_GdkPixbuf.cpp abiword-2.3.4/abi/src/wp/impexp/unix/ie_impGraphic_GdkPixbuf.cpp
+--- abiword-2.3.4.orig/abi/src/wp/impexp/unix/ie_impGraphic_GdkPixbuf.cpp	2018-09-29 04:01:17.090045000 -0700
++++ abiword-2.3.4/abi/src/wp/impexp/unix/ie_impGraphic_GdkPixbuf.cpp	2018-10-04 03:31:17.460013000 -0700
+@@ -77,7 +77,7 @@
+ 		return err;
+ 	}
+ 
+-	if (setjmp(m_pPNG->jmpbuf))
++	if (false /*setjmp(m_pPNG->jmpbuf)*/)
+ 	{
+ 		g_object_unref(G_OBJECT(pixbuf));
+ 		png_destroy_write_struct(&m_pPNG, &m_pPNGInfo);
+@@ -151,7 +151,7 @@
+ 		return err;
+ 	}
+ 
+-	if (setjmp(m_pPNG->jmpbuf))
++	if (false /*setjmp(m_pPNG->jmpbuf)*/)
+ 	{
+ 		png_destroy_write_struct(&m_pPNG, &m_pPNGInfo);
+ 		g_object_unref(G_OBJECT(pixbuf));
+@@ -441,7 +441,7 @@
+ 	 * the normal method of doing things with libpng).  REQUIRED unless you
+ 	 * set up your own error handlers in the png_create_read_struct() earlier.
+ 	 */
+-	if (setjmp(m_pPNG->jmpbuf))
++	if (false /*setjmp(m_pPNG->jmpbuf)*/)
+ 		{
+ 			/* Free all of the memory associated with the png_ptr and info_ptr */
+ 			png_destroy_write_struct(&m_pPNG, &m_pPNGInfo);
