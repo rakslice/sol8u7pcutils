@@ -9,9 +9,16 @@ if [ "$1" == "-f" ]; then
 	shift
 fi
 
+if [ "$1" == "-s" ]; then
+	copyups=yes
+	shift
+else
+	copyups=no
+fi
+
 if [ $# -lt 1 ]; then
 	echo "Usage:"
-	echo "$0 [-f] {dirname} [args for patchout]"
+	echo "$0 [-f] [-s] {dirname} [args for patchout]"
 	exit 1
 fi
 
@@ -29,6 +36,18 @@ fi
 if [ ! -d "$origdirname" ]; then
 	echo "$origdirname not found"
 	exit 1
+fi
+
+# checks complete
+
+if [ "$copyups" == "yes" ]; then
+	pushd "$dirname"
+	for filename in config.h config.status; do
+	if [ -f $filename ]; then
+		copytoorig $filename
+	fi
+	done
+	popd
 fi
 
 if [ "$overwrite" == "no" ] && [ -f "$outputfile" ]; then
