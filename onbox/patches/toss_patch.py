@@ -44,6 +44,13 @@ def toss_patch(patch_filename, include_list):
 	if include_list is None:
 		include_list = []
 
+        skip_subpaths = []
+	ignores_filename = patch_filename + ".ignore"
+	if os.path.exists(ignores_filename):
+		with open(ignores_filename, "r") as ignores_handle:
+			lines = [line.strip() for line in ignores_handle]
+			skip_subpaths += [line for line in lines if line != ""]
+
 	output_filename = patch_filename + ".temp"	
 
 	skip_filenames = set()
@@ -56,6 +63,8 @@ def toss_patch(patch_filename, include_list):
 			skip = False
 			filename_proper = filename.rsplit("/", 1)[-1]
 			if filename in skip_filenames:
+				continue
+			if filename_subpath in skip_subpaths:
 				continue
 			if filename_proper.startswith("Makefile") and filename_proper != "Makefile.am" \
 			  and not force_include:
