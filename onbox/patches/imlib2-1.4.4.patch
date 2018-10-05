@@ -1,6 +1,6 @@
 diff '--exclude=.deps' '--exclude=*.log' -ur imlib2-1.4.4.orig/src/lib/Imlib2.h imlib2-1.4.4/src/lib/Imlib2.h
 --- imlib2-1.4.4.orig/src/lib/Imlib2.h	2018-09-17 03:42:23.810054000 -0700
-+++ imlib2-1.4.4/src/lib/Imlib2.h	2018-09-17 04:11:06.870434000 -0700
++++ imlib2-1.4.4/src/lib/Imlib2.h	2018-10-05 13:28:32.210010000 -0700
 @@ -12,7 +12,7 @@
  #  endif
  # else
@@ -12,7 +12,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur imlib2-1.4.4.orig/src/lib/Imlib2.h 
  #    define EAPI
 diff '--exclude=.deps' '--exclude=*.log' -ur imlib2-1.4.4.orig/src/lib/asm.h imlib2-1.4.4/src/lib/asm.h
 --- imlib2-1.4.4.orig/src/lib/asm.h	2018-09-17 03:42:23.810138000 -0700
-+++ imlib2-1.4.4/src/lib/asm.h	2018-09-17 04:11:06.870459000 -0700
++++ imlib2-1.4.4/src/lib/asm.h	2018-10-05 13:28:32.230013000 -0700
 @@ -9,7 +9,7 @@
  # define PR_(sym) __##sym
  #endif
@@ -22,9 +22,12 @@ diff '--exclude=.deps' '--exclude=*.log' -ur imlib2-1.4.4.orig/src/lib/asm.h iml
  # define HIDDEN_(sym) .hidden PR_(sym)
  #else
  # define HIDDEN_(sym)
+Binary files imlib2-1.4.4.orig/src/lib/blend.o and imlib2-1.4.4/src/lib/blend.o differ
+Binary files imlib2-1.4.4.orig/src/lib/color.o and imlib2-1.4.4/src/lib/color.o differ
+Binary files imlib2-1.4.4.orig/src/lib/colormod.o and imlib2-1.4.4/src/lib/colormod.o differ
 diff '--exclude=.deps' '--exclude=*.log' -ur imlib2-1.4.4.orig/src/lib/common.h imlib2-1.4.4/src/lib/common.h
 --- imlib2-1.4.4.orig/src/lib/common.h	2018-09-17 03:42:23.810070000 -0700
-+++ imlib2-1.4.4/src/lib/common.h	2018-09-17 04:11:06.870501000 -0700
++++ imlib2-1.4.4/src/lib/common.h	2018-10-05 13:28:32.230029000 -0700
 @@ -16,7 +16,7 @@
  #include <sys/types.h>
  #endif
@@ -34,15 +37,38 @@ diff '--exclude=.deps' '--exclude=*.log' -ur imlib2-1.4.4.orig/src/lib/common.h 
  #define __hidden __attribute__((visibility("hidden")))
  #else
  #define __hidden
+Binary files imlib2-1.4.4.orig/src/lib/context.o and imlib2-1.4.4/src/lib/context.o differ
+Binary files imlib2-1.4.4.orig/src/lib/draw.o and imlib2-1.4.4/src/lib/draw.o differ
+Binary files imlib2-1.4.4.orig/src/lib/dynamic_filters.o and imlib2-1.4.4/src/lib/dynamic_filters.o differ
+Binary files imlib2-1.4.4.orig/src/lib/ellipse.o and imlib2-1.4.4/src/lib/ellipse.o differ
+Binary files imlib2-1.4.4.orig/src/lib/filter.o and imlib2-1.4.4/src/lib/filter.o differ
+Binary files imlib2-1.4.4.orig/src/lib/font_draw.o and imlib2-1.4.4/src/lib/font_draw.o differ
+Binary files imlib2-1.4.4.orig/src/lib/font_load.o and imlib2-1.4.4/src/lib/font_load.o differ
+Binary files imlib2-1.4.4.orig/src/lib/font_main.o and imlib2-1.4.4/src/lib/font_main.o differ
+Binary files imlib2-1.4.4.orig/src/lib/font_query.o and imlib2-1.4.4/src/lib/font_query.o differ
+Binary files imlib2-1.4.4.orig/src/lib/grab.o and imlib2-1.4.4/src/lib/grab.o differ
+Binary files imlib2-1.4.4.orig/src/lib/grad.o and imlib2-1.4.4/src/lib/grad.o differ
+Binary files imlib2-1.4.4.orig/src/lib/image.o and imlib2-1.4.4/src/lib/image.o differ
+Binary files imlib2-1.4.4.orig/src/lib/line.o and imlib2-1.4.4/src/lib/line.o differ
+Binary files imlib2-1.4.4.orig/src/lib/polygon.o and imlib2-1.4.4/src/lib/polygon.o differ
+Binary files imlib2-1.4.4.orig/src/lib/rectangle.o and imlib2-1.4.4/src/lib/rectangle.o differ
+Binary files imlib2-1.4.4.orig/src/lib/rend.o and imlib2-1.4.4/src/lib/rend.o differ
+Binary files imlib2-1.4.4.orig/src/lib/rgba.o and imlib2-1.4.4/src/lib/rgba.o differ
+Binary files imlib2-1.4.4.orig/src/lib/rgbadraw.o and imlib2-1.4.4/src/lib/rgbadraw.o differ
+Binary files imlib2-1.4.4.orig/src/lib/rotate.o and imlib2-1.4.4/src/lib/rotate.o differ
+Binary files imlib2-1.4.4.orig/src/lib/scale.o and imlib2-1.4.4/src/lib/scale.o differ
+Binary files imlib2-1.4.4.orig/src/lib/script.o and imlib2-1.4.4/src/lib/script.o differ
+Binary files imlib2-1.4.4.orig/src/lib/span.o and imlib2-1.4.4/src/lib/span.o differ
+Binary files imlib2-1.4.4.orig/src/lib/ximage.o and imlib2-1.4.4/src/lib/ximage.o differ
 diff '--exclude=.deps' '--exclude=*.log' -ur imlib2-1.4.4.orig/src/modules/loaders/loader_png.c imlib2-1.4.4/src/modules/loaders/loader_png.c
 --- imlib2-1.4.4.orig/src/modules/loaders/loader_png.c	2018-09-17 03:42:23.860109000 -0700
-+++ imlib2-1.4.4/src/modules/loaders/loader_png.c	2018-09-17 04:11:56.310005000 -0700
++++ imlib2-1.4.4/src/modules/loaders/loader_png.c	2018-10-05 13:31:02.650014000 -0700
 @@ -58,7 +58,7 @@
               fclose(f);
               return 0;
            }
 -        if (setjmp(png_ptr->jmpbuf))
-+        if (setjmp(png_jmpbuf(png_ptr)))
++        if (0 /*setjmp(png_jmpbuf(png_ptr))*/)
            {
               png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
               fclose(f);
@@ -51,7 +77,7 @@ diff '--exclude=.deps' '--exclude=*.log' -ur imlib2-1.4.4.orig/src/modules/loade
          return 0;
       }
 -   if (setjmp(png_ptr->jmpbuf))
-+   if (setjmp(png_jmpbuf(png_ptr)))
++   if (0 /*setjmp(png_jmpbuf(png_ptr))*/)
       {
          fclose(f);
          png_destroy_write_struct(&png_ptr, (png_infopp) & info_ptr);
