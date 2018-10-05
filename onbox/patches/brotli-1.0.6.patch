@@ -1,0 +1,76 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur brotli-1.0.6.orig/c/common/platform.h brotli-1.0.6/c/common/platform.h
+--- brotli-1.0.6.orig/c/common/platform.h	2018-10-04 04:51:13.090060000 -0700
++++ brotli-1.0.6/c/common/platform.h	2018-10-04 05:12:51.300367000 -0700
+@@ -155,8 +155,9 @@
+ 
+ /* BROTLI_INTERNAL could be defined to override visibility, e.g. for tests. */
+ #if !defined(BROTLI_INTERNAL)
+-#if defined(_WIN32) || defined(__CYGWIN__)
++/*#if defined(_WIN32) || defined(__CYGWIN__)*/
+ #define BROTLI_INTERNAL
++/*
+ #elif BROTLI_GNUC_VERSION_CHECK(3, 3, 0) ||                         \
+     BROTLI_TI_VERSION_CHECK(8, 0, 0) ||                             \
+     BROTLI_INTEL_VERSION_CHECK(16, 0, 0) ||                         \
+@@ -169,6 +170,7 @@
+ #else
+ #define BROTLI_INTERNAL
+ #endif
++*/
+ #endif
+ 
+ /* <<< <<< <<< end of hedley macros. */
+diff '--exclude=.deps' '--exclude=*.log' -ur brotli-1.0.6.orig/c/enc/fast_log.h brotli-1.0.6/c/enc/fast_log.h
+--- brotli-1.0.6.orig/c/enc/fast_log.h	2018-10-04 04:51:13.310026000 -0700
++++ brotli-1.0.6/c/enc/fast_log.h	2018-10-04 05:16:59.890012000 -0700
+@@ -130,14 +130,7 @@
+   if (v < sizeof(kLog2Table) / sizeof(kLog2Table[0])) {
+     return kLog2Table[v];
+   }
+-#if (defined(_MSC_VER) && _MSC_VER <= 1700) || \
+-    (defined(__ANDROID_API__) && __ANDROID_API__ < 18)
+-  /* Visual Studio 2012 and Android API levels < 18 do not have the log2()
+-   * function defined, so we use log() and a multiplication instead. */
+   return log((double)v) * LOG_2_INV;
+-#else
+-  return log2((double)v);
+-#endif
+ }
+ 
+ #if defined(__cplusplus) || defined(c_plusplus)
+diff '--exclude=.deps' '--exclude=*.log' -ur brotli-1.0.6.orig/c/include/brotli/port.h brotli-1.0.6/c/include/brotli/port.h
+--- brotli-1.0.6.orig/c/include/brotli/port.h	2018-10-04 04:51:13.490021000 -0700
++++ brotli-1.0.6/c/include/brotli/port.h	2018-10-04 05:12:51.300400000 -0700
+@@ -218,8 +218,11 @@
+   BROTLI_GNUC_VERSION_CHECK(major, minor, patch)
+ #endif
+ 
++/*
+ #if defined(_WIN32) || defined(__CYGWIN__)
++*/
+ #define BROTLI_PUBLIC
++/*
+ #elif BROTLI_GNUC_VERSION_CHECK(3, 3, 0) ||                         \
+     BROTLI_TI_VERSION_CHECK(8, 0, 0) ||                             \
+     BROTLI_INTEL_VERSION_CHECK(16, 0, 0) ||                         \
+@@ -232,6 +235,7 @@
+ #else
+ #define BROTLI_PUBLIC
+ #endif
++*/
+ 
+ #if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L) && \
+     !defined(__STDC_NO_VLA__) && !defined(__cplusplus) &&         \
+diff '--exclude=.deps' '--exclude=*.log' -ur brotli-1.0.6.orig/c/include/brotli/types.h brotli-1.0.6/c/include/brotli/types.h
+--- brotli-1.0.6.orig/c/include/brotli/types.h	2018-10-04 04:51:13.490025000 -0700
++++ brotli-1.0.6/c/include/brotli/types.h	2018-10-04 05:12:51.300428000 -0700
+@@ -24,7 +24,8 @@
+ typedef unsigned __int64 uint64_t;
+ typedef __int64 int64_t;
+ #else
+-#include <stdint.h>
++/*#include <stdint.h>*/
++#include <inttypes.h>
+ #endif  /* defined(_MSC_VER) && (_MSC_VER < 1600) */
+ 
+ /**

@@ -1,0 +1,13 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur nix-2.1.3.orig/src/linenoise/ConvertUTF.h nix-2.1.3/src/linenoise/ConvertUTF.h
+--- nix-2.1.3.orig/src/linenoise/ConvertUTF.h	2018-10-04 05:24:00.230012000 -0700
++++ nix-2.1.3/src/linenoise/ConvertUTF.h	2018-10-04 05:24:35.410012000 -0700
+@@ -93,7 +93,8 @@
+ typedef unsigned char  UTF8;  /* typically 8 bits */
+ #endif
+ 
+-#include <stdint.h>
++/*#include <stdint.h>*/
++#include <inttypes.h>
+ #include <string>
+ 
+ namespace linenoise_ng {
