@@ -237,13 +237,24 @@ function wtcmmi() {
 
 	gtar xf "$archive"
 
+	src_dir="$(pwd)"
+
 	pushd "$dirname"
 
 	# 3) configure
 
 	# apply a patch if there is one to apply and patch_before_configure is specified
 	if [ "$patch_before_configure" != "" ] && [ -f "${patches_dir}/${dirname}.patch" ]; then
+		# for easy patch creation make a .orig copy of the directory if we don't already have one
+		if [ ! -d "${src_dir}/${dirname}.orig" ]; then
+			cp -R "${src_dir}/${dirname}" "${src_dir}/${dirname}.orig"
+		fi
 		gpatch -p1 -i "${patches_dir}/${dirname}.patch" 2>&1 | tee ~/src/logs/${dirname}.patch.out
+	fi
+
+	# do the rest of the build process including configure in a subdir
+	if [ "$use_subdir" != "" ]; then
+		cd "$use_subdir"
 	fi
 
 	if [ "$pre_configure_command" != "" ]; then
@@ -270,8 +281,8 @@ function wtcmmi() {
 	# apply a patch if there is one to apply, post-config by default so it can change makefiles
 	if [ "$patch_before_configure" == "" ] && [ -f "${patches_dir}/${dirname}.patch" ]; then
 		# for easy patch creation make a .orig copy of the directory if we don't already have one
-		if [ ! -d ../${dirname}.orig ]; then
-			cp -R ../${dirname} ../${dirname}.orig
+		if [ ! -d "${src_dir}/${dirname}.orig" ]; then
+			cp -R "${src_dir}/${dirname}" "${src_dir}/${dirname}.orig"
 		fi
 
 		gpatch -p1 -i "${patches_dir}/${dirname}.patch" 2>&1 | tee ~/src/logs/${dirname}.patch.out
@@ -457,7 +468,7 @@ fi # Eterm-0.8.10
 ## OpenSSL 1.0.2o
 
 configure_name=config \
-wtcmmi https://www.openssl.org/source/openssl-1.0.2o.tar.gz a47faaca57b47a0d9d5fb085545857cc92062691
+wtcmmi https://www.openssl.org/source/openssl-1.0.2o.tar.gz a47faaca57b47a0d9d5fb085545857cc92062691 shared
 
 ## Wget 1.19.5 -- second build, with OpenSSL 1.0.x we just built
 # Requires: openssl
@@ -631,6 +642,64 @@ use_dirname=distcc \
 pre_configure_command=./autogen.sh \
 wtcmmi https://github.com/distcc/distcc/releases/download/v3.3.2/distcc-3.3.2.tar.gz 4f2200e74e22b2cdf316c1126eb180e568756d39 --without-libiberty
 
+if false; then
+## firefox 3.0.14
+
+pkg install firefox
+
+use_subdir=nspr \
+wtcmmi https://archive.mozilla.org/pub/nspr/releases/v4.19/src/nspr-4.19.tar.gz e1d27282ad6286b69d6b9fd07201d3dd CC=gcc
+
+if false && [ ! -f installed-nss-3.38 ]; then
+	download_and_sha https://archive.mozilla.org/pub/nspr/releases/v4.19/src/nspr-4.19.tar.gz e1d27282ad6286b69d6b9fd07201d3dd
+	mkdir -p nss-3.38/nspr_temp
+	pushd nss-3.38/nspr_temp
+	gtar xf ../../nspr-4.19.tar.gz
+	popd
+	pushd nss-3.38
+	cp -R nspr_temp/nspr-4.19/nspr .
+	rm -rf nspr_temp
+	popd
+fi
+
+# clear out files that the patch creates
+for f in nss-3.38/nss/config/{Makefile,nss-config.in,nss.pc.in}; do
+	if [ -f "$f" ]; then
+		rm $f
+	fi
+done
+
+patch_before_configure=1 \
+use_subdir=nss \
+noconfig=1 \
+LD=/opt/csw/bin/gld \
+make_params="NS_USE_GCC=1 CC=gcc BUILD_OPT=1 NSPR_INCLUDE_DIR=/usr/local/include/nspr NSPR_LIB_DIR=/usr/local/lib USE_SYSTEM_ZLIB=1 ZLIB_LIBS=-lz NSS_ENABLE_WERROR=0 OS_CFLAGS=-msse2" \
+wtcmmi https://archive.mozilla.org/pub/security/nss/releases/NSS_3_38_RTM/src/nss-3.38.tar.gz ac9065460a7634ba8eb0f942f404e773 
+
+fi
+
+## inkscape 0.48
+
+if false; then
+# currently hitting problems with this glibmm version afaict
+
+pkg install libgc
+pkg install glibmm_devel
+pkg install libsigc++_devel
+pkg install libatk_devel
+pkg install libxslt_devel
+pkg install gsl
+
+# lcms 1.x
+archive_filename=lcms-1.19.tar.gz \
+wtcmmi https://sourceforge.net/projects/lcms/files/lcms/1.19/lcms-1.19.tar.gz/download d5b075ccffc0068015f74f78e4bc39138bcfe2d4
+
+LD_RUN_PATH=/opt/csw/lib:/opt/csw/gcc4/lib \
+PKG_CONFIG_PATH=/opt/csw/lib/pkgconfig:/opt/csw/X11/lib/pkgconfig:/usr/local/lib/pkgconfig \
+wtcmmi https://inkscape.org/en/gallery/item/7731/inkscape-0.48.0.tar.bz2 a2ab9b34937cc4f2b482c9b3720d8fd4dc7b12e8 LDFLAGS=-L/opt/csw/lib CPPFLAGS="-I/opt/csw/include -DSOLARIS_2_8"
+
+fi
+
 exit 1
 
 ## gcc-4.x
@@ -704,6 +773,7 @@ wtcmmi https://sourceforge.net/projects/lcms/files/lcms/2.9/lcms2-2.9.tar.gz/dow
 
 wtcmmi https://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz 228604686ca23f42e48b98930babeb5d217f1899
 wtcmmi https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz e891c3193029775e83e0534ac0ee0c4c711f6d23
+
 
 exit 1
 

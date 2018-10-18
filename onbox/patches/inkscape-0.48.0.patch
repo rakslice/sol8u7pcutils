@@ -1,0 +1,22 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur inkscape-0.48.0.orig/src/2geom/isnan.h inkscape-0.48.0/src/2geom/isnan.h
+--- inkscape-0.48.0.orig/src/2geom/isnan.h	2018-08-05 03:41:01.739591000 -0700
++++ inkscape-0.48.0/src/2geom/isnan.h	2018-08-05 03:41:48.060454000 -0700
+@@ -70,6 +70,8 @@
+ # define IS_NAN(_a) (isnan(_a))		/* GNU definition */
+ #elif defined (SOLARIS_2_8) && __GNUC__ == 3 && __GNUC_MINOR__ == 2
+ # define IS_NAN(_a) (isnan(_a))		/* GNU definition */
++#elif defined (SOLARIS_2_8) && __GNUC__ == 4 && __GNUC_MINOR__ == 3
++# define IS_NAN(_a) (isnan(_a))		/* GNU definition */
+ #else
+ # define IS_NAN(_a) (std::isnan(_a))
+ #endif
+@@ -92,6 +94,9 @@
+ #elif defined (SOLARIS_2_8) && __GNUC__ == 3 && __GNUC_MINOR__ == 2
+ #include  <ieeefp.h>
+ #define IS_FINITE(_a) (finite(_a) && !IS_NAN(_a))
++#elif defined (SOLARIS_2_8) && __GNUC__ == 4 && __GNUC_MINOR__ == 3
++#include  <ieeefp.h>
++#define IS_FINITE(_a) (finite(_a) && !IS_NAN(_a))
+ #else
+ # define IS_FINITE(_a) (std::isfinite(_a))
+ #endif
