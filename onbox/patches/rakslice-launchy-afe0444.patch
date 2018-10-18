@@ -1,0 +1,111 @@
+diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/platforms/unix/platform_unix.cpp launchy-2.5/platforms/unix/platform_unix.cpp
+--- launchy-2.5.orig/platforms/unix/platform_unix.cpp	2018-07-07 21:49:53.244706000 -0700
++++ launchy-2.5/platforms/unix/platform_unix.cpp	2018-07-08 00:13:28.691240000 -0700
+@@ -22,7 +22,7 @@
+ #include <QApplication>
+ #include <QX11Info>
+ #include "platform_unix.h"
+-#include <boost/pointer_cast.hpp>  
++/* #include <boost/pointer_cast.hpp> */ 
+ #include <X11/Xlib.h>
+ #include <QFileIconProvider>
+ 
+diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/platforms/unix/unix.pro launchy-2.5/platforms/unix/unix.pro
+--- launchy-2.5.orig/platforms/unix/unix.pro	2018-07-30 21:43:53.350014000 -0700
++++ launchy-2.5/platforms/unix/unix.pro	2018-07-31 14:53:43.573349000 -0700
+@@ -11,7 +11,7 @@
+ 
+ 
+ unix {
+- PREFIX = /usr
++ PREFIX = /usr/local
+  DEFINES += SKINS_PATH=\\\"$$PREFIX/share/launchy/skins/\\\" \
+            PLUGINS_PATH=\\\"$$PREFIX/lib/launchy/plugins/\\\" \
+            PLATFORMS_PATH=\\\"$$PREFIX/lib/launchy/\\\"
+diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/plugins/calcy/calcy.pro launchy-2.5/plugins/calcy/calcy.pro
+--- launchy-2.5.orig/plugins/calcy/calcy.pro	2018-07-07 21:49:52.224111000 -0700
++++ launchy-2.5/plugins/calcy/calcy.pro	2018-07-08 00:22:45.952467000 -0700
+@@ -26,7 +26,7 @@
+ 
+ 
+ unix:!macx {
+-    PREFIX = /usr
++    PREFIX = /usr/local
+     target.path = $$PREFIX/lib/launchy/plugins/
+     icon.path = $$PREFIX/lib/launchy/plugins/icons/
+     icon.files = calcy.png
+diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/plugins/calcy/precompiled.h launchy-2.5/plugins/calcy/precompiled.h
+--- launchy-2.5.orig/plugins/calcy/precompiled.h	2018-07-07 21:49:52.244109000 -0700
++++ launchy-2.5/plugins/calcy/precompiled.h	2018-07-08 00:13:28.691272000 -0700
+@@ -36,8 +36,8 @@
+ using namespace boost;
+ 
+ #define BOOST_SPIRIT_USE_OLD_NAMESPACE
+-#include <boost/spirit/include/classic_core.hpp>
+-#include <boost/spirit/include/classic_attribute.hpp>
+-#include <boost/spirit/include/phoenix1_functions.hpp>
++#include <boost/spirit/core.hpp> 
++#include <boost/spirit/attribute.hpp>
++#include <boost/spirit/phoenix/functions.hpp>
+ 
+ #endif // PRECOMPILED_H
+diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/plugins/gcalc/gcalc.pro launchy-2.5/plugins/gcalc/gcalc.pro
+--- launchy-2.5.orig/plugins/gcalc/gcalc.pro	2018-07-07 21:49:52.094021000 -0700
++++ launchy-2.5/plugins/gcalc/gcalc.pro	2018-07-08 00:22:18.765296000 -0700
+@@ -19,7 +19,7 @@
+ if(!debug_and_release|build_pass):CONFIG(debug, debug|release):DESTDIR = ../../debug/plugins
+ if(!debug_and_release|build_pass):CONFIG(release, debug|release):DESTDIR = ../../release/plugins
+ unix:!macx {
+-    PREFIX = /usr
++    PREFIX = /usr/local
+     target.path = $$PREFIX/lib/launchy/plugins/
+     
+     # icon.path = $$PREFIX/lib/launchy/plugins/icons/
+diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/plugins/runner/runner.pro launchy-2.5/plugins/runner/runner.pro
+--- launchy-2.5.orig/plugins/runner/runner.pro	2018-07-07 21:49:52.344493000 -0700
++++ launchy-2.5/plugins/runner/runner.pro	2018-07-08 00:22:59.919708000 -0700
+@@ -42,7 +42,7 @@
+ }
+ 
+ unix:!macx {
+- PREFIX = /usr
++ PREFIX = /usr/local
+  target.path = $$PREFIX/lib/launchy/plugins/
+  icon.path = $$PREFIX/lib/launchy/plugins/icons/
+  icon.files = runner.png
+diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/plugins/verby/verby.pro launchy-2.5/plugins/verby/verby.pro
+--- launchy-2.5.orig/plugins/verby/verby.pro	2018-07-07 21:49:52.074046000 -0700
++++ launchy-2.5/plugins/verby/verby.pro	2018-07-08 00:22:03.216062000 -0700
+@@ -31,7 +31,7 @@
+         /WX
+ }
+ unix:!macx {
+-    PREFIX = /usr
++    PREFIX = /usr/local
+     target.path = $$PREFIX/lib/launchy/plugins/
+     icon.path = $$PREFIX/lib/launchy/plugins/icons/
+     icon.files = verby.png copy.png opencontainer.png properties.png run.png
+diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/plugins/weby/weby.pro launchy-2.5/plugins/weby/weby.pro
+--- launchy-2.5.orig/plugins/weby/weby.pro	2018-07-07 21:49:52.524451000 -0700
++++ launchy-2.5/plugins/weby/weby.pro	2018-07-08 00:23:14.109211000 -0700
+@@ -32,7 +32,7 @@
+ if(!debug_and_release|build_pass):CONFIG(debug, debug|release):DESTDIR = ../../debug/plugins
+ if(!debug_and_release|build_pass):CONFIG(release, debug|release):DESTDIR = ../../release/plugins
+ unix:!macx {
+-    PREFIX = /usr
++    PREFIX = /usr/local
+     target.path = $$PREFIX/lib/launchy/plugins/
+     icon.path = $$PREFIX/lib/launchy/plugins/icons/
+     icon.files = weby.png
+diff '--exclude=.deps' '--exclude=*.log' -ur launchy-2.5.orig/src/src.pro launchy-2.5/src/src.pro
+--- launchy-2.5.orig/src/src.pro	2018-07-30 21:43:53.360076000 -0700
++++ launchy-2.5/src/src.pro	2018-07-31 14:53:43.583752000 -0700
+@@ -71,7 +71,7 @@
+                 platform_base_hotkey.h \
+                 platform_base_hottrigger.h
+ 
+-    PREFIX = /usr
++    PREFIX = /usr/local
+     DEFINES += SKINS_PATH=\\\"$$PREFIX/share/launchy/skins/\\\" \
+         PLUGINS_PATH=\\\"$$PREFIX/lib/launchy/plugins/\\\" \
+         PLATFORMS_PATH=\\\"$$PREFIX/lib/launchy/\\\"

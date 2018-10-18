@@ -561,10 +561,16 @@ pkg install boost_devel boost_rt
 
 boost_dir=/opt/csw/include
 
+if false; then
 make_params=-j5 \
 configure_name="${QT464}/bin/qmake -r -unix Launchy.pro" \
 wtcmmi https://www.launchy.net/downloads/src/launchy-2.5.tar.gz 7a6317168fe7aa219c138fbbc0f84539be9bce9e "INCLUDEPATH+=$boost_dir" "LIBS+=-L/usr/openwin/lib -R/usr/openwin/lib -lX11" 
+fi
 
+make_params=-j2 \
+configure_name="${QT464}/bin/qmake -r -unix Launchy.pro" \
+archive_filename="rakslice-launchy-afe0444.tar.gz" \
+wtcmmi https://api.github.com/repos/rakslice/launchy/tarball/afe0444 f236db1cd06be72db9167d6dd91ca39f17282552 "INCLUDEPATH+=$boost_dir" "LIBS+=-L/usr/openwin/lib -R/usr/openwin/lib" 
 
 ## VIM 7.4
 
