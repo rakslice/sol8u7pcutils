@@ -635,6 +635,8 @@ fi
 
 ## coreutils
 
+pkg install xz
+
 wtcmmi https://ftp.gnu.org/gnu/coreutils/coreutils-8.11.tar.xz 9c03e0de95ac6ec65129eaf0b3605982a77d8fedaeca5b665ad44fe901695b3b
 
 ## distcc
