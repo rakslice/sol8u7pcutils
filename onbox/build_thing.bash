@@ -410,9 +410,9 @@ wtcmmi https://www.openssl.org/source/openssl-1.0.2o.tar.gz a47faaca57b47a0d9d5f
 
 if [ ! -d /opt/csw/lib/disabled ]; then
 	sudo mkdir /opt/csw/lib/disabled
-	sudo mv /opt/csw/lib/libssl* /opt/csw/lib/disabled/
-	sudo mv /opt/csw/lib/libcrypto* /opt/csw/lib/disabled/
 fi
+sudo mv /opt/csw/lib/libssl* /opt/csw/lib/disabled/
+sudo mv /opt/csw/lib/libcrypto* /opt/csw/lib/disabled/
 
 PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig \
 tag_must_contain=--with-openssl=/usr/local/ssl \
