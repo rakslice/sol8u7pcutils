@@ -401,7 +401,7 @@ fi
 ## OpenSSL 1.0.2o
 
 configure_name=config \
-wtcmmi https://www.openssl.org/source/openssl-1.0.2o.tar.gz a47faaca57b47a0d9d5fb085545857cc92062691 shared
+wtcmmi https://www.openssl.org/source/openssl-1.0.2o.tar.gz a47faaca57b47a0d9d5fb085545857cc92062691 shared -R/opt/csw/gcc4/lib -R/usr/local/ssl/lib
 
 ## Wget 1.19.5 -- second build, with OpenSSL 1.0.x we just built
 # Requires: openssl
@@ -416,7 +416,7 @@ sudo mv /opt/csw/lib/libcrypto* /opt/csw/lib/disabled/
 
 PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig \
 tag_must_contain=--with-openssl=/usr/local/ssl \
-wtcmmi ftp://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/usr/local/ssl LDFLAGS="-ldl"
+wtcmmi ftp://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/usr/local/ssl LDFLAGS="-ldl -R/usr/local/ssl/lib -R/opt/csw/gcc4/lib"
 
 populate_certificates "/usr/local/ssl"
 
