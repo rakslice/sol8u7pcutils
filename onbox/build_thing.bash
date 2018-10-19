@@ -468,7 +468,9 @@ popd
 
 pkg install libxdmcp
 
+ensure_link /usr/local/bin/tr /usr/bin/tr
 wtcmmi http://eterm.org/download/Eterm-0.9.6.tar.gz b4cb00f898ffd2de9bf7ae0ecde1cc3a5fee9f02 --with-imlib=/opt/csw LDFLAGS="-L$libast_lib /opt/csw/X11/lib/libXdmcp.so -R/opt/csw/X11/lib -R/opt/csw/lib" CPPFLAGS=-DMEMSET=memset --disable-xim
+sudo rm /usr/local/bin/tr
 
 # setup terminfo for Eterm
 ensure_link "/usr/share/lib/terminfo/E/Eterm" "/opt/csw/share/terminfo/x/xterm-256color"
