@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -e 
+set -x
+set -o pipefail
+
+# Helper script for uninstalling and reinstalling locally built
+# openssl and wget when the second stage wget doesn't work for
+# some reason
+
+[ -d /opt/csw/lib/disabled ]
+sudo mv /opt/csw/lib/disabled/* /opt/csw/lib/
+sudo rmdir /opt/csw/lib/disabled
+
+cd ~/src
+~/bin/uninstall_thing wget-1.19.5
+rm installed-openssl-1.0.2o
+sudo rm -rf /usr/local/ssl
