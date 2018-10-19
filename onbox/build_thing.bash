@@ -356,6 +356,8 @@ pkg install pkgconfig
 
 wtcmmi ftp://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/opt/csw/ssl LDFLAGS=-R/opt/csw/lib
 
+if false; then
+
 if ! installed mDNSResponder-878.30.4; then
 
 for d in /etc/rc{4,5}.d; do
@@ -382,6 +384,34 @@ make_params="os=solaris CC=gcc" \
 make_install_params="os=solaris" \
 LD_RUN_PATH=/opt/csw/lib \
 wtcmmi https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-878.30.4.tar.gz 6661247c232e296c8646130a26686b904db7c912
+
+fi
+
+## OpenSSL 1.0.2o
+
+configure_name=config \
+wtcmmi https://www.openssl.org/source/openssl-1.0.2o.tar.gz a47faaca57b47a0d9d5fb085545857cc92062691
+
+## Wget 1.19.5 -- second build, with OpenSSL 1.0.x we just built
+# Requires: openssl
+
+# disable existing ssl so we get a good build
+
+if [ ! -d /opt/csw/lib/disabled ]; then
+	sudo mkdir /opt/csw/lib/disabled
+	sudo mv /opt/csw/lib/libssl* /opt/csw/lib/disabled/
+	sudo mv /opt/csw/lib/libcrypto* /opt/csw/lib/disabled/
+fi
+
+PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig \
+tag_must_contain=--with-openssl=/usr/local/ssl \
+wtcmmi ftp://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/usr/local/ssl LDFLAGS="-ldl"
+
+populate_certificates "/usr/local/ssl"
+
+# mej-libast for eterm
+
+pkg install gsed
 
 pkg install libtool
 pkg install autoconf
@@ -452,29 +482,6 @@ popd
 wtcmmi http://ftp.gnome.org/mirror/archive/ftp.sunet.se/pub/vendor/sco/skunkware/uw7/emulators/rxvt/src/Eterm-0.8.10.tar.gz 0cafeec2c9d79c874c6b312dcb105b912168ad0d --with-imlib=/opt/csw --prefix=/usr/local
 
 fi # Eterm-0.8.10
-
-
-## OpenSSL 1.0.2o
-
-configure_name=config \
-wtcmmi https://www.openssl.org/source/openssl-1.0.2o.tar.gz a47faaca57b47a0d9d5fb085545857cc92062691
-
-## Wget 1.19.5 -- second build, with OpenSSL 1.0.x we just built
-# Requires: openssl
-
-# disable existing ssl so we get a good build
-
-if [ ! -d /opt/csw/lib/disabled ]; then
-	sudo mkdir /opt/csw/lib/disabled
-	sudo mv /opt/csw/lib/libssl* /opt/csw/lib/disabled/
-	sudo mv /opt/csw/lib/libcrypto* /opt/csw/lib/disabled/
-fi
-
-PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig \
-tag_must_contain=--with-openssl=/usr/local/ssl \
-wtcmmi ftp://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/usr/local/ssl LDFLAGS="-ldl"
-
-populate_certificates "/usr/local/ssl"
 
 ## Qt 4.8.5
 
