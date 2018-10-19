@@ -653,7 +653,9 @@ wtcmmi https://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz 3e7504b832eb2dd23170
 
 #wtcmmi https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tar.xz eb8c2a6b1447d50813c02714af4681f3
 wtcmmi https://www.python.org/ftp/python/3.1.5/Python-3.1.5.tar.xz 20dd2b7f801dc97db948dd168df4dd52 \
-LDFLAGS="-L/usr/local/lib -R/usr/local/lib"
+SHELL="$(which bash)" CONFIG_SHELL="$(which bash)" \
+make_params="SHELL=$(which bash)" \
+LDFLAGS="-L/usr/local/lib -R/usr/local/lib -L/opt/csw/lib -R/opt/csw/lib -R/opt/csw/gcc4/lib -R/usr/local/ssl/lib"
 
 #mkdir -p distcc/_include_server
 
