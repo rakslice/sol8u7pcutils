@@ -420,6 +420,9 @@ PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig \
 tag_must_contain=--with-openssl=/usr/local/ssl \
 wtcmmi ftp://ftp.gnu.org/gnu/wget/wget-1.19.5.tar.gz 43b3d09e786df9e8d7aa454095d4ea2d420ae41c --with-ssl=openssl --with-openssl=/usr/local/ssl LDFLAGS="-ldl -R/usr/local/ssl/lib -R/opt/csw/gcc4/lib"
 
+# to get the newly-built wget to be used, explicitly rehash
+hash -r
+
 populate_certificates "/usr/local/ssl"
 
 # mej-libast for eterm
