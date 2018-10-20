@@ -724,7 +724,7 @@ wtcmmi https://inkscape.org/en/gallery/item/7731/inkscape-0.48.0.tar.bz2 a2ab9b3
 
 fi
 
-exit 1
+exit 0
 
 ## gcc-4.x
 
@@ -799,7 +799,7 @@ wtcmmi https://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz 228604686ca23f42e48b98930babe
 wtcmmi https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz e891c3193029775e83e0534ac0ee0c4c711f6d23
 
 
-exit 1
+exit 0
 
 #pkg install gnome
 pkg install libxau_devel
